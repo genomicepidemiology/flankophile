@@ -1,0 +1,20 @@
+channels:
+  - conda-forge
+  - bioconda
+  - default
+dependencies:
+  - python=3.7
+  - snakemake=6.9.1
+  - seqkit=2.1.0
+  - any2fasta=0.4.2
+  - blast=2.12.0
+  - perl=5.32.1
+  - perl-lwp-simple=6.39
+  - perl-bioperl=1.7.8
+  - perl-json=4.02
+  - perl-path-tiny=0.108
+  - bedtools=2.30.0
+  - kma=1.4.0
+  - cd-hit=4.8.1
+  - prokka=1.14.6
+  - phylip=3.697
