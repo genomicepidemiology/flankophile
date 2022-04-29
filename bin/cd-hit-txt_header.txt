@@ -1,1 +1,0 @@
-#id      clstr   clstr_size      length  clstr_rep       clstr_iden      clstr_cov
