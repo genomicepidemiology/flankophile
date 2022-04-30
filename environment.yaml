@@ -17,4 +17,4 @@ dependencies:
   - kma=1.4.0
   - cd-hit=4.8.1
   - prokka=1.14.6
-  - phylip=3.697
+  - clearcut=1.0.9

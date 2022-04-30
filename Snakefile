@@ -1,4 +1,4 @@
-# FLANKOPHILE version 0.0.1
+# FLANKOPHILE version 0.0.2
 # Alex Thorn
 
 configfile: "config.yaml"
@@ -250,7 +250,7 @@ rule filter_abricate_space_for_flanks:
                 if  space_for_flank_up >= user_upstreams and space_for_flank_down >= user_downstreams:
                     counter_accepted += 1
                     assembly_name = PATH_ASSEMBLY_NAME_DICT[path]
-                    new_line = line + "\t" + assembly_name + "\t" + str(counter_accepted)
+                    new_line = line + "\t" + assembly_name + "\t" + "i" + str(counter_accepted)
                     print(new_line, file = output_tsv)
                 else:
                     total_discarded_observation += 1
@@ -635,87 +635,49 @@ rule kma_index:
         "kma index -i {input.just_gene} -o {params.outfolder_just_gene}"
 
 
-## 6 #################################################
-        
+
+
 rule kma_dist:
     input:
         m="output/5_gene_clusters/{c}/kma_index/masked_gene.seq.b",
         j="output/5_gene_clusters/{c}/kma_index/just_gene.seq.b"
     output:
-        m="output/5_gene_clusters/{c}/distance/masked_gene/{c}.masked_gene_dist_kma_format",
-        j="output/5_gene_clusters/{c}/distance/just_gene/{c}.just_gene_dist_kma_format"
+        m="output/5_gene_clusters/{c}/{c}.masked_gene_dist",
+        j="output/5_gene_clusters/{c}/{c}.just_gene_dist"
     params:
         m_db=lambda wildcards: "output/5_gene_clusters/" +  wildcards.c + "/kma_index/masked_gene",
         j_db=lambda wildcards: "output/5_gene_clusters/" +  wildcards.c + "/kma_index/just_gene",
         m_dist_measure=config["distance_measure_flanks_masked_gene"],
         j_dist_measure=config["distance_measure_just_gene"]
+    conda: "environment.yaml"
     shell:
         "kma dist -t_db {params.m_db} -o {output.m} -d {params.m_dist_measure};"
         "kma dist -t_db {params.j_db} -o {output.j} -d {params.j_dist_measure}"
 
 
-rule prepare_dist_for_phylip:
+
+rule clearcut:
     input:
-        m="output/5_gene_clusters/{c}/distance/masked_gene/{c}.masked_gene_dist_kma_format",
-        j="output/5_gene_clusters/{c}/distance/just_gene/{c}.just_gene_dist_kma_format"
+        m="output/5_gene_clusters/{c}/{c}.masked_gene_dist",
+        j="output/5_gene_clusters/{c}/{c}.just_gene_dist"
     output:
-        m="output/5_gene_clusters/{c}/distance/masked_gene/{c}.masked_gene_dist_phylip_format",
-        j="output/5_gene_clusters/{c}/distance/just_gene/{c}.just_gene_dist_phylip_format",
-        m_phylip="output/5_gene_clusters/{c}/distance/masked_gene/input",
-        j_phylip="output/5_gene_clusters/{c}/distance/just_gene/input"
-    params:
-        m=lambda wildcards: wildcards.c + ".masked_gene_dist_phylip_format",
-        j=lambda wildcards: wildcards.c + ".just_gene_dist_phylip_format"
+        m="output/5_gene_clusters/{c}/{c}.masked_gene_tree",
+        j="output/5_gene_clusters/{c}/{c}.just_gene_tree"
 
-    shell:
-        "sed '2s/$/        /' {input.m} | sed 's/\t/        /g' > {output.m};"
-        "sed '2s/$/        /' {input.j} | sed 's/\t/        /g' > {output.j};"
-        "echo {params.m} > {output.m_phylip};"
-        "echo L >> {output.m_phylip};"
-        "echo Y >> {output.m_phylip};"
-        "echo {params.j} > {output.j_phylip};"
-        "echo L >> {output.j_phylip};"
-        "echo Y >> {output.j_phylip}"
-
-
-rule phylip_m:
-    input:
-        m="output/5_gene_clusters/{c}/distance/masked_gene/{c}.masked_gene_dist_phylip_format",
-        m_phylip="output/5_gene_clusters/{c}/distance/masked_gene/input"
-    output:
-        m="output/5_gene_clusters/{c}/distance/masked_gene/outtree"
     conda: "environment.yaml"
-    params:
-        m=lambda wildcards: "output/5_gene_clusters/" +  wildcards.c + "/distance/masked_gene"
     shell:
         '''
-        cd {params.m};
-        neighbor < input > screenout &
+        echo To few leaves to make a tree > {output.m};
+        echo To few leaves to make a tree > {output.j};
+        clearcut --in={input.m} --out={output.m} --neighbor || true ;
+        clearcut --in={input.j} --out={output.j} --neighbor || true 
         '''
+        
 
-rule phylip_j:
-    input:
-        j="output/5_gene_clusters/{c}/distance/just_gene/{c}.just_gene_dist_phylip_format",
-        j_phylip="output/5_gene_clusters/{c}/distance/just_gene/input"
-    output:
-        j="output/5_gene_clusters/{c}/distance/just_gene/outtree"
-    conda: "environment.yaml"
-    params:
-        j=lambda wildcards: "output/5_gene_clusters/" +  wildcards.c + "/distance/just_gene"
-    shell:
-        '''
-        cd {params.j};
-        neighbor < input > screenout &
-        '''
 
-def tree_masked_gene_input(wildcards):
+def tree_input(wildcards):
     checkpoint_output = checkpoints.split_cd_hit_results.get(**wildcards).output[0]
-    return expand("output/5_gene_clusters/{c}/distance/masked_gene/outtree",
-           c=glob_wildcards(os.path.join(checkpoint_output, "{c}.tsv")).c)
-
-def tree_just_gene_input(wildcards):
-    checkpoint_output = checkpoints.split_cd_hit_results.get(**wildcards).output[0]
-    return expand("output/5_gene_clusters/{c}/distance/just_gene/outtree",
+    return expand("output/5_gene_clusters/{c}/{c}.masked_gene_tree",
            c=glob_wildcards(os.path.join(checkpoint_output, "{c}.tsv")).c)
 
 
@@ -724,12 +686,12 @@ def tree_just_gene_input(wildcards):
 
 rule get_trees:
     input:
-        tree_masked_gene_input,
-        tree_just_gene_input
+        tree_input
     output:
         "output/99_trees_and_distance_matrixes_done"
     shell:
         "echo done > {output}"
+
 
 
 
