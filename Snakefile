@@ -119,7 +119,7 @@ rule abricate_merge:
          tsv="output/2_filter_gene_observations/1_abricate_all.tsv",
          report="output/2_filter_gene_observations/1_abricate_all.report"
     shell:
-        "cat  {input} | grep -v '^#'  > {output.no_head};"
+        "cat  {input} | grep -v '^#'| sed 's/\t\t/\t/g'   > {output.no_head};"
         "cat bin/abricate_header.txt {output.no_head} > {output.tsv};"
         "echo Total number of gene observations in unfiltered abricate results: > {output.report};"
         "cat {output.no_head} | wc -l  >> {output.report}"
