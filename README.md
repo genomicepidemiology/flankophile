@@ -1,5 +1,5 @@
 # FLANKOPHILE #
-FLANKOPHILE version 0.0.2
+FLANKOPHILE version 0.0.3
 By Alex Thorn
 
 
