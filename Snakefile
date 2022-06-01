@@ -629,10 +629,11 @@ rule kma_index:
     conda: "environment.yaml"
     params:
         outfolder_masked=lambda wildcards: "output/5_gene_clusters/" +  wildcards.c + "/kma_index/masked_gene",
-        outfolder_just_gene=lambda wildcards: "output/5_gene_clusters/" +  wildcards.c + "/kma_index/just_gene"
+        outfolder_just_gene=lambda wildcards: "output/5_gene_clusters/" +  wildcards.c + "/kma_index/just_gene",
+        k=config["Kmersize_kma"]
     shell:
-        "kma index -i {input.masked} -o {params.outfolder_masked};"
-        "kma index -i {input.just_gene} -o {params.outfolder_just_gene}"
+        "kma index -k {params.k} -i {input.masked} -o {params.outfolder_masked};"
+        "kma index -k {params.k} -i {input.just_gene} -o {params.outfolder_just_gene}"
 
 
 
