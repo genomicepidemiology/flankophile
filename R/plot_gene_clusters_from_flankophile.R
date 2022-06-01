@@ -4,7 +4,7 @@
 
 cluster_name <- "1_blaTEM-57"   # Enter the name of a subfolder in output folder 5_gene_clusters.
 
-legendpos <- "bottom" # Enter desired legend position. "None" or "bottom". Use "None" if plot is very big.
+legendpos <- "bottom" # Enter desired legend position. "none" or "bottom". Use "None" if plot is very big, else use "bottom" to see the legend.
 
 x_lim_plot <- 0.7     # Adjust x-lim to make tiplaps visible in flank tree.
 
@@ -72,7 +72,7 @@ gene.tree = dist2tree(gene.df)
 
 
 # gene plot ####################
-gene_plot <- ggtree(gene.tree) + 
+gene_plot <- ggtree(gene.tree, options(ignore.negative.edge=TRUE)) + 
   geom_tiplab() +
   ggtitle(paste0(cluster_name, " - gene"))
 
@@ -82,10 +82,12 @@ gene_plot
 
 cluster_prokka_raw <- read_tsv(paste0("../output/5_gene_clusters/", cluster_name, "/", cluster_name, ".gggenes"))
 
+
 cluster_prokka <- cluster_prokka_raw %>% 
-  rename( gene_name_full = gene) %>% 
-  mutate(gene = case_when(str_count(gene_name_full, "_") >= 1 ~ str_split(gene_name_full, pattern = "_", simplify = T)[,1],
-                          str_count(gene_name_full, "_") < 1 ~ gene_name_full))
+  rename( gene_long = gene) %>% 
+  mutate(gene = case_when(str_count(gene_long, "_") >= 2 ~ str_c(str_split(gene_long, pattern = "_", simplify = T)[,1], str_split(gene_long, pattern = "_", simplify = T)[,2], sep = "_"),
+                          str_count(gene_long, "_") < 2 ~ gene_long))
+
 
 # Find most common gene
 most_commen_gene <- cluster_prokka %>% 
@@ -94,7 +96,7 @@ most_commen_gene <- cluster_prokka %>%
   arrange(desc(n))
 most_commen_gene <- as.character(most_commen_gene[1,1])
 
-p <- ggtree(flank.tree) + 
+p <- ggtree(flank.tree, options(ignore.negative.edge=TRUE)) + 
   geom_tiplab() +
   xlim_tree(x_lim_plot) +
   ggtitle(paste0(cluster_name, " - flanking regions")) +
@@ -110,3 +112,6 @@ flank_plot
 
 
 # R version 4.1.2
+
+
+

@@ -24,7 +24,6 @@ outheader = "molecule" + "\t" + "gene" + "\t" + "start" + "\t" + "end" + "\t" + 
 print(outheader, file=gggenes_file)
 
 fasta_flag = False
-# ##FASTA
 
 for line in gff_file:
     line = line.strip()
@@ -32,7 +31,6 @@ for line in gff_file:
         fasta_flag = True
     if fasta_flag == False and not line.startswith("##"):
 
-        #print(molecule)
         
         if re.search(r',similar to AA sequence:', line):
             line_list = line.split()
@@ -45,8 +43,6 @@ for line in gff_file:
             else:
                 orientation = "-1"
             
-            #m = re.search(',similar to AA sequence:(\w+)', line)
-            #db_name = (m.group(1))
             db_name = re.search(',similar to AA sequence:(\w+)', line).group(1)
             
             if db_name == "user_db":
@@ -54,6 +50,7 @@ for line in gff_file:
             elif db_name == "UniProtKB":
                 if re.search(r';Name=', line):
                     gene = re.search(';Name=(\w+?);', line).group(1)
+                    gene = gene.split('_')[0]
                 else:
                     gene = re.search(',similar to AA sequence:UniProtKB:(\S+?);', line).group(1)
             
@@ -62,13 +59,7 @@ for line in gff_file:
             
             outline = molecule + "\t" + gene + "\t" + start + "\t" + end + "\t" + orientation + "\t" + db_name
             print(outline, file=gggenes_file)
-            #print (line)
         
-        #m = re.search('CDS', line)
-        #print(m.group(0))
-#        node = line[1:]
-#        to_print = sample_name + "\t" + node + "\t" + sample_path
-#        print(to_print)
 
 gff_file.close()
 gggenes_file.close()
