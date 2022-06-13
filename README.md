@@ -2,21 +2,33 @@
 FLANKOPHILE version 0.0.3
 By Alex Thorn
 
-## What does Flankophile do?
+## About Flankophile
 
+### What can Flankophile do?
 
-## How to run Flankophile
+### How does it work?
 
 Flankophile is a Snakemake based pipeline. Snakemake is a python based workflow management system.
 The [Snakefile](Snakefile) contains the main pipeline code.
 
-### Prerequisites
-
-You need miniconda to run the pipeline.
-
 Flankofile is conda based and uses a conda env. You can see it in the file environment.yaml.
 When you run the pipeline Snakemake and conda will download the required conda tools.  
 
+## How to run Flankophile
+
+
+### Download Flankophile
+
+Download this repository to your computer.
+
+```bash
+git clone https://avthorn@bitbucket.org/genomicepidemiology/flankophile.git
+
+```
+
+Enter the flankophile folder.
+
+### Prerequisites
 
 #### If you are using Computerome 2 
 If you are using Computerome 2 (The Danish National Supercomputer for Life Sciences) then you can use the module system. 
@@ -27,30 +39,43 @@ Load these modules:
 `module load miniconda3/4.11.0`  
 `module load snakemake/6.9.1`
 
-### Download Flankophile
 
-`git clone https://avthorn@bitbucket.org/genomicepidemiology/flankophile.git`
+#### If you are using another computer
+
+You need to miniconda and Snakemake to run Flankophile.
+
 
 ### Input files
 
+In order to use the pipeline you need to prepare two input files: The reference database and the data you want to analyse.
+ 
 The path to the input files must be given in the config file [config.yaml](config.yaml).
 
 #### Reference database
 
+The reference database contains reference sequences of all the genes that you want to search for in your data. 
+Flankophile will find these genes in your data and extract the gene sequence and the flanking sequences on each side of the gene.
 The reference database must be a multifasta file. The resfinder database is given as an example of a reference database.
-It can be found [here](input/example_input_files/Resfinder_08_02_2022_dub_rem.fa). The ResFinder database consists 
+It can be found here [Resfinder_08_02_2022_dub_rem.fa](input/example_input_files/Resfinder_08_02_2022_dub_rem.fa). The ResFinder database consists 
 of acquired antimicrobial resistance genes. The version found in this repository is from February 8 2022. 
 The uptodate ResFinder database is found [here](https://bitbucket.org/genomicepidemiology/resfinder_db/src/master/).
 
 #### Sample input list
 
+Your sample input data must consist of a number of assemblies or genemes in multifasta format. One multifasta per sample. You can input as many samples as wanted.
+
 ##### Assembly level analysis
 
+The recommended way is to use assembly-level analysis. This is when you want to analyse the entire assembly and not analyse only a subset of the contigs in each assembly. An assembly can also be an individual bin from binned data, or it can be a fasta of unbinned contigs. The input file is a tsv file with two columns. The first column has to be a unique name for each input fasta, for example, "sample_1" or "e.coli_bin_32". The second column is the full path to the fasta file, including the file name. The pipeline will ignore lines that start with #. This is useful if you want to add human-readable headers between different datasets in the file.
+In [test_input_assemblies_list_small.tsv](input/example_input_files/test_input_assemblies_list_small.tsv) you can see an example of an assembly level input file. 
+
 ##### Config level analysis
+Three columns. One line per contig. The first column has to be a unique name for each input fasta. The second is the name of the contig. The third column is the full path to the fasta. 
+In [test_input_contig_list_small.tsv](input/example_input_files/test_input_contig_list_small.tsv) you can see an example of a contig level input file. 
 
 ### Configuration file
 
-[config.yaml](config.yaml)
+Fill out [config.yaml](config.yaml) before running the pipeline. The path to input files can be given as relative path to the location of the Snakefile.
 
 ### Running the pipeline
 
