@@ -205,7 +205,7 @@ The gene tree is based on the target genes sequence alone. The distance matrix e
 The script can be run with RStudio and should be run with the R directory as the working directory.
 
 ## Contact
-Alex Thorn
+Alex Vincent Thorn
 alvit@food.dtu.dk
 
 
@@ -245,9 +245,11 @@ By Torsten Seemann
 [Clearcut: a fast implementation of relaxed neighbor joining](https://academic.oup.com/bioinformatics/article/22/22/2823/197536)
 
 
+
 **clstr2txt.pl**
 
 [https://raw.githubusercontent.com/weizhongli/cdhit/master/clstr2txt.pl](https://raw.githubusercontent.com/weizhongli/cdhit/master/clstr2txt.pl)
+
 
 
 
@@ -261,6 +263,7 @@ By Philip T.L.C. Clausen
 
 
 
+
 **prokka**
 
 By Torsten Seemann
@@ -268,6 +271,7 @@ By Torsten Seemann
 [https://github.com/tseemann/prokka](https://github.com/tseemann/prokka)
 
 [Prokka: rapid prokaryotic genome annotation](https://academic.oup.com/bioinformatics/article/30/14/2068/2390517)
+
 
 
 
