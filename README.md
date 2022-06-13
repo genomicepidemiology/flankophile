@@ -4,6 +4,11 @@ By Alex Thorn
 
 ## About Flankophile
 
+Flankophile is a pipeline build for easy analysis of gene synthony - the genetic context of genes. Flankophile locates genes of interest in the input data and extracts the gene plus the upstream and downstream flanking regions.
+
+Requied input: Assempled genetic data from multiple samples in fasta format plus a reference gene database in fasta format.
+
+Output: Distance matrix, neighbor joining trees, genetic sequences of genes and flanking regions. 
 
 Flankophile is a Snakemake based pipeline. Snakemake is a python based workflow management system.
 The [Snakefile](Snakefile) contains the main pipeline code.
@@ -19,7 +24,6 @@ Download this repository to your computer.
 git clone https://avthorn@bitbucket.org/genomicepidemiology/flankophile.git
 
 ```
-
 
 
 ### Prerequisites
@@ -53,6 +57,7 @@ The path to the input files must be given in the config file [config.yaml](confi
 
 The reference database contains reference sequences of all the genes that you want to search for in your data. 
 Flankophile will find these genes in your data and extract the gene sequence and the flanking sequences on each side of the gene.
+The reference database can contain reference genes that are not homologs. Flankophile will cluster the reference genes by percentage identity and report the results separately for each cluster.
 The reference database must be a multifasta file. The resfinder database is given as an example of a reference database.
 
 It can be found here [Resfinder_08_02_2022_dub_rem.fa](input/example_input_files/Resfinder_08_02_2022_dub_rem.fa). The ResFinder database consists 
@@ -82,6 +87,22 @@ In [test_input_contig_list_small.tsv](input/example_input_files/test_input_conti
 Fill out [config.yaml](config.yaml) before running the pipeline. The path to input files can be given as relative path to the location of the Snakefile.
 The configuation file contains numbered sections. Each number refer to an output folder.
 
+
+| **Variable name**                   | **Suggestion**        | **Variable**    | **Notes**                                                                                          |
+|-------------------------------------|-----------------------|-----------------|----------------------------------------------------------------------------------------------------|
+| database                            | d                     | d               | d                                                                                                  |
+| input_format                        | d                     | d               | d                                                                                                  |
+| input_list                          | d                     | d               | d                                                                                                  |
+| flank_length_upstreams              | sdfgsfdgsdfgfgsfdgfsg | adfsdafasdfdfaf | fgsfgsfdgfsdgsdfggdfgsfdgs                                                                         |
+| flank_length_downstreams            | d                     | d               | d                                                                                                  |
+| min_coverage_abricate               | d                     | d               | d                                                                                                  |
+| min_identity_abricate               | d                     | d               | d                                                                                                  |
+| cluster_identity_cd_hit             | d                     | d               | See https://github.com/weizhongli/cdhit/wiki/3.-User's-Guide#CDHITEST                              |
+| cluster_wordsize_cd_hit             | d                     | d               | See https://github.com/weizhongli/cdhit/wiki/3.-User's-Guide#CDHITEST                              |
+| cluster_length_dif_cd_hit           | d                     | d               | See https://github.com/weizhongli/cdhit/wiki/3.-User's-Guide#CDHITEST                              |
+| Kmersize_kma                        | d                     | d               | d                                                                                                  |
+| distance_measure_flanks_masked_gene | d                     | d               | Methods: 1 k-mer hamming distance 64 Jaccard distance 256 Cosine distance 4096 Chi-square distance |
+| distance_measure_just_gene          | d                     | d               | Methods: 1 k-mer hamming distance 64 Jaccard distance 256 Cosine distance 4096 Chi-square distance |
 
 ### Running the pipeline
 
@@ -206,6 +227,7 @@ By Torsten Seemann
 
 
 
+
 **any2fasta**
 
 
@@ -220,10 +242,13 @@ By Torsten Seemann
 
 **clearcut**
 
+[Clearcut: a fast implementation of relaxed neighbor joining](https://academic.oup.com/bioinformatics/article/22/22/2823/197536)
+
 
 **clstr2txt.pl**
 
 [https://raw.githubusercontent.com/weizhongli/cdhit/master/clstr2txt.pl](https://raw.githubusercontent.com/weizhongli/cdhit/master/clstr2txt.pl)
+
 
 
 **kma**
@@ -235,11 +260,15 @@ By Philip T.L.C. Clausen
 [Rapid and precise alignment of raw reads against redundant databases with KMA](https://pubmed.ncbi.nlm.nih.gov/30157759/)
 
 
+
 **prokka**
 
 By Torsten Seemann
 
 [https://github.com/tseemann/prokka](https://github.com/tseemann/prokka)
+
+[Prokka: rapid prokaryotic genome annotation](https://academic.oup.com/bioinformatics/article/30/14/2068/2390517)
+
 
 
 **seqkit**
