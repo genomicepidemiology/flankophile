@@ -90,19 +90,19 @@ The configuation file contains numbered sections. Each number refer to an output
 
 | **Variable name**                   | **Suggestion**        | **Variable**    | **Notes**                                                                                          |
 |-------------------------------------|-----------------------|-----------------|----------------------------------------------------------------------------------------------------|
-| database                            | d                     | d               | d                                                                                                  |
-| input_format                        | d                     | d               | d                                                                                                  |
-| input_list                          | d                     | d               | d                                                                                                  |
-| flank_length_upstreams              | sdfgsfdgsdfgfgsfdgfsg | adfsdafasdfdfaf | fgsfgsfdgfsdgsdfggdfgsfdgs                                                                         |
-| flank_length_downstreams            | d                     | d               | d                                                                                                  |
-| min_coverage_abricate               | d                     | d               | d                                                                                                  |
-| min_identity_abricate               | d                     | d               | d                                                                                                  |
-| cluster_identity_cd_hit             | d                     | d               | See https://github.com/weizhongli/cdhit/wiki/3.-User's-Guide#CDHITEST                              |
-| cluster_wordsize_cd_hit             | d                     | d               | See https://github.com/weizhongli/cdhit/wiki/3.-User's-Guide#CDHITEST                              |
-| cluster_length_dif_cd_hit           | d                     | d               | See https://github.com/weizhongli/cdhit/wiki/3.-User's-Guide#CDHITEST                              |
-| Kmersize_kma                        | d                     | d               | d                                                                                                  |
-| distance_measure_flanks_masked_gene | d                     | d               | Methods: 1 k-mer hamming distance 64 Jaccard distance 256 Cosine distance 4096 Chi-square distance |
-| distance_measure_just_gene          | d                     | d               | Methods: 1 k-mer hamming distance 64 Jaccard distance 256 Cosine distance 4096 Chi-square distance |
+| database                            | "input/db.fa"         | Path to file.   | d                                                                                                  |
+| input_format                        | "assemblies"          | Format.         | d                                                                                                  |
+| input_list                          | "input/sa.tsv"        | Path to file.   | d                                                                                                  |
+| flank_length_upstreams              | "3000"                | Length in bp.   | d                                                                                                  |
+| flank_length_downstreams            | "3000"                | Length in bp.   | d                                                                                                  |
+| min_coverage_abricate               | "95"                  | d               | d                                                                                                  |
+| min_identity_abricate               | "95"                  | In percent.     | d                                                                                                  |
+| cluster_identity_cd_hit             | "0.95"                | d               | See https://github.com/weizhongli/cdhit/wiki/3.-User's-Guide#CDHITEST                              |
+| cluster_wordsize_cd_hit             | "9"                   | d               | See https://github.com/weizhongli/cdhit/wiki/3.-User's-Guide#CDHITEST                              |
+| cluster_length_dif_cd_hit           | "0.9"                 | d               | See https://github.com/weizhongli/cdhit/wiki/3.-User's-Guide#CDHITEST                              |
+| Kmersize_kma                        | "16"                  | Kmer size.      | For kma index.                                                                                     |
+| distance_measure_flanks_masked_gene | "1"                   | d               | Methods: 1 k-mer hamming distance 64 Jaccard distance 256 Cosine distance 4096 Chi-square distance |
+| distance_measure_just_gene          | "1"                   | d               | Methods: 1 k-mer hamming distance 64 Jaccard distance 256 Cosine distance 4096 Chi-square distance |
 
 ### Running the pipeline
 
