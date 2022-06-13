@@ -4,9 +4,6 @@ By Alex Thorn
 
 ## About Flankophile
 
-### What can Flankophile do?
-
-### How does it work?
 
 Flankophile is a Snakemake based pipeline. Snakemake is a python based workflow management system.
 The [Snakefile](Snakefile) contains the main pipeline code.
@@ -16,8 +13,6 @@ When you run the pipeline Snakemake and conda will download the required conda t
 
 ## How to run Flankophile
 
-### Get Flankophile
-
 Download this repository to your computer.
 
 ```bash
@@ -25,12 +20,13 @@ git clone https://avthorn@bitbucket.org/genomicepidemiology/flankophile.git
 
 ```
 
-Enter the flankophile folder.
+
 
 ### Prerequisites
 
 
-**If you are using Computerome 2** 
+**If you are using Computerome 2**
+
 If you are using Computerome 2 (The Danish National Supercomputer for Life Sciences) then you can use the module system. 
 Book an interactive node via the qsub system. 
 Load these modules:  
@@ -45,11 +41,13 @@ Load these modules:
 You need to miniconda and Snakemake to run Flankophile.
 
 
+
 ### Input files
 
 In order to use the pipeline you need to prepare two input files: The reference database and the data you want to analyse.
  
 The path to the input files must be given in the config file [config.yaml](config.yaml).
+
 
 #### Reference database
 
@@ -60,6 +58,7 @@ The reference database must be a multifasta file. The resfinder database is give
 It can be found here [Resfinder_08_02_2022_dub_rem.fa](input/example_input_files/Resfinder_08_02_2022_dub_rem.fa). The ResFinder database consists 
 of acquired antimicrobial resistance genes. The version found in this repository is from February 8 2022. 
 The uptodate ResFinder database is found [here](https://bitbucket.org/genomicepidemiology/resfinder_db/src/master/).
+
 
 #### Sample input list
 
@@ -73,16 +72,20 @@ The second column is the full path to the fasta file, including the file name. T
 In [test_input_assemblies_list_small.tsv](input/example_input_files/test_input_assemblies_list_small.tsv) you can see an example of an assembly level input file. 
 
 **Config level analysis**
+
 Three columns. One line per contig. The first column has to be a unique name for each input fasta. The second is the name of the contig. The third column is the full path to the fasta. 
 In [test_input_contig_list_small.tsv](input/example_input_files/test_input_contig_list_small.tsv) you can see an example of a contig level input file. 
+
 
 ### Configuration file
 
 Fill out [config.yaml](config.yaml) before running the pipeline. The path to input files can be given as relative path to the location of the Snakefile.
 The configuation file contains numbered sections. Each number refer to an output folder.
 
+
 ### Running the pipeline
 
+Enter the flankophile folder.
 
 Run the pipeline: 
 `snakemake --use-conda --cores 39` 
@@ -106,15 +109,14 @@ If you write a # in front of both
 
 #### Rerunning the pipeline
 If you want to rerun part of the pipeline you simply delete output folders and files and 
-Snakemake will rerun these part of the pipeline. You must delete output in descending order starting with 99 and
- down to where you do not want to rerun anymore. 
+Snakemake will rerun these part of the pipeline when you give the run command `snakemake --use-conda --cores 39` again. 
+You must delete output in descending order starting with 99 and down to where you do not want to rerun anymore. 
 
 **New config settings**
 
 If you want to rerun the pipeline with new settings you must look in the config file [config.yaml](config.yaml)
  and take note of the numbered sections. If you want to change a parameters you must delete all output
  with a number equal or higher than the numbe of the section. 
-
 
 **More data**
 
@@ -181,11 +183,20 @@ The distance matrix file ends with .masked_gene_tree.
 The gene tree is based on the target genes sequence alone. The distance matrix ends with .just_gene_dist. 
 The script can be run with RStudio and should be run with the R directory as the working directory.
 
+## Contact
+Alex Thorn
+alvit@food.dtu.dk
+
+
+## License
+
+## Acknowledgement
+
+
 ## Citations
 
 This section is not yet complete!
 
-### Pipeline
 
 **Abricate**
 
@@ -197,13 +208,18 @@ By Torsten Seemann
 
 **any2fasta**
 
+
 **bedtools**
+
 
 **blast**
 
+
 **cd-hit**
 
+
 **clearcut**
+
 
 **clstr2txt.pl**
 
@@ -218,22 +234,20 @@ By Philip T.L.C. Clausen
 
 [Rapid and precise alignment of raw reads against redundant databases with KMA](https://pubmed.ncbi.nlm.nih.gov/30157759/)
 
+
 **prokka**
 
 By Torsten Seemann
 
 [https://github.com/tseemann/prokka](https://github.com/tseemann/prokka)
 
+
 **seqkit**
+
 
 **Snakemake**
 
-### R
 
-## License
 
-## Acknowledgement
 
-## Contact
-Alex Thorn
-alvit@food.dtu.dk
+
