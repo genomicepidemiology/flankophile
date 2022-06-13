@@ -16,7 +16,6 @@ When you run the pipeline Snakemake and conda will download the required conda t
 
 ## How to run Flankophile
 
-
 ### Download Flankophile
 
 Download this repository to your computer.
@@ -56,6 +55,7 @@ The path to the input files must be given in the config file [config.yaml](confi
 The reference database contains reference sequences of all the genes that you want to search for in your data. 
 Flankophile will find these genes in your data and extract the gene sequence and the flanking sequences on each side of the gene.
 The reference database must be a multifasta file. The resfinder database is given as an example of a reference database.
+
 It can be found here [Resfinder_08_02_2022_dub_rem.fa](input/example_input_files/Resfinder_08_02_2022_dub_rem.fa). The ResFinder database consists 
 of acquired antimicrobial resistance genes. The version found in this repository is from February 8 2022. 
 The uptodate ResFinder database is found [here](https://bitbucket.org/genomicepidemiology/resfinder_db/src/master/).
@@ -66,7 +66,9 @@ Your sample input data must consist of a number of assemblies or genemes in mult
 
 ##### Assembly level analysis
 
-The recommended way is to use assembly-level analysis. This is when you want to analyse the entire assembly and not analyse only a subset of the contigs in each assembly. An assembly can also be an individual bin from binned data, or it can be a fasta of unbinned contigs. The input file is a tsv file with two columns. The first column has to be a unique name for each input fasta, for example, "sample_1" or "e.coli_bin_32". The second column is the full path to the fasta file, including the file name. The pipeline will ignore lines that start with #. This is useful if you want to add human-readable headers between different datasets in the file.
+The recommended way is to use assembly-level analysis. This is when you want to analyse the entire assembly and not analyse only a subset of the contigs in each assembly. An assembly can also be an individual bin from binned data, or it can be a fasta of unbinned contigs. The input file is a tsv file with two columns. The first column has to be a unique name for each input fasta, for example, "sample_1" or "e.coli_bin_32". 
+
+The second column is the full path to the fasta file, including the file name. The pipeline will ignore lines that start with #. This is useful if you want to add human-readable headers between different datasets in the file.
 In [test_input_assemblies_list_small.tsv](input/example_input_files/test_input_assemblies_list_small.tsv) you can see an example of an assembly level input file. 
 
 ##### Config level analysis
@@ -93,6 +95,7 @@ If your dataset is very large you may want to run the pipeline in 3 stages. That
 spending compute time rerunning the later stages again and again while you parametrize the first stages.
 In the Snakefile around line 30 you find **rule all**. There are 4 files under the rule. 
 The first and last file must always be included. 
+
 If you write a # in front of **"output/99_trees_and_distance_matrixes_done"** 
 then you do not run the last stage, step 5 of the pipeline. You can remove the # again later to run this step.
 If you write a # in front of both
@@ -118,11 +121,13 @@ If you want to add more data you must delete all output except
  input_list file. If you want to use a difference reference database you must delete the entire
  output directory and start over. 
 
-#### Problems with conda?
+#### Using Computerome 2 and having problems with conda?
 If running the pipeline gives an error message related to conda then it 
-may be because you already have an enviroment loaded you need to delete:
-Delete .conda in your personal root directory. 
-Delele ./snakemake/conda and ./snakemake/conda-archieve in snakemake directory.
+may be because you already have an enviroment loaded you need to delete. 
+
+On C2 you only have space for 10 GB in your personal root directory and the conda environment takes up some space.
+Go to your personal root `cd ` and delete .conda: `rm -r .conda`. Also delete some other files if you have a lot of junk in your personal dir.
+In the Flankophile pipeline directory delete ./snakemake/conda and ./snakemake/conda-archieve.
 
 
 
@@ -139,6 +144,7 @@ In this directory abricate results from all the samples have been merged. It con
 In step 1 no filtering has taken place yet. The raw collective abricate results can be found in **1_abricate_all.tsv**.
 In step 2 the results have been filtered on minimum coverage and minimum sequence identity. 
 **2_abricate_filter_qual.report** contains information on how many gene observtions that were discarded during filtering.
+
 In step 3 the tsv from step 2 has been filtered on flank length. Gene observations that are so close to the
  edge of a contig that there is not space for the full desired flank length are discarded. 
  **3_abricate_filter_length.report** contains information on how many gene observtions that were discarded during filtering.
@@ -168,6 +174,46 @@ The gene tree is based on the target genes sequence alone. The distance matrix e
 The script can be run with RStudio and should be run with the R directory as the working directory.
 
 ## Citations
+
+This section is not yet complete!
+
+### Pipeline
+
+**Abricate**
+By Torsten Seemann
+[https://github.com/tseemann/abricate](https://github.com/tseemann/abricate)
+
+
+
+**any2fasta**
+
+**bedtools**
+
+**blast**
+
+**cd-hit**
+
+**clearcut**
+
+**clstr2txt.pl**
+[https://raw.githubusercontent.com/weizhongli/cdhit/master/clstr2txt.pl](https://raw.githubusercontent.com/weizhongli/cdhit/master/clstr2txt.pl)
+
+
+**kma**
+By Philip T.L.C. Clausen  
+[https://bitbucket.org/genomicepidemiology/kma/src/master/](https://bitbucket.org/genomicepidemiology/kma/src/master/)
+
+["Rapid and precise alignment of raw reads against redundant databases with KMA"](https://pubmed.ncbi.nlm.nih.gov/30157759/)
+
+**prokka**
+By Torsten Seemann
+[https://github.com/tseemann/prokka](https://github.com/tseemann/prokka)
+
+**seqkit**
+
+**Snakemake**
+
+### R
 
 ## License
 
