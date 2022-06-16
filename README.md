@@ -1,5 +1,5 @@
 # FLANKOPHILE
-FLANKOPHILE version 0.0.3
+FLANKOPHILE version 0.0.4
 By Alex Thorn
 
 ## About Flankophile
@@ -95,14 +95,14 @@ The configuation file contains numbered sections. Each number refer to an output
 | input_list                          | "input/sa.tsv"        | Path to file.   | d                                                                                                  |
 | flank_length_upstreams              | "3000"                | Length in bp.   | d                                                                                                  |
 | flank_length_downstreams            | "3000"                | Length in bp.   | d                                                                                                  |
-| min_coverage_abricate               | "95"                  | d               | d                                                                                                  |
+| min_coverage_abricate               | "95"                  |                 | d                                                                                                  |
 | min_identity_abricate               | "95"                  | In percent.     | d                                                                                                  |
-| cluster_identity_cd_hit             | "0.95"                | d               | See https://github.com/weizhongli/cdhit/wiki/3.-User's-Guide#CDHITEST                              |
-| cluster_wordsize_cd_hit             | "9"                   | d               | See https://github.com/weizhongli/cdhit/wiki/3.-User's-Guide#CDHITEST                              |
-| cluster_length_dif_cd_hit           | "0.9"                 | d               | See https://github.com/weizhongli/cdhit/wiki/3.-User's-Guide#CDHITEST                              |
+| cluster_identity_cd_hit             | "0.95"                |                 | See https://github.com/weizhongli/cdhit/wiki/3.-User's-Guide#CDHITEST                              |
+| cluster_wordsize_cd_hit             | "9"                   |                 | See https://github.com/weizhongli/cdhit/wiki/3.-User's-Guide#CDHITEST                              |
+| cluster_length_dif_cd_hit           | "0.9"                 |                 | See https://github.com/weizhongli/cdhit/wiki/3.-User's-Guide#CDHITEST                              |
 | Kmersize_kma                        | "16"                  | Kmer size.      | For kma index.                                                                                     |
-| distance_measure_flanks_masked_gene | "1"                   | d               | Methods: 1 k-mer hamming distance 64 Jaccard distance 256 Cosine distance 4096 Chi-square distance |
-| distance_measure_just_gene          | "1"                   | d               | Methods: 1 k-mer hamming distance 64 Jaccard distance 256 Cosine distance 4096 Chi-square distance |
+| distance_measure                    | "1"                   | Distmatrix      | Methods: 1 k-mer hamming distance 64 Jaccard distance 256 Cosine distance 4096 Chi-square distance |
+
 
 ### Running the pipeline
 
