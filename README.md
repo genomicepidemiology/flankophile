@@ -1,6 +1,6 @@
 # FLANKOPHILE
 FLANKOPHILE version 0.0.4
-By Alex Thorn
+By Alex Vincent Thorn
 
 ## About Flankophile
 
@@ -90,13 +90,13 @@ The configuation file contains numbered sections. Each number refer to an output
 
 | **Variable name**                   | **Suggestion**        | **Variable**    | **Notes**                                                                                          |
 |-------------------------------------|-----------------------|-----------------|----------------------------------------------------------------------------------------------------|
-| database                            | "input/db.fa"         | Path to file.   | d                                                                                                  |
-| input_format                        | "assemblies"          | Format.         | d                                                                                                  |
-| input_list                          | "input/sa.tsv"        | Path to file.   | d                                                                                                  |
-| flank_length_upstreams              | "3000"                | Length in bp.   | d                                                                                                  |
-| flank_length_downstreams            | "3000"                | Length in bp.   | d                                                                                                  |
-| min_coverage_abricate               | "95"                  |                 | d                                                                                                  |
-| min_identity_abricate               | "95"                  | In percent.     | d                                                                                                  |
+| database                            | "input/db.fa"         | Path to file.   |                                                                                                    |
+| input_format                        | "assemblies"          | Format.         |                                                                                                    |
+| input_list                          | "input/sa.tsv"        | Path to file.   |                                                                                                    |
+| flank_length_upstreams              | "3000"                | Length in bp.   |                                                                                                    |
+| flank_length_downstreams            | "3000"                | Length in bp.   |                                                                                                    |
+| min_coverage_abricate               | "95"                  |                 |                                                                                                    |
+| min_identity_abricate               | "95"                  | In percent.     |                                                                                                    |
 | cluster_identity_cd_hit             | "0.95"                |                 | See https://github.com/weizhongli/cdhit/wiki/3.-User's-Guide#CDHITEST                              |
 | cluster_wordsize_cd_hit             | "9"                   |                 | See https://github.com/weizhongli/cdhit/wiki/3.-User's-Guide#CDHITEST                              |
 | cluster_length_dif_cd_hit           | "0.9"                 |                 | See https://github.com/weizhongli/cdhit/wiki/3.-User's-Guide#CDHITEST                              |

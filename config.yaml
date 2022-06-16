@@ -1,4 +1,4 @@
-# FLANKOPHILE version 0.0.3
+# FLANKOPHILE version 0.0.4
 # Alex Thorn
 
 
@@ -50,9 +50,8 @@ cluster_length_dif_cd_hit: "0.9"     # -s
 
 Kmersize_kma: "16"                       # Kmersize used by kma index. Try with "16" if in doubt.  
 
-distance_measure_flanks_masked_gene: "1" # Choose measurement for making distance matrix of the flanks of genes
+distance_measure: "1" # Choose measurement for making distance matrix 
 
-distance_measure_just_gene: "1"          # Choose measurement for making distance matrix of genes
 
 
 # Distance calculation methods:

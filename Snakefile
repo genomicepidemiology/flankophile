@@ -1,5 +1,5 @@
-# FLANKOPHILE version 0.0.3
-# Alex Thorn
+# FLANKOPHILE version 0.0.4
+# Alex Vincent Thorn
 
 configfile: "config.yaml"
 
@@ -615,23 +615,30 @@ rule make_gggenes_input:
 rule kma_index:
     input:
         gggenes="output/5_gene_clusters/{c}/{c}.gggenes",
+        flanks_with_gene="output/5_gene_clusters/{c}/{c}.flanks_with_gene_fasta",
         masked="output/5_gene_clusters/{c}/{c}.masked_gene_fasta",
         just_gene="output/5_gene_clusters/{c}/{c}.just_gene_fasta"
     output:
-        "output/5_gene_clusters/{c}/kma_index/masked_gene.comp.b",
-        "output/5_gene_clusters/{c}/kma_index/masked_gene.length.b",
-        "output/5_gene_clusters/{c}/kma_index/masked_gene.name",
-        "output/5_gene_clusters/{c}/kma_index/masked_gene.seq.b",
-        "output/5_gene_clusters/{c}/kma_index/just_gene.comp.b",
-        "output/5_gene_clusters/{c}/kma_index/just_gene.length.b",
-        "output/5_gene_clusters/{c}/kma_index/just_gene.name",
-        "output/5_gene_clusters/{c}/kma_index/just_gene.seq.b"
+        temp("output/5_gene_clusters/{c}/kma_index/flanks_with_gene.comp.b"),
+        temp("output/5_gene_clusters/{c}/kma_index/flanks_with_gene.length.b"),
+        temp("output/5_gene_clusters/{c}/kma_index/flanks_with_gene.name"),
+        temp("output/5_gene_clusters/{c}/kma_index/flanks_with_gene.seq.b"),
+        temp("output/5_gene_clusters/{c}/kma_index/masked_gene.comp.b"),
+        temp("output/5_gene_clusters/{c}/kma_index/masked_gene.length.b"),
+        temp("output/5_gene_clusters/{c}/kma_index/masked_gene.name"),
+        temp("output/5_gene_clusters/{c}/kma_index/masked_gene.seq.b"),
+        temp("output/5_gene_clusters/{c}/kma_index/just_gene.comp.b"),
+        temp("output/5_gene_clusters/{c}/kma_index/just_gene.length.b"),
+        temp("output/5_gene_clusters/{c}/kma_index/just_gene.name"),
+        temp("output/5_gene_clusters/{c}/kma_index/just_gene.seq.b")
     conda: "environment.yaml"
     params:
+        outfolder_flanks_with_gene=lambda wildcards: "output/5_gene_clusters/" +  wildcards.c + "/kma_index/flanks_with_gene",
         outfolder_masked=lambda wildcards: "output/5_gene_clusters/" +  wildcards.c + "/kma_index/masked_gene",
         outfolder_just_gene=lambda wildcards: "output/5_gene_clusters/" +  wildcards.c + "/kma_index/just_gene",
         k=config["Kmersize_kma"]
     shell:
+        "kma index -k {params.k} -i {input.flanks_with_gene} -o {params.outfolder_flanks_with_gene};"
         "kma index -k {params.k} -i {input.masked} -o {params.outfolder_masked};"
         "kma index -k {params.k} -i {input.just_gene} -o {params.outfolder_just_gene}"
 
@@ -640,36 +647,53 @@ rule kma_index:
 
 rule kma_dist:
     input:
+        ja="output/5_gene_clusters/{c}/kma_index/just_gene.comp.b",
+        jb="output/5_gene_clusters/{c}/kma_index/just_gene.length.b",
+        jc="output/5_gene_clusters/{c}/kma_index/just_gene.name",
+        fa="output/5_gene_clusters/{c}/kma_index/flanks_with_gene.comp.b",
+        fb="output/5_gene_clusters/{c}/kma_index/flanks_with_gene.length.b",
+        fc="output/5_gene_clusters/{c}/kma_index/flanks_with_gene.name",
+        ma="output/5_gene_clusters/{c}/kma_index/masked_gene.comp.b",
+        mb="output/5_gene_clusters/{c}/kma_index/masked_gene.length.b",
+        mc="output/5_gene_clusters/{c}/kma_index/masked_gene.name",
+        f="output/5_gene_clusters/{c}/kma_index/flanks_with_gene.seq.b",
         m="output/5_gene_clusters/{c}/kma_index/masked_gene.seq.b",
         j="output/5_gene_clusters/{c}/kma_index/just_gene.seq.b"
     output:
+        f="output/5_gene_clusters/{c}/{c}.flanks_with_gene_dist",
         m="output/5_gene_clusters/{c}/{c}.masked_gene_dist",
         j="output/5_gene_clusters/{c}/{c}.just_gene_dist"
     params:
+        f_db=lambda wildcards: "output/5_gene_clusters/" +  wildcards.c + "/kma_index/flanks_with_gene",
         m_db=lambda wildcards: "output/5_gene_clusters/" +  wildcards.c + "/kma_index/masked_gene",
         j_db=lambda wildcards: "output/5_gene_clusters/" +  wildcards.c + "/kma_index/just_gene",
-        m_dist_measure=config["distance_measure_flanks_masked_gene"],
-        j_dist_measure=config["distance_measure_just_gene"]
+        dist_measure=config["distance_measure"]
+     
     conda: "environment.yaml"
     shell:
-        "kma dist -t_db {params.m_db} -o {output.m} -d {params.m_dist_measure};"
-        "kma dist -t_db {params.j_db} -o {output.j} -d {params.j_dist_measure}"
+        "kma dist -t_db {params.f_db} -o {output.f} -d {params.dist_measure};"
+        "kma dist -t_db {params.m_db} -o {output.m} -d {params.dist_measure};"
+        "kma dist -t_db {params.j_db} -o {output.j} -d {params.dist_measure}"
 
 
 
 rule clearcut:
     input:
+        f="output/5_gene_clusters/{c}/{c}.flanks_with_gene_dist",
         m="output/5_gene_clusters/{c}/{c}.masked_gene_dist",
         j="output/5_gene_clusters/{c}/{c}.just_gene_dist"
     output:
+        f="output/5_gene_clusters/{c}/{c}.flanks_with_gene_tree",
         m="output/5_gene_clusters/{c}/{c}.masked_gene_tree",
         j="output/5_gene_clusters/{c}/{c}.just_gene_tree"
 
     conda: "environment.yaml"
     shell:
         '''
+        echo To few leaves to make a tree > {output.f};
         echo To few leaves to make a tree > {output.m};
         echo To few leaves to make a tree > {output.j};
+        clearcut --in={input.f} --out={output.f} --neighbor || true ;
         clearcut --in={input.m} --out={output.m} --neighbor || true ;
         clearcut --in={input.j} --out={output.j} --neighbor || true 
         '''
@@ -691,7 +715,9 @@ rule get_trees:
     output:
         "output/99_trees_and_distance_matrixes_done"
     shell:
-        "echo done > {output}"
+        '''
+        echo done > {output}
+        '''
 
 
 
