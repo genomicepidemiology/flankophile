@@ -2,6 +2,10 @@
 FLANKOPHILE version 0.0.4
 By Alex Vincent Thorn
 
+
+[**Quick start - for Computerome users**](quick_start.md)
+
+
 ## About Flankophile
 
 Flankophile is a pipeline build for easy analysis of gene synthony - the genetic context of genes. Flankophile locates genes of interest in the input data and extracts the gene plus the upstream and downstream flanking regions.
