@@ -14,11 +14,12 @@ Requied input: Assempled genetic data from multiple samples in fasta format plus
 
 Output: Distance matrix, neighbor joining trees, genetic sequences of genes and flanking regions. 
 
+The output can be visualized in RStudio with the R script [plot_gene_clusters_from_flankophile.R](R/plot_gene_clusters_from_flankophile.R).
+
+![Demo_R_plot.PNG](Demo_R_plot.PNG)
+
 Flankophile is a Snakemake based pipeline. Snakemake is a python based workflow management system.
 The [Snakefile](Snakefile) contains the main pipeline code.
-
-Flankofile is conda based and uses a conda env. You can see it in the file environment.yaml.
-When you run the pipeline Snakemake and conda will download the required conda tools.  
 
 ## How to run Flankophile
 
@@ -33,7 +34,8 @@ git clone https://avthorn@bitbucket.org/genomicepidemiology/flankophile.git
 ### Prerequisites
 
 
-You need to Miniconda and Snakemake to run Flankophile. You do not need to load the conda enviroment manually. Snakemake will automatically download the necessary conda packages when running the pipeline for the first time. For this reason, the pipeline will take a longer time to run the first time.
+You need to Miniconda and Snakemake to run Flankophile. Flankofile is conda based and uses a conda env. You can see it in the file environment.yaml.
+ You do not need to load the conda enviroment manually. Snakemake will automatically download the necessary conda packages when running the pipeline for the first time. For this reason, the pipeline will take a longer time to run the first time.
 
 ### Input files
 
@@ -56,18 +58,19 @@ The uptodate ResFinder database is found [here](https://bitbucket.org/genomicepi
 
 #### Sample input list
 
-Your sample input data must consist of a number of assemblies or genemes in multifasta format. One multifasta per sample. You can input as many samples as wanted. You have to use either an assembly or a contig input file.
+Your sample input data must consist of a number of assemblies or genomes in multifasta format. One multifasta per sample. You can input as many samples as wanted. You have to use either an assembly or a contig input file. Instead of entire assemblies you can also use induvidual bins from a binned assembly. It does not matter, any collection of contigs in a multifasta file will work.
 
-**Assembly level analysis**
+**Assembly/bin level analysis**
 
-The recommended way is to use assembly-level analysis. This is when you want to analyse the entire assembly and not analyse only a subset of the contigs in each assembly. An assembly can also be an individual bin from binned data, or it can be a fasta of unbinned contigs. The input file is a tsv file with two columns. The first column has to be a unique name for each input fasta, for example, "sample_1" or "e.coli_bin_32". 
+The recommended way is to use assembly-level analysis. This is when you want to analyse the entire assembly/bin and not analyse only a subset of the contigs in the multifasta.  The input file is a tsv file with two columns. The first column has to be a unique name for each input fasta, for example, "sample_1" or "e.coli_bin_32". 
 
 The second column is the full path to the fasta file, including the file name. The pipeline will ignore lines that start with #. This is useful if you want to add human-readable headers between different datasets in the file.
 In [test_input_assemblies_list_small.tsv](input/example_input_files/test_input_assemblies_list_small.tsv) you can see an example of an assembly level input file. 
 
 **Config level analysis**
 
-Three columns. One line per contig. The first column has to be a unique name for each input fasta. The second is the name of the contig. The third column is the full path to the fasta. 
+You can use this type op input files if you are only interested in a specific contigs from each multifasta. This may be relavant if for example you have used a tool to analyse which contigs in a assembly/bin that are from plasmids and now you only want to run flankophile on those contigs.
+The format is a tsv file with three columns. One line per contig. The first column contains a nickname for the input fasta. It has to be a unique for each input fasta but contigs from the same assembly/bin will have the same name in collumn 1. The second is the name of the contig. This has to be unique for each input fasta. The third column is the full path to the fasta. 
 In [test_input_contig_list_small.tsv](input/example_input_files/test_input_contig_list_small.tsv) you can see an example of a contig level input file. 
 
 
@@ -181,11 +184,10 @@ The R script [plot_gene_clusters_from_flankophile.R](R/plot_gene_clusters_from_f
  can be used to visualize the results in output folder 5.
  It plots distance trees with gene annotation for a gene cluster. 
 The trees are based on the distance matrices. 
-The flank tree is based on the flanking regions alone since the gene is masked. 
-The distance matrix file ends with .masked_gene_tree.
- 
-The gene tree is based on the target genes sequence alone. The distance matrix ends with .just_gene_dist. 
+
 The script can be run with RStudio and should be run with the R directory as the working directory.
+
+[Example of output](R/Demo_R_plot.pdf).
 
 ## Contact
 Alex Vincent Thorn
