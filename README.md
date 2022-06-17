@@ -18,6 +18,7 @@ The output can be visualized in RStudio with the R script [plot_gene_clusters_fr
 
 ![Demo_R_plot.PNG](Demo_R_plot.PNG)
 
+
 Flankophile is a Snakemake based pipeline. Snakemake is a python based workflow management system.
 The [Snakefile](Snakefile) contains the main pipeline code.
 
@@ -187,7 +188,7 @@ The trees are based on the distance matrices.
 
 The script can be run with RStudio and should be run with the R directory as the working directory.
 
-[Example of output](R/Demo_R_plot.pdf).
+**[Example of output](R/Demo_R_plot.pdf)**
 
 ## Contact
 Alex Vincent Thorn
