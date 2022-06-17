@@ -19,8 +19,7 @@ The output can be visualized in RStudio with the R script [plot_gene_clusters_fr
 ![Demo_R_plot.PNG](Demo_R_plot.PNG)
 
 
-Flankophile is a Snakemake based pipeline. Snakemake is a python based workflow management system.
-The [Snakefile](Snakefile) contains the main pipeline code.
+
 
 ## How to run Flankophile
 
@@ -31,6 +30,8 @@ git clone https://avthorn@bitbucket.org/genomicepidemiology/flankophile.git
 
 ```
 
+Flankophile is a Snakemake based pipeline. Snakemake is a python based workflow management system.
+The [Snakefile](Snakefile) contains the main pipeline code.
 
 ### Prerequisites
 
