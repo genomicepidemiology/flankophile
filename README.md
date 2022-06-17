@@ -3,7 +3,7 @@ FLANKOPHILE version 0.0.4
 By Alex Vincent Thorn
 
 
-[**Quick start - for Computerome users**](quick_start.md)
+## [Quick start - for Computerome users](quick_start.md)
 
 
 ## About Flankophile
@@ -33,22 +33,7 @@ git clone https://avthorn@bitbucket.org/genomicepidemiology/flankophile.git
 ### Prerequisites
 
 
-**If you are using Computerome 2**
-
-If you are using Computerome 2 (The Danish National Supercomputer for Life Sciences) then you can use the module system. 
-Book an interactive node via the qsub system. 
-Load these modules:  
- 
-`module load tools`  
-`module load miniconda3/4.11.0`  
-`module load snakemake/6.9.1`
-
-
-**If you are not using Computerome 2**
-
-You need to miniconda and Snakemake to run Flankophile.
-
-
+You need to Miniconda and Snakemake to run Flankophile. You do not need to load the conda enviroment manually. Snakemake will automatically download the necessary conda packages when running the pipeline for the first time. For this reason, the pipeline will take a longer time to run the first time.
 
 ### Input files
 
@@ -94,14 +79,14 @@ The configuation file contains numbered sections. Each number refer to an output
 
 | **Variable name**                   | **Suggestion**        | **Variable**    | **Notes**                                                                                          |
 |-------------------------------------|-----------------------|-----------------|----------------------------------------------------------------------------------------------------|
-| database                            | "input/db.fa"         | Path to file.   |                                                                                                    |
+| database                            | "input/db.fa"         | Path to file.   | Multifasta.                                                                                        |
 | input_format                        | "assemblies"          | Format.         |                                                                                                    |
-| input_list                          | "input/sa.tsv"        | Path to file.   |                                                                                                    |
+| input_list                          | "input/sa.tsv"        | Path to file.   | tsv file.                                                                                          |
 | flank_length_upstreams              | "3000"                | Length in bp.   |                                                                                                    |
 | flank_length_downstreams            | "3000"                | Length in bp.   |                                                                                                    |
-| min_coverage_abricate               | "95"                  |                 |                                                                                                    |
-| min_identity_abricate               | "95"                  | In percent.     |                                                                                                    |
-| cluster_identity_cd_hit             | "0.95"                |                 | See https://github.com/weizhongli/cdhit/wiki/3.-User's-Guide#CDHITEST                              |
+| min_coverage_abricate               | "95"                  | In %.           |                                                                                                    |
+| min_identity_abricate               | "95"                  | In %.           |                                                                                                    |
+| cluster_identity_cd_hit             | "0.95"                | 1 equals 100 %. | See https://github.com/weizhongli/cdhit/wiki/3.-User's-Guide#CDHITEST                              |
 | cluster_wordsize_cd_hit             | "9"                   |                 | See https://github.com/weizhongli/cdhit/wiki/3.-User's-Guide#CDHITEST                              |
 | cluster_length_dif_cd_hit           | "0.9"                 |                 | See https://github.com/weizhongli/cdhit/wiki/3.-User's-Guide#CDHITEST                              |
 | Kmersize_kma                        | "16"                  | Kmer size.      | For kma index.                                                                                     |
@@ -150,13 +135,7 @@ If you want to add more data you must delete all output except
  input_list file. If you want to use a difference reference database you must delete the entire
  output directory and start over. 
 
-#### Using Computerome 2 and having problems with conda?
-If running the pipeline gives an error message related to conda then it 
-may be because you already have an enviroment loaded you need to delete. 
 
-On C2 you only have space for 10 GB in your personal root directory and the conda environment takes up some space.
-Go to your personal root `cd ` and delete .conda: `rm -r .conda`. Also delete some other files if you have a lot of junk in your personal dir.
-In the Flankophile pipeline directory delete ./snakemake/conda and ./snakemake/conda-archieve.
 
 
 
@@ -213,19 +192,24 @@ Alex Vincent Thorn
 alvit@food.dtu.dk
 
 
+## Acknowledgement
+
+Head Supervisor Frank Møller Aarestrup.
+
+Supervisor Patrick Munk.
+
 ## License
 
-## Acknowledgement
+TBA
 
 
 ## Citations
 
-This section is not yet complete!
 
 
 **Abricate**
 
-By Torsten Seemann
+By Torsten Seemann.
 
 [https://github.com/tseemann/abricate](https://github.com/tseemann/abricate)
 
@@ -234,14 +218,28 @@ By Torsten Seemann
 
 **any2fasta**
 
+By Torsten Seemann.
+
+[github.com/tseemann/any2fasta](https://github.com/tseemann/any2fasta)
+
 
 **bedtools**
+
+[Bedtools documentation](https://bedtools.readthedocs.io/en/latest/)
 
 
 **blast**
 
+[blast.ncbi.nlm.nih.gov/Blast.cgi](https://blast.ncbi.nlm.nih.gov/Blast.cgi)
+
 
 **cd-hit**
+
+[weizhong-lab.ucsd.edu/cd-hit/](http://weizhong-lab.ucsd.edu/cd-hit/)
+
+[cd-hit.org](http://cd-hit.org)
+
+[CD-HIT: accelerated for clustering the next-generation sequencing data](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3516142/)
 
 
 **clearcut**
@@ -257,33 +255,41 @@ By Torsten Seemann
 
 
 
-**kma**
+**KMA**
 
-By Philip T.L.C. Clausen
+By Philip T.L.C. Clausen.
   
 [https://bitbucket.org/genomicepidemiology/kma/src/master/](https://bitbucket.org/genomicepidemiology/kma/src/master/)
 
 [Rapid and precise alignment of raw reads against redundant databases with KMA](https://pubmed.ncbi.nlm.nih.gov/30157759/)
-
+ 
+Philip T.L.C. Clausen, Frank M. Aarestrup & Ole Lund, "Rapid and precise alignment of raw reads against redundant databases with KMA", BMC Bioinformatics, 2018;19:307. 
+ 
 
 
 
 **prokka**
 
-By Torsten Seemann
+By Torsten Seemann.
 
 [https://github.com/tseemann/prokka](https://github.com/tseemann/prokka)
 
-[Prokka: rapid prokaryotic genome annotation](https://academic.oup.com/bioinformatics/article/30/14/2068/2390517)
-
+Seemann T. 
+[Prokka: rapid prokaryotic genome annotation](https://academic.oup.com/bioinformatics/article/30/14/2068/2390517) 
+Bioinformatics 2014 Jul 15;30(14):2068-9. [PMID:24642063](https://pubmed.ncbi.nlm.nih.gov/24642063/)
 
 
 
 **seqkit**
 
+[bioinf.shenwei.me/seqkit/](https://bioinf.shenwei.me/seqkit/)
+
 
 **Snakemake**
 
+[Snakemake docs](https://snakemake.readthedocs.io/en/stable/)
+
+[Sustainable data analysis with Snakemake](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC8114187/)
 
 
 
