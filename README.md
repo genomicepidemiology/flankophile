@@ -60,20 +60,45 @@ The uptodate ResFinder database is found [here](https://bitbucket.org/genomicepi
 
 #### Sample input list
 
-Your sample input data must consist of a number of assemblies or genomes in multifasta format. One multifasta per sample. You can input as many samples as wanted. You have to use either an assembly or a contig input file. Instead of entire assemblies you can also use induvidual bins from a binned assembly. It does not matter, any collection of contigs in a multifasta file will work.
+Your sample input data must consist of a number of assemblies or genomes in DNA multifasta format. One multifasta per sample. You can input as many samples as wanted. You have to use one of two input file formats: assembly input file or contig input file. Instead of entire assemblies you can also use induvidual bins from a binned assembly and use those induvidual bins as "assemblies". It does not matter, any collection of contigs in a multifasta file will work.
+
+The pipeline will ignore lines that start with **#**. This is useful if you want to add human-readable headers between different datasets in the file.
+
 
 **Assembly/bin level analysis**
 
-The recommended way is to use assembly-level analysis. This is when you want to analyse the entire assembly/bin and not analyse only a subset of the contigs in the multifasta.  The input file is a tsv file with two columns. The first column has to be a unique name for each input fasta, for example, "sample_1" or "e.coli_bin_32". 
+The recommended way is to use assembly-level analysis. This is when you want to analyse the entire assembly/bin and not analyse only a subset of the contigs in the multifasta.  The input file is a tsv file with two columns. The first column has to be a unique name for each input fasta, for example, "sample_1" or "e.coli_bin_32". The name must not contain whitespace.
 
-The second column is the full path to the fasta file, including the file name. The pipeline will ignore lines that start with #. This is useful if you want to add human-readable headers between different datasets in the file.
+The second column is the full path to the fasta file, including the file name. 
 In [test_input_assemblies_list_small.tsv](input/example_input_files/test_input_assemblies_list_small.tsv) you can see an example of an assembly level input file. 
+
+| #assembly_name | path                                   |
+|----------------|----------------------------------------|
+| dog_sample_1   | home/data/dog_v1.fasta                 |
+| dog_sample_2   | home/data/dog_v2.fasta                 |
+| pig_sample     | home/data/pig_sample.fsa               |
+| cat_sample     | home/data/old/cat_ER34793_sample.fasta |
+
 
 **Config level analysis**
 
 You can use this type op input files if you are only interested in a specific contigs from each multifasta. This may be relavant if for example you have used a tool to analyse which contigs in a assembly/bin that are from plasmids and now you only want to run flankophile on those contigs.
-The format is a tsv file with three columns. One line per contig. The first column contains a nickname for the input fasta. It has to be a unique for each input fasta but contigs from the same assembly/bin will have the same name in collumn 1. The second is the name of the contig. This has to be unique for each input fasta. The third column is the full path to the fasta. 
+
+The format is a tsv file with three columns. One line per contig. The first column contains a unique nickname for the input fasta. The name must not contain whitespace and is has to be unique for each different fasta path. The third column is the full path to the fasta.  The second column is the name of the contig. The name of the contig is the fasta header without the **>**. This has to be unique within each fasta and must not contain whitespace. In this file there is one line per contig. Since you are propably the interested in many contigs from each fasta the values in column 1 and 3 will be identical for many lines, while the second one will be different. 
+
+ It has to be a unique for each input fasta, but contigs from the same assembly/bin will have the same name in collumn 1. The second column is the name of the contig. This has to be unique for each input fasta.  
 In [test_input_contig_list_small.tsv](input/example_input_files/test_input_contig_list_small.tsv) you can see an example of a contig level input file. 
+
+| #assembly_name | contig_name  | path                                   |
+|----------------|--------------|----------------------------------------|
+| dog_sample_1   | contig_27    | home/data/dog_v1.fasta                 |
+| dog_sample_1   | contig_35    | home/data/dog_v1.fasta                 |
+| dog_sample_2   | c_45         | home/data/dog_v2.fasta                 |
+| dog_sample_2   | c_66         | home/data/dog_v2.fasta                 |
+| dog_sample_2   | c_89         | home/data/dog_v2.fasta                 |
+| pig_sample     | contig_44    | home/data/pig_sample.fsa               |
+| cat_sample     | Contig_10003 | home/data/old/cat_ER34793_sample.fasta |
+| cat_sample     | Contig_10009 | home/data/old/cat_ER34793_sample.fasta |
 
 
 ### Configuration file
