@@ -189,6 +189,8 @@ In step 3 the tsv from step 2 has been filtered on flank length. Gene observatio
  edge of a contig that there is not space for the full desired flank length are discarded. 
  3_abricate_filter_length.report contains information on how many gene observtions that were discarded during filtering.
  3_final_gene_results.tsv contains all the gene observations that are included in the further analysis.
+ 
+ See example of [output folder 2 for a full flankophile run](example_output/2_filter_gene_observations/)
 
 
 **3_extract_sequences**
@@ -203,7 +205,7 @@ The rest of the contents of this folder can be deleted by the user without loss 
 **5_gene_clusters**
 
 Contains one directory for each reference gene cluster. Directory names have two parts. The first part is a unique number. 
-The second part after the underscore is the first part of the name of the gene that seeded the cluster.  
+The second part after the underscore is the first part of the name of the gene that seeded the cluster. See example of output from an induvidual [gene family cluster](example_output/5_gene_clusters/0_blaSHV-187/) .
 
 ## Visualization
 
