@@ -190,7 +190,7 @@ In step 3 the tsv from step 2 has been filtered on flank length. Gene observatio
  3_abricate_filter_length.report contains information on how many gene observtions that were discarded during filtering.
  3_final_gene_results.tsv contains all the gene observations that are included in the further analysis.
  
- See example of [output folder 2 for a full flankophile run](example_output/2_filter_gene_observations/)
+ See **[example of output folder 2 for a full flankophile run](example_output/2_filter_gene_observations/)**.
 
 
 **3_extract_sequences**
@@ -205,14 +205,21 @@ The rest of the contents of this folder can be deleted by the user without loss 
 **5_gene_clusters**
 
 Contains one directory for each reference gene cluster. Directory names have two parts. The first part is a unique number. 
-The second part after the underscore is the first part of the name of the gene that seeded the cluster. See example of output from an induvidual [gene family cluster](example_output/5_gene_clusters/0_blaSHV-187/) .
+The second part after the underscore is the first part of the name of the gene that seeded the cluster. 
+See **[example of output from an induvidual gene family cluster](example_output/5_gene_clusters/0_blaSHV-187/)**.
+
+| **Nickname**     | **Explanation**                                                                      |
+|------------------|--------------------------------------------------------------------------------------|
+| flanks_with_gene | The DNA sequence of target gene and upstreams and downstreams flanking regions.      |
+| just_gene        | The DNA sequence of target gene only.                                                |
+| masked_gene      | The DNA sequence of flanks of target gene. Target genes is included but masked as N. |
 
 ## Visualization
 
 The R script [plot_gene_clusters_from_flankophile.R](R/plot_gene_clusters_from_flankophile.R)
  can be used to visualize the results in output folder 5.
  It plots distance trees with gene annotation for a gene cluster. 
-The trees are based on the distance matrices. 
+The trees are based on the distance matrices. See [distance matrix format](example_output/5_gene_clusters/0_blaSHV-187/0_blaSHV-187.flanks_with_gene_dist). 
 
 The script can be run with RStudio and should be run with the R directory as the working directory. R version 4.1.2 was used for development. Certain packages will not work with all versions of R. Try 4.1.2 or 4.1.3.
 
