@@ -212,27 +212,27 @@ The R script [plot_gene_clusters_from_flankophile.R](R/plot_gene_clusters_from_f
  It plots distance trees with gene annotation for a gene cluster. 
 The trees are based on the distance matrices. 
 
-The script can be run with RStudio and should be run with the R directory as the working directory.
+The script can be run with RStudio and should be run with the R directory as the working directory. R version 4.1.2 was used for development. Certain packages will not work with all versions of R. Try 4.1.2 or 4.1.3.
+
 
 **[Example of output](R/Demo_R_plot.pdf)**
 
 ## Contact
 Alex Vincent Thorn
+
 alvit@food.dtu.dk
 
 
-## Acknowledgement
+## Supervisors
 
 Head Supervisor Frank Møller Aarestrup.
 
 Supervisor Patrick Munk.
 
-## License
-
-TBA
 
 
-## Citations
+
+## Tools used in the pipeline
 
 
 
@@ -321,5 +321,13 @@ Bioinformatics 2014 Jul 15;30(14):2068-9. [PMID:24642063](https://pubmed.ncbi.nl
 [Sustainable data analysis with Snakemake](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC8114187/)
 
 
+## License
 
+Copyright (c) 2022, Alex Vincent Thorn, Technical University of Denmark All rights reserved.
 
+Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at
+```
+http://www.apache.org/licenses/LICENSE-2.0
+```
+
+Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.

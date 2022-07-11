@@ -1,0 +1,234 @@
+[11:59:14] This is prokka 1.14.6
+[11:59:14] Written by Torsten Seemann <torsten.seemann@gmail.com>
+[11:59:14] Homepage is https://github.com/tseemann/prokka
+[11:59:14] Local time is Mon Jul 11 11:59:14 2022
+[11:59:14] You are aletho
+[11:59:14] Operating system is linux
+[11:59:14] You have BioPerl 1.7.8
+[11:59:14] System has 40 cores.
+[11:59:14] Will use maximum of 8 cores.
+[11:59:14] Annotating as >>> Bacteria <<<
+[11:59:14] Generating locus_tag from 'output/5_gene_clusters/0_blaSHV-187/0_blaSHV-187.flanks_with_gene_fasta' contents.
+[11:59:14] Setting --locustag MMCAELCA from MD5 66cae5cacc71af42f3bc6def4a04a23b
+[11:59:14] Re-using existing --outdir output/5_gene_clusters/0_blaSHV-187/prokka
+[11:59:14] Using filename prefix: 0_blaSHV-187.XXX
+[11:59:14] Setting HMMER_NCPU=1
+[11:59:14] Writing log to: output/5_gene_clusters/0_blaSHV-187/prokka/0_blaSHV-187.log
+[11:59:14] Command: /home/projects/cge/data/projects/77/flankophile/.snakemake/conda/5f831a547a0957f0345f86b8a86ea0eb/bin/prokka --proteins output/user_db --outdir output/5_gene_clusters/0_blaSHV-187/prokka --force --prefix 0_blaSHV-187 output/5_gene_clusters/0_blaSHV-187/0_blaSHV-187.flanks_with_gene_fasta
+[11:59:14] Appending to PATH: /home/projects/cge/data/projects/77/flankophile/.snakemake/conda/5f831a547a0957f0345f86b8a86ea0eb/bin
+[11:59:14] Looking for 'aragorn' - found /home/projects/cge/data/projects/77/flankophile/.snakemake/conda/5f831a547a0957f0345f86b8a86ea0eb/bin/aragorn
+[11:59:14] Determined aragorn version is 001002 from 'ARAGORN v1.2.41 Dean Laslett'
+[11:59:14] Looking for 'barrnap' - found /home/projects/cge/data/projects/77/flankophile/.snakemake/conda/5f831a547a0957f0345f86b8a86ea0eb/bin/barrnap
+[11:59:14] Determined barrnap version is 000009 from 'barrnap 0.9'
+[11:59:14] Looking for 'blastp' - found /home/projects/cge/data/projects/77/flankophile/.snakemake/conda/5f831a547a0957f0345f86b8a86ea0eb/bin/blastp
+[11:59:15] Determined blastp version is 002012 from 'blastp: 2.12.0+'
+[11:59:15] Looking for 'cmpress' - found /home/projects/cge/data/projects/77/flankophile/.snakemake/conda/5f831a547a0957f0345f86b8a86ea0eb/bin/cmpress
+[11:59:15] Determined cmpress version is 001001 from '# INFERNAL 1.1.4 (Dec 2020)'
+[11:59:15] Looking for 'cmscan' - found /home/projects/cge/data/projects/77/flankophile/.snakemake/conda/5f831a547a0957f0345f86b8a86ea0eb/bin/cmscan
+[11:59:15] Determined cmscan version is 001001 from '# INFERNAL 1.1.4 (Dec 2020)'
+[11:59:15] Looking for 'egrep' - found /bin/egrep
+[11:59:15] Looking for 'find' - found /bin/find
+[11:59:15] Looking for 'grep' - found /bin/grep
+[11:59:15] Looking for 'hmmpress' - found /home/projects/cge/data/projects/77/flankophile/.snakemake/conda/5f831a547a0957f0345f86b8a86ea0eb/bin/hmmpress
+[11:59:15] Determined hmmpress version is 003003 from '# HMMER 3.3.2 (Nov 2020); http://hmmer.org/'
+[11:59:15] Looking for 'hmmscan' - found /home/projects/cge/data/projects/77/flankophile/.snakemake/conda/5f831a547a0957f0345f86b8a86ea0eb/bin/hmmscan
+[11:59:15] Determined hmmscan version is 003003 from '# HMMER 3.3.2 (Nov 2020); http://hmmer.org/'
+[11:59:15] Looking for 'java' - found /home/projects/cge/data/projects/77/flankophile/.snakemake/conda/5f831a547a0957f0345f86b8a86ea0eb/bin/java
+[11:59:15] Looking for 'makeblastdb' - found /home/projects/cge/data/projects/77/flankophile/.snakemake/conda/5f831a547a0957f0345f86b8a86ea0eb/bin/makeblastdb
+[11:59:15] Determined makeblastdb version is 002012 from 'makeblastdb: 2.12.0+'
+[11:59:15] Looking for 'minced' - found /home/projects/cge/data/projects/77/flankophile/.snakemake/conda/5f831a547a0957f0345f86b8a86ea0eb/bin/minced
+[11:59:16] Determined minced version is 004002 from 'minced 0.4.2'
+[11:59:16] Looking for 'parallel' - found /home/projects/cge/data/projects/77/flankophile/.snakemake/conda/5f831a547a0957f0345f86b8a86ea0eb/bin/parallel
+[11:59:16] Determined parallel version is 20220222 from 'GNU parallel 20220222'
+[11:59:16] Looking for 'prodigal' - found /home/projects/cge/data/projects/77/flankophile/.snakemake/conda/5f831a547a0957f0345f86b8a86ea0eb/bin/prodigal
+[11:59:16] Determined prodigal version is 002006 from 'Prodigal V2.6.3: February, 2016'
+[11:59:16] Looking for 'prokka-genbank_to_fasta_db' - found /home/projects/cge/data/projects/77/flankophile/.snakemake/conda/5f831a547a0957f0345f86b8a86ea0eb/bin/prokka-genbank_to_fasta_db
+[11:59:16] Looking for 'sed' - found /bin/sed
+[11:59:16] Looking for 'tbl2asn' - found /home/projects/cge/data/projects/77/flankophile/.snakemake/conda/5f831a547a0957f0345f86b8a86ea0eb/bin/tbl2asn
+[11:59:17] Determined tbl2asn version is 025007 from 'tbl2asn 25.7   arguments:'
+[11:59:17] Using genetic code table 11.
+[11:59:17] Loading and checking input file: output/5_gene_clusters/0_blaSHV-187/0_blaSHV-187.flanks_with_gene_fasta
+[11:59:17] Wrote 94 contigs totalling 222198 bp.
+[11:59:17] Predicting tRNAs and tmRNAs
+[11:59:17] Running: aragorn -l -gc11  -w output\/5_gene_clusters\/0_blaSHV\-187\/prokka\/0_blaSHV\-187\.fna
+[11:59:17] Found 0 tRNAs
+[11:59:17] Predicting Ribosomal RNAs
+[11:59:17] Running Barrnap with 8 threads
+[11:59:18] Found 0 rRNAs
+[11:59:18] Skipping ncRNA search, enable with --rfam if desired.
+[11:59:18] Total of 0 tRNA + rRNA features
+[11:59:18] Searching for CRISPR repeats
+[11:59:19] Found 0 CRISPRs
+[11:59:19] Predicting coding sequences
+[11:59:19] Contigs total 222198 bp, so using single mode
+[11:59:19] Running: prodigal -i output\/5_gene_clusters\/0_blaSHV\-187\/prokka\/0_blaSHV\-187\.fna -c -m -g 11 -p single -f sco -q
+[11:59:20] Found 374 CDS
+[11:59:20] Connecting features back to sequences
+[11:59:20] Not using genus-specific database. Try --usegenus to enable it.
+[11:59:20] Preparing user-supplied primary BLAST annotation source: output/user_db
+[11:59:20] Guessed source was in fasta format.
+[11:59:20] Running: makeblastdb -dbtype prot -in output\/user_db -out output\/5_gene_clusters\/0_blaSHV\-187\/prokka\/proteins -logfile /dev/null
+[11:59:21] Using /inference source as 'user_db'
+[11:59:21] Annotating CDS, please be patient.
+[11:59:21] Will use 8 CPUs for similarity searching.
+[11:59:21] There are still 374 unannotated CDS left (started with 374)
+[11:59:21] Will use blast to search against output/5_gene_clusters/0_blaSHV-187/prokka/proteins with 8 CPUs
+[11:59:21] Running: cat output\/5_gene_clusters\/0_blaSHV\-187\/prokka\/0_blaSHV\-187\.proteins\.tmp\.18380\.faa | parallel --gnu --plain -j 8 --block 4064 --recstart '>' --pipe blastp -query - -db output/5_gene_clusters/0_blaSHV-187/prokka/proteins -evalue 1e-09 -qcov_hsp_perc 80 -num_threads 1 -num_descriptions 1 -num_alignments 1 -seg no > output\/5_gene_clusters\/0_blaSHV\-187\/prokka\/0_blaSHV\-187\.proteins\.tmp\.18380\.blast 2> /dev/null
+[11:59:34] Modify product:  => hypothetical protein
+[11:59:34] Modify product:  => hypothetical protein
+[11:59:34] Modify product:  => hypothetical protein
+[11:59:34] Modify product:  => hypothetical protein
+[11:59:34] Modify product:  => hypothetical protein
+[11:59:34] Modify product:  => hypothetical protein
+[11:59:34] Modify product:  => hypothetical protein
+[11:59:34] Modify product:  => hypothetical protein
+[11:59:34] Modify product:  => hypothetical protein
+[11:59:34] Modify product:  => hypothetical protein
+[11:59:34] Modify product:  => hypothetical protein
+[11:59:34] Modify product:  => hypothetical protein
+[11:59:34] Modify product:  => hypothetical protein
+[11:59:34] Modify product:  => hypothetical protein
+[11:59:34] Modify product:  => hypothetical protein
+[11:59:34] Modify product:  => hypothetical protein
+[11:59:34] Modify product:  => hypothetical protein
+[11:59:34] Modify product:  => hypothetical protein
+[11:59:34] Modify product:  => hypothetical protein
+[11:59:34] Modify product:  => hypothetical protein
+[11:59:34] Modify product:  => hypothetical protein
+[11:59:34] Modify product:  => hypothetical protein
+[11:59:34] Modify product:  => hypothetical protein
+[11:59:34] Modify product:  => hypothetical protein
+[11:59:34] Modify product:  => hypothetical protein
+[11:59:34] Modify product:  => hypothetical protein
+[11:59:34] Modify product:  => hypothetical protein
+[11:59:34] Modify product:  => hypothetical protein
+[11:59:34] Modify product:  => hypothetical protein
+[11:59:34] Modify product:  => hypothetical protein
+[11:59:34] Modify product:  => hypothetical protein
+[11:59:34] Modify product:  => hypothetical protein
+[11:59:34] Modify product:  => hypothetical protein
+[11:59:34] Modify product:  => hypothetical protein
+[11:59:34] Modify product:  => hypothetical protein
+[11:59:34] Modify product:  => hypothetical protein
+[11:59:34] Modify product:  => hypothetical protein
+[11:59:34] Modify product:  => hypothetical protein
+[11:59:34] Modify product:  => hypothetical protein
+[11:59:34] Modify product:  => hypothetical protein
+[11:59:34] Modify product:  => hypothetical protein
+[11:59:34] Modify product:  => hypothetical protein
+[11:59:34] Modify product:  => hypothetical protein
+[11:59:34] Modify product:  => hypothetical protein
+[11:59:34] Modify product:  => hypothetical protein
+[11:59:34] Modify product:  => hypothetical protein
+[11:59:34] Modify product:  => hypothetical protein
+[11:59:34] Modify product:  => hypothetical protein
+[11:59:34] Modify product:  => hypothetical protein
+[11:59:34] Modify product:  => hypothetical protein
+[11:59:34] Modify product:  => hypothetical protein
+[11:59:34] Modify product:  => hypothetical protein
+[11:59:34] Modify product:  => hypothetical protein
+[11:59:34] Modify product:  => hypothetical protein
+[11:59:34] Modify product:  => hypothetical protein
+[11:59:34] Modify product:  => hypothetical protein
+[11:59:34] Modify product:  => hypothetical protein
+[11:59:34] Modify product:  => hypothetical protein
+[11:59:34] Modify product:  => hypothetical protein
+[11:59:34] Modify product:  => hypothetical protein
+[11:59:34] Modify product:  => hypothetical protein
+[11:59:34] Modify product:  => hypothetical protein
+[11:59:34] Modify product:  => hypothetical protein
+[11:59:34] Modify product:  => hypothetical protein
+[11:59:34] Modify product:  => hypothetical protein
+[11:59:34] Modify product:  => hypothetical protein
+[11:59:34] Modify product:  => hypothetical protein
+[11:59:34] Modify product:  => hypothetical protein
+[11:59:34] Modify product:  => hypothetical protein
+[11:59:34] Modify product:  => hypothetical protein
+[11:59:34] Modify product:  => hypothetical protein
+[11:59:34] Modify product:  => hypothetical protein
+[11:59:34] Modify product:  => hypothetical protein
+[11:59:34] Modify product:  => hypothetical protein
+[11:59:34] Modify product:  => hypothetical protein
+[11:59:34] Modify product:  => hypothetical protein
+[11:59:34] Modify product:  => hypothetical protein
+[11:59:34] Modify product:  => hypothetical protein
+[11:59:34] Modify product:  => hypothetical protein
+[11:59:34] Modify product:  => hypothetical protein
+[11:59:34] Modify product:  => hypothetical protein
+[11:59:34] Modify product:  => hypothetical protein
+[11:59:34] Modify product:  => hypothetical protein
+[11:59:34] Modify product:  => hypothetical protein
+[11:59:34] Modify product:  => hypothetical protein
+[11:59:34] Modify product:  => hypothetical protein
+[11:59:34] Modify product:  => hypothetical protein
+[11:59:34] Modify product:  => hypothetical protein
+[11:59:34] Modify product:  => hypothetical protein
+[11:59:34] Modify product:  => hypothetical protein
+[11:59:34] Modify product:  => hypothetical protein
+[11:59:34] Modify product:  => hypothetical protein
+[11:59:34] Modify product:  => hypothetical protein
+[11:59:34] Modify product:  => hypothetical protein
+[11:59:34] Cleaned 94 /product names
+[11:59:34] Deleting unwanted file: output/5_gene_clusters/0_blaSHV-187/prokka/0_blaSHV-187.proteins.tmp.18380.faa
+[11:59:34] Deleting unwanted file: output/5_gene_clusters/0_blaSHV-187/prokka/0_blaSHV-187.proteins.tmp.18380.blast
+[11:59:34] There are still 280 unannotated CDS left (started with 374)
+[11:59:34] Will use blast to search against /home/projects/cge/data/projects/77/flankophile/.snakemake/conda/5f831a547a0957f0345f86b8a86ea0eb/db/kingdom/Bacteria/IS with 8 CPUs
+[11:59:34] Running: cat output\/5_gene_clusters\/0_blaSHV\-187\/prokka\/0_blaSHV\-187\.IS\.tmp\.18380\.faa | parallel --gnu --plain -j 8 --block 2247 --recstart '>' --pipe blastp -query - -db /home/projects/cge/data/projects/77/flankophile/.snakemake/conda/5f831a547a0957f0345f86b8a86ea0eb/db/kingdom/Bacteria/IS -evalue 1e-30 -qcov_hsp_perc 90 -num_threads 1 -num_descriptions 1 -num_alignments 1 -seg no > output\/5_gene_clusters\/0_blaSHV\-187\/prokka\/0_blaSHV\-187\.IS\.tmp\.18380\.blast 2> /dev/null
+[11:59:38] Deleting unwanted file: output/5_gene_clusters/0_blaSHV-187/prokka/0_blaSHV-187.IS.tmp.18380.faa
+[11:59:38] Deleting unwanted file: output/5_gene_clusters/0_blaSHV-187/prokka/0_blaSHV-187.IS.tmp.18380.blast
+[11:59:38] There are still 280 unannotated CDS left (started with 374)
+[11:59:38] Will use blast to search against /home/projects/cge/data/projects/77/flankophile/.snakemake/conda/5f831a547a0957f0345f86b8a86ea0eb/db/kingdom/Bacteria/AMR with 8 CPUs
+[11:59:38] Running: cat output\/5_gene_clusters\/0_blaSHV\-187\/prokka\/0_blaSHV\-187\.AMR\.tmp\.18380\.faa | parallel --gnu --plain -j 8 --block 2247 --recstart '>' --pipe blastp -query - -db /home/projects/cge/data/projects/77/flankophile/.snakemake/conda/5f831a547a0957f0345f86b8a86ea0eb/db/kingdom/Bacteria/AMR -evalue 1e-300 -qcov_hsp_perc 90 -num_threads 1 -num_descriptions 1 -num_alignments 1 -seg no > output\/5_gene_clusters\/0_blaSHV\-187\/prokka\/0_blaSHV\-187\.AMR\.tmp\.18380\.blast 2> /dev/null
+[11:59:42] Deleting unwanted file: output/5_gene_clusters/0_blaSHV-187/prokka/0_blaSHV-187.AMR.tmp.18380.faa
+[11:59:42] Deleting unwanted file: output/5_gene_clusters/0_blaSHV-187/prokka/0_blaSHV-187.AMR.tmp.18380.blast
+[11:59:42] There are still 280 unannotated CDS left (started with 374)
+[11:59:42] Will use blast to search against /home/projects/cge/data/projects/77/flankophile/.snakemake/conda/5f831a547a0957f0345f86b8a86ea0eb/db/kingdom/Bacteria/sprot with 8 CPUs
+[11:59:42] Running: cat output\/5_gene_clusters\/0_blaSHV\-187\/prokka\/0_blaSHV\-187\.sprot\.tmp\.18380\.faa | parallel --gnu --plain -j 8 --block 2247 --recstart '>' --pipe blastp -query - -db /home/projects/cge/data/projects/77/flankophile/.snakemake/conda/5f831a547a0957f0345f86b8a86ea0eb/db/kingdom/Bacteria/sprot -evalue 1e-09 -qcov_hsp_perc 80 -num_threads 1 -num_descriptions 1 -num_alignments 1 -seg no > output\/5_gene_clusters\/0_blaSHV\-187\/prokka\/0_blaSHV\-187\.sprot\.tmp\.18380\.blast 2> /dev/null
+[11:59:45] Deleting unwanted file: output/5_gene_clusters/0_blaSHV-187/prokka/0_blaSHV-187.sprot.tmp.18380.faa
+[11:59:45] Deleting unwanted file: output/5_gene_clusters/0_blaSHV-187/prokka/0_blaSHV-187.sprot.tmp.18380.blast
+[11:59:45] There are still 186 unannotated CDS left (started with 374)
+[11:59:45] Will use hmmer3 to search against /home/projects/cge/data/projects/77/flankophile/.snakemake/conda/5f831a547a0957f0345f86b8a86ea0eb/db/hmm/HAMAP.hmm with 8 CPUs
+[11:59:45] Running: cat output\/5_gene_clusters\/0_blaSHV\-187\/prokka\/0_blaSHV\-187\.HAMAP\.hmm\.tmp\.18380\.faa | parallel --gnu --plain -j 8 --block 811 --recstart '>' --pipe hmmscan --noali --notextw --acc -E 1e-09 --cpu 1 /home/projects/cge/data/projects/77/flankophile/.snakemake/conda/5f831a547a0957f0345f86b8a86ea0eb/db/hmm/HAMAP.hmm /dev/stdin > output\/5_gene_clusters\/0_blaSHV\-187\/prokka\/0_blaSHV\-187\.HAMAP\.hmm\.tmp\.18380\.hmmer3 2> /dev/null
+[11:59:48] Deleting unwanted file: output/5_gene_clusters/0_blaSHV-187/prokka/0_blaSHV-187.HAMAP.hmm.tmp.18380.faa
+[11:59:48] Deleting unwanted file: output/5_gene_clusters/0_blaSHV-187/prokka/0_blaSHV-187.HAMAP.hmm.tmp.18380.hmmer3
+[11:59:48] Deleting unwanted file: output/5_gene_clusters/0_blaSHV-187/prokka/proteins.psq
+[11:59:48] Deleting unwanted file: output/5_gene_clusters/0_blaSHV-187/prokka/proteins.phr
+[11:59:48] Deleting unwanted file: output/5_gene_clusters/0_blaSHV-187/prokka/proteins.pin
+[11:59:48] Labelling remaining 186 proteins as 'hypothetical protein'
+[11:59:48] Found 2 unique /gene codes.
+[11:59:48] Fixed 89 duplicate /gene - glpR_1 glpR_2 glpR_3 glpR_4 glpR_5 glpR_6 glpR_7 glpR_8 glpR_9 glpR_10 glpR_11 glpR_12 glpR_13 glpR_14 glpR_15 glpR_16 glpR_17 glpR_18 glpR_19 glpR_20 glpR_21 glpR_22 glpR_23 glpR_24 glpR_25 glpR_26 glpR_27 glpR_28 glpR_29 glpR_30 glpR_31 glpR_32 glpR_33 glpR_34 glpR_35 glpR_36 glpR_37 glpR_38 glpR_39 glpR_40 glpR_41 glpR_42 glpR_43 glpR_44 glpR_45 glpR_46 glpR_47 glpR_48 glpR_49 glpR_50 glpR_51 glpR_52 glpR_53 glpR_54 glpR_55 glpR_56 glpR_57 glpR_58 glpR_59 glpR_60 glpR_61 glpR_62 glpR_63 glpR_64 glpR_65 glpR_66 glpR_67 glpR_68 glpR_69 glpR_70 glpR_71 glpR_72 glpR_73 glpR_74 glpR_75 glpR_76 glpR_77 glpR_78 glpR_79 glpR_80 glpR_81 glpR_82 glpR_83 glpR_84 glpR_85 glpR_86 glpR_87 glpR_88 glpR_89
+[11:59:48] Fixed 5 duplicate /gene - csqR_1 csqR_2 csqR_3 csqR_4 csqR_5
+[11:59:48] Fixed 2 colliding /gene names.
+[11:59:48] Adding /locus_tag identifiers
+[11:59:48] Assigned 374 locus_tags to CDS and RNA features.
+[11:59:48] Writing outputs to output/5_gene_clusters/0_blaSHV-187/prokka/
+[11:59:48] Generating annotation statistics file
+[11:59:48] Generating Genbank and Sequin files
+[11:59:48] Running: tbl2asn -V b -a r10k -l paired-ends -M n -N 1 -y 'Annotated using prokka 1.14.6 from https://github.com/tseemann/prokka' -Z output\/5_gene_clusters\/0_blaSHV\-187\/prokka\/0_blaSHV\-187\.err -i output\/5_gene_clusters\/0_blaSHV\-187\/prokka\/0_blaSHV\-187\.fsa 2> /dev/null
+[11:59:49] Deleting unwanted file: output/5_gene_clusters/0_blaSHV-187/prokka/errorsummary.val
+[11:59:49] Deleting unwanted file: output/5_gene_clusters/0_blaSHV-187/prokka/0_blaSHV-187.dr
+[11:59:49] Deleting unwanted file: output/5_gene_clusters/0_blaSHV-187/prokka/0_blaSHV-187.fixedproducts
+[11:59:49] Deleting unwanted file: output/5_gene_clusters/0_blaSHV-187/prokka/0_blaSHV-187.ecn
+[11:59:49] Deleting unwanted file: output/5_gene_clusters/0_blaSHV-187/prokka/0_blaSHV-187.val
+[11:59:49] Repairing broken .GBK output that tbl2asn produces...
+[11:59:49] Running: sed 's/COORDINATES: profile/COORDINATES:profile/' < output\/5_gene_clusters\/0_blaSHV\-187\/prokka\/0_blaSHV\-187\.gbf > output\/5_gene_clusters\/0_blaSHV\-187\/prokka\/0_blaSHV\-187\.gbk
+[11:59:49] Deleting unwanted file: output/5_gene_clusters/0_blaSHV-187/prokka/0_blaSHV-187.gbf
+[11:59:49] Output files:
+[11:59:49] output/5_gene_clusters/0_blaSHV-187/prokka/0_blaSHV-187.tsv
+[11:59:49] output/5_gene_clusters/0_blaSHV-187/prokka/0_blaSHV-187.txt
+[11:59:49] output/5_gene_clusters/0_blaSHV-187/prokka/0_blaSHV-187.tbl
+[11:59:49] output/5_gene_clusters/0_blaSHV-187/prokka/0_blaSHV-187.err
+[11:59:49] output/5_gene_clusters/0_blaSHV-187/prokka/0_blaSHV-187.log
+[11:59:49] output/5_gene_clusters/0_blaSHV-187/prokka/0_blaSHV-187.fna
+[11:59:49] output/5_gene_clusters/0_blaSHV-187/prokka/0_blaSHV-187.gff
+[11:59:49] output/5_gene_clusters/0_blaSHV-187/prokka/0_blaSHV-187.faa
+[11:59:49] output/5_gene_clusters/0_blaSHV-187/prokka/0_blaSHV-187.ffn
+[11:59:49] output/5_gene_clusters/0_blaSHV-187/prokka/0_blaSHV-187.sqn
+[11:59:49] output/5_gene_clusters/0_blaSHV-187/prokka/0_blaSHV-187.gbk
+[11:59:49] output/5_gene_clusters/0_blaSHV-187/prokka/0_blaSHV-187.fsa
+[11:59:49] Annotation finished successfully.
+[11:59:49] Walltime used: 0.58 minutes
+[11:59:49] If you use this result please cite the Prokka paper:
+[11:59:49] Seemann T (2014) Prokka: rapid prokaryotic genome annotation. Bioinformatics. 30(14):2068-9.
+[11:59:49] Type 'prokka --citation' for more details.
+[11:59:49] Share and enjoy!

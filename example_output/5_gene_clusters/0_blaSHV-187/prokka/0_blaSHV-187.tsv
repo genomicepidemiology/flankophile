@@ -1,0 +1,375 @@
+locus_tag	ftype	length_bp	gene	EC_number	COG	product
+MMCAELCA_00001	CDS	261				hypothetical protein
+MMCAELCA_00002	CDS	132				hypothetical protein
+MMCAELCA_00003	CDS	915				hypothetical protein
+MMCAELCA_00004	CDS	669	glpR_1		COG1349	Glycerol-3-phosphate regulon repressor
+MMCAELCA_00005	CDS	261				hypothetical protein
+MMCAELCA_00006	CDS	132				hypothetical protein
+MMCAELCA_00007	CDS	915				hypothetical protein
+MMCAELCA_00008	CDS	723	glpR_2		COG1349	Glycerol-3-phosphate regulon repressor
+MMCAELCA_00009	CDS	261				hypothetical protein
+MMCAELCA_00010	CDS	132				hypothetical protein
+MMCAELCA_00011	CDS	915				hypothetical protein
+MMCAELCA_00012	CDS	723	glpR_3		COG1349	Glycerol-3-phosphate regulon repressor
+MMCAELCA_00013	CDS	261				hypothetical protein
+MMCAELCA_00014	CDS	132				hypothetical protein
+MMCAELCA_00015	CDS	915				hypothetical protein
+MMCAELCA_00016	CDS	723	glpR_4		COG1349	Glycerol-3-phosphate regulon repressor
+MMCAELCA_00017	CDS	261				hypothetical protein
+MMCAELCA_00018	CDS	132				hypothetical protein
+MMCAELCA_00019	CDS	915				hypothetical protein
+MMCAELCA_00020	CDS	723	glpR_5		COG1349	Glycerol-3-phosphate regulon repressor
+MMCAELCA_00021	CDS	261				hypothetical protein
+MMCAELCA_00022	CDS	132				hypothetical protein
+MMCAELCA_00023	CDS	915				hypothetical protein
+MMCAELCA_00024	CDS	723	glpR_6		COG1349	Glycerol-3-phosphate regulon repressor
+MMCAELCA_00025	CDS	261				hypothetical protein
+MMCAELCA_00026	CDS	132				hypothetical protein
+MMCAELCA_00027	CDS	915				hypothetical protein
+MMCAELCA_00028	CDS	723	glpR_7		COG1349	Glycerol-3-phosphate regulon repressor
+MMCAELCA_00029	CDS	261				hypothetical protein
+MMCAELCA_00030	CDS	120				hypothetical protein
+MMCAELCA_00031	CDS	915				hypothetical protein
+MMCAELCA_00032	CDS	705	csqR_1		COG1349	HTH-type transcriptional repressor CsqR
+MMCAELCA_00033	CDS	261				hypothetical protein
+MMCAELCA_00034	CDS	132				hypothetical protein
+MMCAELCA_00035	CDS	915				hypothetical protein
+MMCAELCA_00036	CDS	723	glpR_8		COG1349	Glycerol-3-phosphate regulon repressor
+MMCAELCA_00037	CDS	261				hypothetical protein
+MMCAELCA_00038	CDS	132				hypothetical protein
+MMCAELCA_00039	CDS	915				hypothetical protein
+MMCAELCA_00040	CDS	723	glpR_9		COG1349	Glycerol-3-phosphate regulon repressor
+MMCAELCA_00041	CDS	261				hypothetical protein
+MMCAELCA_00042	CDS	132				hypothetical protein
+MMCAELCA_00043	CDS	915				hypothetical protein
+MMCAELCA_00044	CDS	723	glpR_10		COG1349	Glycerol-3-phosphate regulon repressor
+MMCAELCA_00045	CDS	261				hypothetical protein
+MMCAELCA_00046	CDS	132				hypothetical protein
+MMCAELCA_00047	CDS	867				hypothetical protein
+MMCAELCA_00048	CDS	723	glpR_11		COG1349	Glycerol-3-phosphate regulon repressor
+MMCAELCA_00049	CDS	261				hypothetical protein
+MMCAELCA_00050	CDS	132				hypothetical protein
+MMCAELCA_00051	CDS	915				hypothetical protein
+MMCAELCA_00052	CDS	723	glpR_12		COG1349	Glycerol-3-phosphate regulon repressor
+MMCAELCA_00053	CDS	261				hypothetical protein
+MMCAELCA_00054	CDS	132				hypothetical protein
+MMCAELCA_00055	CDS	915				hypothetical protein
+MMCAELCA_00056	CDS	723	glpR_13		COG1349	Glycerol-3-phosphate regulon repressor
+MMCAELCA_00057	CDS	261				hypothetical protein
+MMCAELCA_00058	CDS	132				hypothetical protein
+MMCAELCA_00059	CDS	915				hypothetical protein
+MMCAELCA_00060	CDS	723	glpR_14		COG1349	Glycerol-3-phosphate regulon repressor
+MMCAELCA_00061	CDS	261				hypothetical protein
+MMCAELCA_00062	CDS	132				hypothetical protein
+MMCAELCA_00063	CDS	915				hypothetical protein
+MMCAELCA_00064	CDS	723	glpR_15		COG1349	Glycerol-3-phosphate regulon repressor
+MMCAELCA_00065	CDS	261				hypothetical protein
+MMCAELCA_00066	CDS	132				hypothetical protein
+MMCAELCA_00067	CDS	915				hypothetical protein
+MMCAELCA_00068	CDS	723	glpR_16		COG1349	Glycerol-3-phosphate regulon repressor
+MMCAELCA_00069	CDS	261				hypothetical protein
+MMCAELCA_00070	CDS	132				hypothetical protein
+MMCAELCA_00071	CDS	915				hypothetical protein
+MMCAELCA_00072	CDS	723	glpR_17		COG1349	Glycerol-3-phosphate regulon repressor
+MMCAELCA_00073	CDS	261				hypothetical protein
+MMCAELCA_00074	CDS	132				hypothetical protein
+MMCAELCA_00075	CDS	915				hypothetical protein
+MMCAELCA_00076	CDS	723	glpR_18		COG1349	Glycerol-3-phosphate regulon repressor
+MMCAELCA_00077	CDS	261				hypothetical protein
+MMCAELCA_00078	CDS	132				hypothetical protein
+MMCAELCA_00079	CDS	867				hypothetical protein
+MMCAELCA_00080	CDS	723	glpR_19		COG1349	Glycerol-3-phosphate regulon repressor
+MMCAELCA_00081	CDS	261				hypothetical protein
+MMCAELCA_00082	CDS	132				hypothetical protein
+MMCAELCA_00083	CDS	915				hypothetical protein
+MMCAELCA_00084	CDS	723	glpR_20		COG1349	Glycerol-3-phosphate regulon repressor
+MMCAELCA_00085	CDS	261				hypothetical protein
+MMCAELCA_00086	CDS	132				hypothetical protein
+MMCAELCA_00087	CDS	915				hypothetical protein
+MMCAELCA_00088	CDS	723	glpR_21		COG1349	Glycerol-3-phosphate regulon repressor
+MMCAELCA_00089	CDS	261				hypothetical protein
+MMCAELCA_00090	CDS	132				hypothetical protein
+MMCAELCA_00091	CDS	915				hypothetical protein
+MMCAELCA_00092	CDS	723	glpR_22		COG1349	Glycerol-3-phosphate regulon repressor
+MMCAELCA_00093	CDS	261				hypothetical protein
+MMCAELCA_00094	CDS	132				hypothetical protein
+MMCAELCA_00095	CDS	915				hypothetical protein
+MMCAELCA_00096	CDS	723	glpR_23		COG1349	Glycerol-3-phosphate regulon repressor
+MMCAELCA_00097	CDS	261				hypothetical protein
+MMCAELCA_00098	CDS	132				hypothetical protein
+MMCAELCA_00099	CDS	915				hypothetical protein
+MMCAELCA_00100	CDS	723	glpR_24		COG1349	Glycerol-3-phosphate regulon repressor
+MMCAELCA_00101	CDS	261				hypothetical protein
+MMCAELCA_00102	CDS	132				hypothetical protein
+MMCAELCA_00103	CDS	915				hypothetical protein
+MMCAELCA_00104	CDS	723	glpR_25		COG1349	Glycerol-3-phosphate regulon repressor
+MMCAELCA_00105	CDS	261				hypothetical protein
+MMCAELCA_00106	CDS	132				hypothetical protein
+MMCAELCA_00107	CDS	915				hypothetical protein
+MMCAELCA_00108	CDS	669	glpR_26		COG1349	Glycerol-3-phosphate regulon repressor
+MMCAELCA_00109	CDS	261				hypothetical protein
+MMCAELCA_00110	CDS	132				hypothetical protein
+MMCAELCA_00111	CDS	915				hypothetical protein
+MMCAELCA_00112	CDS	669	glpR_27		COG1349	Glycerol-3-phosphate regulon repressor
+MMCAELCA_00113	CDS	261				hypothetical protein
+MMCAELCA_00114	CDS	132				hypothetical protein
+MMCAELCA_00115	CDS	915				hypothetical protein
+MMCAELCA_00116	CDS	723	glpR_28		COG1349	Glycerol-3-phosphate regulon repressor
+MMCAELCA_00117	CDS	261				hypothetical protein
+MMCAELCA_00118	CDS	132				hypothetical protein
+MMCAELCA_00119	CDS	915				hypothetical protein
+MMCAELCA_00120	CDS	723	glpR_29		COG1349	Glycerol-3-phosphate regulon repressor
+MMCAELCA_00121	CDS	261				hypothetical protein
+MMCAELCA_00122	CDS	132				hypothetical protein
+MMCAELCA_00123	CDS	915				hypothetical protein
+MMCAELCA_00124	CDS	723	glpR_30		COG1349	Glycerol-3-phosphate regulon repressor
+MMCAELCA_00125	CDS	261				hypothetical protein
+MMCAELCA_00126	CDS	132				hypothetical protein
+MMCAELCA_00127	CDS	915				hypothetical protein
+MMCAELCA_00128	CDS	723	glpR_31		COG1349	Glycerol-3-phosphate regulon repressor
+MMCAELCA_00129	CDS	261				hypothetical protein
+MMCAELCA_00130	CDS	132				hypothetical protein
+MMCAELCA_00131	CDS	915				hypothetical protein
+MMCAELCA_00132	CDS	723	glpR_32		COG1349	Glycerol-3-phosphate regulon repressor
+MMCAELCA_00133	CDS	261				hypothetical protein
+MMCAELCA_00134	CDS	132				hypothetical protein
+MMCAELCA_00135	CDS	915				hypothetical protein
+MMCAELCA_00136	CDS	723	glpR_33		COG1349	Glycerol-3-phosphate regulon repressor
+MMCAELCA_00137	CDS	261				hypothetical protein
+MMCAELCA_00138	CDS	132				hypothetical protein
+MMCAELCA_00139	CDS	915				hypothetical protein
+MMCAELCA_00140	CDS	723	glpR_34		COG1349	Glycerol-3-phosphate regulon repressor
+MMCAELCA_00141	CDS	261				hypothetical protein
+MMCAELCA_00142	CDS	132				hypothetical protein
+MMCAELCA_00143	CDS	915				hypothetical protein
+MMCAELCA_00144	CDS	723	glpR_35		COG1349	Glycerol-3-phosphate regulon repressor
+MMCAELCA_00145	CDS	261				hypothetical protein
+MMCAELCA_00146	CDS	132				hypothetical protein
+MMCAELCA_00147	CDS	915				hypothetical protein
+MMCAELCA_00148	CDS	723	glpR_36		COG1349	Glycerol-3-phosphate regulon repressor
+MMCAELCA_00149	CDS	261				hypothetical protein
+MMCAELCA_00150	CDS	132				hypothetical protein
+MMCAELCA_00151	CDS	915				hypothetical protein
+MMCAELCA_00152	CDS	723	glpR_37		COG1349	Glycerol-3-phosphate regulon repressor
+MMCAELCA_00153	CDS	261				hypothetical protein
+MMCAELCA_00154	CDS	132				hypothetical protein
+MMCAELCA_00155	CDS	915				hypothetical protein
+MMCAELCA_00156	CDS	723	glpR_38		COG1349	Glycerol-3-phosphate regulon repressor
+MMCAELCA_00157	CDS	261				hypothetical protein
+MMCAELCA_00158	CDS	120				hypothetical protein
+MMCAELCA_00159	CDS	915				hypothetical protein
+MMCAELCA_00160	CDS	705	csqR_2		COG1349	HTH-type transcriptional repressor CsqR
+MMCAELCA_00161	CDS	261				hypothetical protein
+MMCAELCA_00162	CDS	132				hypothetical protein
+MMCAELCA_00163	CDS	915				hypothetical protein
+MMCAELCA_00164	CDS	723	glpR_39		COG1349	Glycerol-3-phosphate regulon repressor
+MMCAELCA_00165	CDS	261				hypothetical protein
+MMCAELCA_00166	CDS	132				hypothetical protein
+MMCAELCA_00167	CDS	867				hypothetical protein
+MMCAELCA_00168	CDS	723	glpR_40		COG1349	Glycerol-3-phosphate regulon repressor
+MMCAELCA_00169	CDS	261				hypothetical protein
+MMCAELCA_00170	CDS	132				hypothetical protein
+MMCAELCA_00171	CDS	915				hypothetical protein
+MMCAELCA_00172	CDS	723	glpR_41		COG1349	Glycerol-3-phosphate regulon repressor
+MMCAELCA_00173	CDS	261				hypothetical protein
+MMCAELCA_00174	CDS	132				hypothetical protein
+MMCAELCA_00175	CDS	915				hypothetical protein
+MMCAELCA_00176	CDS	723	glpR_42		COG1349	Glycerol-3-phosphate regulon repressor
+MMCAELCA_00177	CDS	261				hypothetical protein
+MMCAELCA_00178	CDS	132				hypothetical protein
+MMCAELCA_00179	CDS	915				hypothetical protein
+MMCAELCA_00180	CDS	723	glpR_43		COG1349	Glycerol-3-phosphate regulon repressor
+MMCAELCA_00181	CDS	261				hypothetical protein
+MMCAELCA_00182	CDS	132				hypothetical protein
+MMCAELCA_00183	CDS	915				hypothetical protein
+MMCAELCA_00184	CDS	723	glpR_44		COG1349	Glycerol-3-phosphate regulon repressor
+MMCAELCA_00185	CDS	261				hypothetical protein
+MMCAELCA_00186	CDS	132				hypothetical protein
+MMCAELCA_00187	CDS	915				hypothetical protein
+MMCAELCA_00188	CDS	669	glpR_45		COG1349	Glycerol-3-phosphate regulon repressor
+MMCAELCA_00189	CDS	261				hypothetical protein
+MMCAELCA_00190	CDS	132				hypothetical protein
+MMCAELCA_00191	CDS	915				hypothetical protein
+MMCAELCA_00192	CDS	723	glpR_46		COG1349	Glycerol-3-phosphate regulon repressor
+MMCAELCA_00193	CDS	261				hypothetical protein
+MMCAELCA_00194	CDS	132				hypothetical protein
+MMCAELCA_00195	CDS	867				hypothetical protein
+MMCAELCA_00196	CDS	723	glpR_47		COG1349	Glycerol-3-phosphate regulon repressor
+MMCAELCA_00197	CDS	261				hypothetical protein
+MMCAELCA_00198	CDS	132				hypothetical protein
+MMCAELCA_00199	CDS	867				hypothetical protein
+MMCAELCA_00200	CDS	723	glpR_48		COG1349	Glycerol-3-phosphate regulon repressor
+MMCAELCA_00201	CDS	261				hypothetical protein
+MMCAELCA_00202	CDS	132				hypothetical protein
+MMCAELCA_00203	CDS	915				hypothetical protein
+MMCAELCA_00204	CDS	723	glpR_49		COG1349	Glycerol-3-phosphate regulon repressor
+MMCAELCA_00205	CDS	261				hypothetical protein
+MMCAELCA_00206	CDS	132				hypothetical protein
+MMCAELCA_00207	CDS	915				hypothetical protein
+MMCAELCA_00208	CDS	723	glpR_50		COG1349	Glycerol-3-phosphate regulon repressor
+MMCAELCA_00209	CDS	261				hypothetical protein
+MMCAELCA_00210	CDS	132				hypothetical protein
+MMCAELCA_00211	CDS	915				hypothetical protein
+MMCAELCA_00212	CDS	723	glpR_51		COG1349	Glycerol-3-phosphate regulon repressor
+MMCAELCA_00213	CDS	261				hypothetical protein
+MMCAELCA_00214	CDS	132				hypothetical protein
+MMCAELCA_00215	CDS	915				hypothetical protein
+MMCAELCA_00216	CDS	723	glpR_52		COG1349	Glycerol-3-phosphate regulon repressor
+MMCAELCA_00217	CDS	261				hypothetical protein
+MMCAELCA_00218	CDS	132				hypothetical protein
+MMCAELCA_00219	CDS	915				hypothetical protein
+MMCAELCA_00220	CDS	723	glpR_53		COG1349	Glycerol-3-phosphate regulon repressor
+MMCAELCA_00221	CDS	261				hypothetical protein
+MMCAELCA_00222	CDS	120				hypothetical protein
+MMCAELCA_00223	CDS	915				hypothetical protein
+MMCAELCA_00224	CDS	705	csqR_3		COG1349	HTH-type transcriptional repressor CsqR
+MMCAELCA_00225	CDS	261				hypothetical protein
+MMCAELCA_00226	CDS	132				hypothetical protein
+MMCAELCA_00227	CDS	915				hypothetical protein
+MMCAELCA_00228	CDS	723	glpR_54		COG1349	Glycerol-3-phosphate regulon repressor
+MMCAELCA_00229	CDS	261				hypothetical protein
+MMCAELCA_00230	CDS	132				hypothetical protein
+MMCAELCA_00231	CDS	915				hypothetical protein
+MMCAELCA_00232	CDS	723	glpR_55		COG1349	Glycerol-3-phosphate regulon repressor
+MMCAELCA_00233	CDS	261				hypothetical protein
+MMCAELCA_00234	CDS	132				hypothetical protein
+MMCAELCA_00235	CDS	915				hypothetical protein
+MMCAELCA_00236	CDS	723	glpR_56		COG1349	Glycerol-3-phosphate regulon repressor
+MMCAELCA_00237	CDS	261				hypothetical protein
+MMCAELCA_00238	CDS	120				hypothetical protein
+MMCAELCA_00239	CDS	915				hypothetical protein
+MMCAELCA_00240	CDS	705	csqR_4		COG1349	HTH-type transcriptional repressor CsqR
+MMCAELCA_00241	CDS	261				hypothetical protein
+MMCAELCA_00242	CDS	132				hypothetical protein
+MMCAELCA_00243	CDS	915				hypothetical protein
+MMCAELCA_00244	CDS	723	glpR_57		COG1349	Glycerol-3-phosphate regulon repressor
+MMCAELCA_00245	CDS	261				hypothetical protein
+MMCAELCA_00246	CDS	132				hypothetical protein
+MMCAELCA_00247	CDS	915				hypothetical protein
+MMCAELCA_00248	CDS	723	glpR_58		COG1349	Glycerol-3-phosphate regulon repressor
+MMCAELCA_00249	CDS	261				hypothetical protein
+MMCAELCA_00250	CDS	132				hypothetical protein
+MMCAELCA_00251	CDS	915				hypothetical protein
+MMCAELCA_00252	CDS	723	glpR_59		COG1349	Glycerol-3-phosphate regulon repressor
+MMCAELCA_00253	CDS	261				hypothetical protein
+MMCAELCA_00254	CDS	132				hypothetical protein
+MMCAELCA_00255	CDS	915				hypothetical protein
+MMCAELCA_00256	CDS	723	glpR_60		COG1349	Glycerol-3-phosphate regulon repressor
+MMCAELCA_00257	CDS	261				hypothetical protein
+MMCAELCA_00258	CDS	120				hypothetical protein
+MMCAELCA_00259	CDS	915				hypothetical protein
+MMCAELCA_00260	CDS	705	csqR_5		COG1349	HTH-type transcriptional repressor CsqR
+MMCAELCA_00261	CDS	261				hypothetical protein
+MMCAELCA_00262	CDS	132				hypothetical protein
+MMCAELCA_00263	CDS	915				hypothetical protein
+MMCAELCA_00264	CDS	723	glpR_61		COG1349	Glycerol-3-phosphate regulon repressor
+MMCAELCA_00265	CDS	261				hypothetical protein
+MMCAELCA_00266	CDS	132				hypothetical protein
+MMCAELCA_00267	CDS	915				hypothetical protein
+MMCAELCA_00268	CDS	723	glpR_62		COG1349	Glycerol-3-phosphate regulon repressor
+MMCAELCA_00269	CDS	261				hypothetical protein
+MMCAELCA_00270	CDS	132				hypothetical protein
+MMCAELCA_00271	CDS	915				hypothetical protein
+MMCAELCA_00272	CDS	723	glpR_63		COG1349	Glycerol-3-phosphate regulon repressor
+MMCAELCA_00273	CDS	261				hypothetical protein
+MMCAELCA_00274	CDS	132				hypothetical protein
+MMCAELCA_00275	CDS	915				hypothetical protein
+MMCAELCA_00276	CDS	723	glpR_64		COG1349	Glycerol-3-phosphate regulon repressor
+MMCAELCA_00277	CDS	261				hypothetical protein
+MMCAELCA_00278	CDS	132				hypothetical protein
+MMCAELCA_00279	CDS	915				hypothetical protein
+MMCAELCA_00280	CDS	723	glpR_65		COG1349	Glycerol-3-phosphate regulon repressor
+MMCAELCA_00281	CDS	261				hypothetical protein
+MMCAELCA_00282	CDS	132				hypothetical protein
+MMCAELCA_00283	CDS	915				hypothetical protein
+MMCAELCA_00284	CDS	723	glpR_66		COG1349	Glycerol-3-phosphate regulon repressor
+MMCAELCA_00285	CDS	261				hypothetical protein
+MMCAELCA_00286	CDS	132				hypothetical protein
+MMCAELCA_00287	CDS	915				hypothetical protein
+MMCAELCA_00288	CDS	723	glpR_67		COG1349	Glycerol-3-phosphate regulon repressor
+MMCAELCA_00289	CDS	261				hypothetical protein
+MMCAELCA_00290	CDS	132				hypothetical protein
+MMCAELCA_00291	CDS	915				hypothetical protein
+MMCAELCA_00292	CDS	723	glpR_68		COG1349	Glycerol-3-phosphate regulon repressor
+MMCAELCA_00293	CDS	261				hypothetical protein
+MMCAELCA_00294	CDS	132				hypothetical protein
+MMCAELCA_00295	CDS	915				hypothetical protein
+MMCAELCA_00296	CDS	723	glpR_69		COG1349	Glycerol-3-phosphate regulon repressor
+MMCAELCA_00297	CDS	261				hypothetical protein
+MMCAELCA_00298	CDS	132				hypothetical protein
+MMCAELCA_00299	CDS	915				hypothetical protein
+MMCAELCA_00300	CDS	723	glpR_70		COG1349	Glycerol-3-phosphate regulon repressor
+MMCAELCA_00301	CDS	261				hypothetical protein
+MMCAELCA_00302	CDS	132				hypothetical protein
+MMCAELCA_00303	CDS	915				hypothetical protein
+MMCAELCA_00304	CDS	669	glpR_71		COG1349	Glycerol-3-phosphate regulon repressor
+MMCAELCA_00305	CDS	261				hypothetical protein
+MMCAELCA_00306	CDS	132				hypothetical protein
+MMCAELCA_00307	CDS	915				hypothetical protein
+MMCAELCA_00308	CDS	723	glpR_72		COG1349	Glycerol-3-phosphate regulon repressor
+MMCAELCA_00309	CDS	915				hypothetical protein
+MMCAELCA_00310	CDS	714	glpR_73		COG1349	Glycerol-3-phosphate regulon repressor
+MMCAELCA_00311	CDS	261				hypothetical protein
+MMCAELCA_00312	CDS	132				hypothetical protein
+MMCAELCA_00313	CDS	915				hypothetical protein
+MMCAELCA_00314	CDS	723	glpR_74		COG1349	Glycerol-3-phosphate regulon repressor
+MMCAELCA_00315	CDS	261				hypothetical protein
+MMCAELCA_00316	CDS	132				hypothetical protein
+MMCAELCA_00317	CDS	915				hypothetical protein
+MMCAELCA_00318	CDS	723	glpR_75		COG1349	Glycerol-3-phosphate regulon repressor
+MMCAELCA_00319	CDS	261				hypothetical protein
+MMCAELCA_00320	CDS	132				hypothetical protein
+MMCAELCA_00321	CDS	915				hypothetical protein
+MMCAELCA_00322	CDS	723	glpR_76		COG1349	Glycerol-3-phosphate regulon repressor
+MMCAELCA_00323	CDS	261				hypothetical protein
+MMCAELCA_00324	CDS	132				hypothetical protein
+MMCAELCA_00325	CDS	915				hypothetical protein
+MMCAELCA_00326	CDS	714	glpR_77		COG1349	Glycerol-3-phosphate regulon repressor
+MMCAELCA_00327	CDS	261				hypothetical protein
+MMCAELCA_00328	CDS	132				hypothetical protein
+MMCAELCA_00329	CDS	915				hypothetical protein
+MMCAELCA_00330	CDS	723	glpR_78		COG1349	Glycerol-3-phosphate regulon repressor
+MMCAELCA_00331	CDS	261				hypothetical protein
+MMCAELCA_00332	CDS	132				hypothetical protein
+MMCAELCA_00333	CDS	915				hypothetical protein
+MMCAELCA_00334	CDS	669	glpR_79		COG1349	Glycerol-3-phosphate regulon repressor
+MMCAELCA_00335	CDS	261				hypothetical protein
+MMCAELCA_00336	CDS	132				hypothetical protein
+MMCAELCA_00337	CDS	915				hypothetical protein
+MMCAELCA_00338	CDS	723	glpR_80		COG1349	Glycerol-3-phosphate regulon repressor
+MMCAELCA_00339	CDS	261				hypothetical protein
+MMCAELCA_00340	CDS	132				hypothetical protein
+MMCAELCA_00341	CDS	915				hypothetical protein
+MMCAELCA_00342	CDS	723	glpR_81		COG1349	Glycerol-3-phosphate regulon repressor
+MMCAELCA_00343	CDS	261				hypothetical protein
+MMCAELCA_00344	CDS	132				hypothetical protein
+MMCAELCA_00345	CDS	915				hypothetical protein
+MMCAELCA_00346	CDS	723	glpR_82		COG1349	Glycerol-3-phosphate regulon repressor
+MMCAELCA_00347	CDS	261				hypothetical protein
+MMCAELCA_00348	CDS	132				hypothetical protein
+MMCAELCA_00349	CDS	915				hypothetical protein
+MMCAELCA_00350	CDS	723	glpR_83		COG1349	Glycerol-3-phosphate regulon repressor
+MMCAELCA_00351	CDS	261				hypothetical protein
+MMCAELCA_00352	CDS	132				hypothetical protein
+MMCAELCA_00353	CDS	915				hypothetical protein
+MMCAELCA_00354	CDS	723	glpR_84		COG1349	Glycerol-3-phosphate regulon repressor
+MMCAELCA_00355	CDS	261				hypothetical protein
+MMCAELCA_00356	CDS	132				hypothetical protein
+MMCAELCA_00357	CDS	915				hypothetical protein
+MMCAELCA_00358	CDS	723	glpR_85		COG1349	Glycerol-3-phosphate regulon repressor
+MMCAELCA_00359	CDS	261				hypothetical protein
+MMCAELCA_00360	CDS	132				hypothetical protein
+MMCAELCA_00361	CDS	915				hypothetical protein
+MMCAELCA_00362	CDS	723	glpR_86		COG1349	Glycerol-3-phosphate regulon repressor
+MMCAELCA_00363	CDS	261				hypothetical protein
+MMCAELCA_00364	CDS	132				hypothetical protein
+MMCAELCA_00365	CDS	915				hypothetical protein
+MMCAELCA_00366	CDS	723	glpR_87		COG1349	Glycerol-3-phosphate regulon repressor
+MMCAELCA_00367	CDS	261				hypothetical protein
+MMCAELCA_00368	CDS	132				hypothetical protein
+MMCAELCA_00369	CDS	915				hypothetical protein
+MMCAELCA_00370	CDS	723	glpR_88		COG1349	Glycerol-3-phosphate regulon repressor
+MMCAELCA_00371	CDS	261				hypothetical protein
+MMCAELCA_00372	CDS	132				hypothetical protein
+MMCAELCA_00373	CDS	915				hypothetical protein
+MMCAELCA_00374	CDS	723	glpR_89		COG1349	Glycerol-3-phosphate regulon repressor

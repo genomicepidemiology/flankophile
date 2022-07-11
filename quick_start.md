@@ -59,3 +59,7 @@ On Computerome you only have space for 10 GB in your personal root directory and
 Go to your personal root `cd ` and delete .conda: `rm -r .conda`. Also delete some other files if you have a lot of junk in your personal dir.
 In the flankophile pipeline directory delete ./snakemake/conda and ./snakemake/conda-archieve.
 Then try running the pipeline again.
+
+**Visualisation with R studio**
+
+R Studio on Computerome does currently not have the right version of R (June, 2022). You must run the R script on your local computer. Download the R folder to your computer. In the folder that contains the R folder you make a folder called output. In this folder you download folders 2_filter_gene_observations and 5_gene_clusters. Or all results foldes if you have infinite space on your computer. Now run the R script from the R folder. Remember to use the correct version of R. Try 4.1.2 or 4.1.3. Save plots as PDF. You can make the PDF longer than A4 if the results are too cramped.
