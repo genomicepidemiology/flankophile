@@ -49,7 +49,7 @@ for line in gff_file:
                 gene = re.search(',similar to AA sequence:user_db:(\S+?);', line).group(1)
             elif db_name == "UniProtKB":
                 if re.search(r';Name=', line):
-                    gene = re.search(';Name=(\w+?);', line).group(1)
+                    gene = re.search(';Name=(\S+?);', line).group(1)
                     gene = gene.split('_')[0]
                 else:
                     gene = re.search(',similar to AA sequence:UniProtKB:(\S+?);', line).group(1)
