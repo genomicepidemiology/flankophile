@@ -20,7 +20,6 @@ The output can be visualized in RStudio with the R script [plot_gene_clusters_fr
 
 
 
-
 ## How to run Flankophile
 
 Download this repository to your computer.
@@ -109,18 +108,18 @@ The configuation file contains numbered sections. Each number refer to an output
 
 | **Variable name**                   | **Suggestion**        | **Variable**    | **Notes**                                                                                          |
 |-------------------------------------|-----------------------|-----------------|----------------------------------------------------------------------------------------------------|
-| database                            | "input/db.fa"         | Path to file.   | Multifasta.                                                                                        |
-| input_format                        | "assemblies"          | Format.         |                                                                                                    |
-| input_list                          | "input/sa.tsv"        | Path to file.   | tsv file.                                                                                          |
-| flank_length_upstreams              | "3000"                | Length in bp.   |                                                                                                    |
-| flank_length_downstreams            | "3000"                | Length in bp.   |                                                                                                    |
-| min_coverage_abricate               | "95"                  | In %.           |                                                                                                    |
-| min_identity_abricate               | "95"                  | In %.           |                                                                                                    |
-| cluster_identity_cd_hit             | "0.95"                | 1 equals 100 %. | See https://github.com/weizhongli/cdhit/wiki/3.-User's-Guide#CDHITEST                              |
-| cluster_wordsize_cd_hit             | "9"                   |                 | See https://github.com/weizhongli/cdhit/wiki/3.-User's-Guide#CDHITEST                              |
-| cluster_length_dif_cd_hit           | "0.9"                 |                 | See https://github.com/weizhongli/cdhit/wiki/3.-User's-Guide#CDHITEST                              |
-| Kmersize_kma                        | "16"                  | Kmer size.      | For kma index.                                                                                     |
-| distance_measure                    | "1"                   | Distmatrix      | Methods: 1 k-mer hamming distance 64 Jaccard distance 256 Cosine distance 4096 Chi-square distance |
+| database                            | "input/db.fa"         | Path to file.   | Step 0. Multifasta file of genes of interest, DNA.                                                 |
+| input_format                        | "assemblies"          | Format.         | Step 1.                                                                                            |
+| input_list                          | "input/sa.tsv"        | Path to file.   | Step 1. tsv file.                                                                                  |
+| flank_length_upstreams              | "3000"                | Length in bp.   | Step 2.                                                                                            |
+| flank_length_downstreams            | "3000"                | Length in bp.   | Step 2.                                                                                            |
+| min_coverage_abricate               | "95"                  | In %.           | Step 2.                                                                                            |
+| min_identity_abricate               | "95"                  | In %.           | Step 2.                                                                                            |
+| cluster_identity_cd_hit             | "0.95"                | 1 equals 100 %. | Step 5.     github.com/weizhongli/cdhit/wiki/3.-User's-Guide#CDHITEST                              |
+| cluster_wordsize_cd_hit             | "9"                   |                 | Step 5.     github.com/weizhongli/cdhit/wiki/3.-User's-Guide#CDHITEST                              |
+| cluster_length_dif_cd_hit           | "0.9"                 |                 | Step 5.     github.com/weizhongli/cdhit/wiki/3.-User's-Guide#CDHITEST                              |
+| Kmersize_kma                        | "16"                  | Kmer size.      | Step 5. For kma index.                                                                             |
+| distance_measure                    | "1"                   | Distmatrix      | Step 5.- 1 k-mer hamming distance 64 Jaccard distance 256 Cosine distance 4096 Chi-square distance |
 
 
 ### Running the pipeline
@@ -151,14 +150,11 @@ If you write a # in front of both
 If you want to rerun part of the pipeline you simply delete output folders and files and 
 Snakemake will rerun these part of the pipeline when you give the run command `snakemake --use-conda --cores 39` again. 
 You must delete output in descending order starting with 99 and down to where you do not want to rerun anymore. 
+Be aware that the step that produces the folder 1_abricate  is not deterministic so if you delete this folder and rerun the pipeline you will not get exactly the same results.
 
-**New config settings**
-
-If you want to rerun the pipeline with new settings you must look in the config file [config.yaml](config.yaml)
+If you want to rerun the pipeline with new config settings you must look in the config file [config.yaml](config.yaml)
  and take note of the numbered sections. If you want to change a parameters you must delete all output
- with a number equal or higher than the numbe of the section. 
-
-**More data**
+ with a number equal or higher than the number of the section. 
 
 If you want to add more data you must delete all output except 
 0_setup_abricate_db and 1_abricate. You add more data by appending more lines to the
@@ -171,7 +167,7 @@ If you want to add more data you must delete all output except
 
 ## Output
 
-The output directories are created by Flankophile in the order of the numbers. 
+The output directories are created by Flankophile in the order of the numbers. The files in the first directory are used to produced the files in the second directory and so on. This is usefull since it is then easy to run the analysis with different parameters without having to redo the whole analysis.
 
 
 **1_abricate**
