@@ -69,7 +69,7 @@ The pipeline will ignore lines that start with **#**. This is useful if you want
 The recommended way is to use assembly-level analysis. This is when you want to analyse the entire assembly/bin and not analyse only a subset of the contigs in the multifasta.  The input file is a tsv file with two columns. The first column has to be a unique name for each input fasta, for example, "sample_1" or "e.coli_bin_32". The name must not contain whitespace or slash or any strange characters, but underscore and dash is fine.
 
 The second column is the full path to the fasta file, including the file name. 
-In [test_input_assemblies_list_small.tsv](input/example_input_files/test_input_assemblies_list_small.tsv) you can see an example of an assembly level input file. 
+In [test_input_1000_assemblies_list.tsv](input/example_input_files/test_input_1000_assemblies_list.tsv) you can see an example of an assembly level input file. 
 
 | #assembly_name | path                                   |
 |----------------|----------------------------------------|
