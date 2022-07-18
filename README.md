@@ -54,7 +54,7 @@ The reference database must be a multifasta file. The resfinder database is give
 
 It can be found here [Resfinder_08_02_2022_dub_rem.fa](input/example_input_files/Resfinder_08_02_2022_dub_rem.fa). The ResFinder database consists 
 of acquired antimicrobial resistance genes. The version found in this repository is from February 8 2022. 
-The uptodate ResFinder database is found [here](https://bitbucket.org/genomicepidemiology/resfinder_db/src/master/).
+The up-to-date ResFinder database is found [here](https://bitbucket.org/genomicepidemiology/resfinder_db/src/master/).
 
 
 #### Sample input list
@@ -219,8 +219,7 @@ The trees are based on the distance matrices. See [distance matrix format](examp
 
 The script can be run with RStudio and should be run with the R directory as the working directory. R version 4.1.2 was used for development. Certain packages will not work with all versions of R. Try 4.1.2 or 4.1.3.
 
-It is possible to visualize metadata along with the plot. Here is an example of **[output from flankphile visualized with metadata.](R/Advanced_R_plot.pdf)** It was made using a custom R script. The observation IDs (formatted as i plus a number) from the tree tips were compared with the [tsv file](example_output/5_gene_clusters/0_blaSHV-187/0_blaSHV-187.tsv) from the output to find the sample names corresponding to each observation. Since I had metadata for each sample I was able to pair up the metadata such as *Species* with the tips of the tree. The function (gheatmap)[https://rdrr.io/bioc/ggtree/man/gheatmap.html] from ggtree was used. Read more at [here](https://yulab-smu.top/treedata-book/chapter7.html). 
-
+It is possible to visualize metadata along with the plot. Here is an example of **[output from flankphile visualized with metadata.](R/Advanced_R_plot.pdf)** It was made using a custom R script. The observation IDs (formatted as i plus a number) from the tree tips were compared with the [tsv file](example_output/5_gene_clusters/0_blaSHV-187/0_blaSHV-187.tsv) from the output to find the sample names corresponding to each observation. Since I had metadata for each sample I was able to pair up the metadata such as *Species* with the tips of the tree. The function [gheatmap](https://rdrr.io/bioc/ggtree/man/gheatmap.html) from ggtree was used. Read more at [here](https://yulab-smu.top/treedata-book/chapter7.html). 
 
 
 
