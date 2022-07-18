@@ -3,7 +3,7 @@ FLANKOPHILE version 0.0.4
 By Alex Vincent Thorn
 
 
-## [Quick start - for Computerome users](quick_start.md)
+## [Quick Guide - for Computerome users](quick_start.md)
 
 
 ## About Flankophile
@@ -66,7 +66,7 @@ The pipeline will ignore lines that start with **#**. This is useful if you want
 
 **Assembly/bin level analysis**
 
-The recommended way is to use assembly-level analysis. This is when you want to analyse the entire assembly/bin and not analyse only a subset of the contigs in the multifasta.  The input file is a tsv file with two columns. The first column has to be a unique name for each input fasta, for example, "sample_1" or "e.coli_bin_32". The name must not contain whitespace.
+The recommended way is to use assembly-level analysis. This is when you want to analyse the entire assembly/bin and not analyse only a subset of the contigs in the multifasta.  The input file is a tsv file with two columns. The first column has to be a unique name for each input fasta, for example, "sample_1" or "e.coli_bin_32". The name must not contain whitespace or slash or any strange characters, but underscore and dash is fine.
 
 The second column is the full path to the fasta file, including the file name. 
 In [test_input_assemblies_list_small.tsv](input/example_input_files/test_input_assemblies_list_small.tsv) you can see an example of an assembly level input file. 
@@ -150,7 +150,7 @@ If you write a # in front of both
 If you want to rerun part of the pipeline you simply delete output folders and files and 
 Snakemake will rerun these part of the pipeline when you give the run command `snakemake --use-conda --cores 39` again. 
 You must delete output in descending order starting with 99 and down to where you do not want to rerun anymore. 
-Be aware that the step that produces the folder 1_abricate  is not deterministic so if you delete this folder and rerun the pipeline you will not get exactly the same results.
+Be aware that the step that produces the folder 1_abricate  is not deterministic so if you delete this folder and rerun the pipeline you will not get exactly the same results. If you want want to rerun the pipeline from the start delete the entire output folder.
 
 If you want to rerun the pipeline with new config settings you must look in the config file [config.yaml](config.yaml)
  and take note of the numbered sections. If you want to change a parameters you must delete all output
@@ -213,14 +213,16 @@ See **[example of output from an induvidual gene family cluster](example_output/
 ## Visualization
 
 The R script [plot_gene_clusters_from_flankophile.R](R/plot_gene_clusters_from_flankophile.R)
- can be used to visualize the results in output folder 5.
- It plots distance trees with gene annotation for a gene cluster. 
+ can be used to visualize the results in output folder 5. **[See example of output from flankphile visualized with included R script.](R/Demo_R_plot.pdf)**
+ The script plots distance trees with gene annotation for a gene cluster. 
 The trees are based on the distance matrices. See [distance matrix format](example_output/5_gene_clusters/0_blaSHV-187/0_blaSHV-187.flanks_with_gene_dist). 
 
 The script can be run with RStudio and should be run with the R directory as the working directory. R version 4.1.2 was used for development. Certain packages will not work with all versions of R. Try 4.1.2 or 4.1.3.
 
+It is possible to visualize metadata along with the plot. Here is an example of **[output from flankphile visualized with metadata.](R/Advanced_R_plot.pdf)** It was made using a custom R script. The observation IDs (formatted as i plus a number) from the tree tips were compared with the [tsv file](example_output/5_gene_clusters/0_blaSHV-187/0_blaSHV-187.tsv) from the output to find the sample names corresponding to each observation. Since I had metadata for each sample I was able to pair up the metadata such as *Species* with the tips of the tree. The function (gheatmap)[https://rdrr.io/bioc/ggtree/man/gheatmap.html] from ggtree was used. Read more at [here](https://yulab-smu.top/treedata-book/chapter7.html). 
 
-**[Example of output](R/Demo_R_plot.pdf)**
+
+
 
 ## Contact
 Alex Vincent Thorn
