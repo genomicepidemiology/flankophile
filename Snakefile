@@ -1,9 +1,10 @@
-# FLANKOPHILE version 0.0.4
+# FLANKOPHILE version 0.0.5
 # Alex Vincent Thorn
 
 configfile: "config.yaml"
 
 import os
+import re
 
 ASSEMBLY_NAMES = []
 ASSEMBLY_NAME_PATH_DICT = {}
@@ -461,7 +462,6 @@ rule extract_relavant_reference_sequences:
         flanks="output/3_extract_sequences/4_gene_fasta_files_pooled/flanks_with_gene.fa",
         just_gene="output/3_extract_sequences/4_gene_fasta_files_pooled/just_gene.fa",
         masked="output/3_extract_sequences/4_gene_fasta_files_pooled/masked_gene.fa",
-        ref_seq="bin/abricate/db/user_db/sequences",
         final_results="output/2_filter_gene_observations/3_final_gene_results.tsv"
     output:
         list=temp("output/4_cluster_by_gene_family/final_output_list.txt"),
@@ -469,7 +469,7 @@ rule extract_relavant_reference_sequences:
     conda: "environment.yaml"
     shell:
         "awk '{{print $13}}' {input.final_results} |awk 'NR>1' | sort -u > {output.list};"
-        "seqkit grep -n -f {output.list} {input.ref_seq} > {output.fasta}"
+        "seqkit grep -n -f {output.list} bin/abricate/db/user_db/sequences > {output.fasta}"
 
 
 rule cd_hit:
@@ -511,7 +511,8 @@ rule process_cd_hit_results:
                 clus_number = line_list[1]
                 if clus_number not in dict:
                     # Split name so only first part of name is used
-                    first_part_gene_name = re.split(', |\'|\/|\(|\)|_| ', gene_name)[0]
+                    # first_part_gene_name = re.split(', |\'|\/|\(|\)|_| ', gene_name)[0]
+                    first_part_gene_name = re.sub(r'\W', '_', gene_name)
                     dict[clus_number] = clus_number + "_" + first_part_gene_name + ".tsv"
                 new_line = line + "\t" + dict[clus_number]
                 print(new_line, file=output)        

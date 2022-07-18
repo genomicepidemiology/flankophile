@@ -1,5 +1,5 @@
 # FLANKOPHILE
-FLANKOPHILE version 0.0.4
+FLANKOPHILE version 0.0.5
 By Alex Vincent Thorn
 
 
@@ -16,7 +16,7 @@ Output: Distance matrix, neighbor joining trees, genetic sequences of genes and 
 
 The output can be visualized in RStudio with the R script [plot_gene_clusters_from_flankophile.R](R/plot_gene_clusters_from_flankophile.R).
 
-![Demo_R_plot.PNG](Demo_R_plot.PNG)
+![Demo_R_plot.PNG](R/Demo_R_plot.PNG)
 
 
 

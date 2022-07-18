@@ -1,4 +1,4 @@
-# FLANKOPHILE version 0.0.4
+# FLANKOPHILE version 0.0.5
 # Alex Thorn
 
 
@@ -26,9 +26,9 @@ input_list: "input/example_input_files/test_input_1000_assemblies_list.tsv"     
  
 ## 2 ##
 
-flank_length_upstreams: "3000"
+flank_length_upstreams: "2000"
 
-flank_length_downstreams: "3000"
+flank_length_downstreams: "2000"
 
 min_coverage_abricate: "95"   # percentage
 
