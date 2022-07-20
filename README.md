@@ -16,7 +16,9 @@ Output: Distance matrix, neighbor joining trees, genetic sequences of genes and 
 
 The output can be visualized in RStudio with the R script [plot_gene_clusters_from_flankophile.R](R/plot_gene_clusters_from_flankophile.R).
 
-![Demo_R_plot.PNG](R/Demo_R_plot.PNG)
+**[Examples of plots made with the pipeline](R/demo_plots)**
+
+![Demo_R_plot.PNG](R/demo_plots/Demo_R_plot.PNG)
 
 
 
@@ -213,13 +215,16 @@ See **[example of output from an induvidual gene family cluster](example_output/
 ## Visualization
 
 The R script [plot_gene_clusters_from_flankophile.R](R/plot_gene_clusters_from_flankophile.R)
- can be used to visualize the results in output folder 5. **[See example of output from flankphile visualized with included R script.](R/Demo_R_plot.pdf)**
+ can be used to visualize the results in output folder 5. The script can make 4 different plots and it can be modified to suit your needs. **[See examples of output from flankphile visualized with included R script.](R/demo_plots)** Here is a [plot where the distance tree is based on the flanking region.](R/demo_plots/tree_based_on_flanking_region.pdf)
+ 
  The script plots distance trees with gene annotation for a gene cluster. 
 The trees are based on the distance matrices. See [distance matrix format](example_output/5_gene_clusters/0_blaSHV-187/0_blaSHV-187.flanks_with_gene_dist). 
 
-The script can be run with RStudio and should be run with the R directory as the working directory. R version 4.1.2 was used for development. Certain packages will not work with all versions of R. Try 4.1.2 or 4.1.3.
+The script can be run with RStudio. R version 4.1.2 was used for development. Certain packages will not work with all versions of R. Try 4.1.2 or 4.1.3.
 
-It is possible to visualize metadata along with the plot. Here is an example of **[output from flankphile visualized with metadata.](R/Advanced_R_plot.pdf)** It was made using a custom R script. The observation IDs (formatted as i plus a number) from the tree tips were compared with the [tsv file](example_output/5_gene_clusters/0_blaSHV-187/0_blaSHV-187.tsv) from the output to find the sample names corresponding to each observation. Since I had metadata for each sample I was able to pair up the metadata such as *Species* with the tips of the tree. The function [gheatmap](https://rdrr.io/bioc/ggtree/man/gheatmap.html) from ggtree was used. Read more at [here](https://yulab-smu.top/treedata-book/chapter7.html). 
+It is possible to visualize metadata along with the plot. Here is an example of **[output from flankphile visualized with metadata.](R/demo_plots/flank_based_tree_with_reference_gene_panel.pdf)** It was made using [plot_gene_clusters_from_flankophile.R](R/plot_gene_clusters_from_flankophile.R).  More metadata can be include in the tree. Here is an example of output made with a custom [R script](R/demo_plots/plot_made_with_custom_made_R_script_for_inspiration.pdf). 
+
+ Read more about tree visualization [here](https://yulab-smu.top/treedata-book/chapter7.html). 
 
 
 
