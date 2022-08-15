@@ -1,4 +1,4 @@
-# FLANKOPHILE version 0.0.5
+# FLANKOPHILE version 0.0.6
 # Alex Vincent Thorn
 
 configfile: "config.yaml"
@@ -105,11 +105,6 @@ def give_abricate_output(input_format):
     elif input_format == "assemblies":
         return expand("output/1_abricate_a/{assembly_name}/{assembly_name}.tsv", assembly_name=ASSEMBLY_NAMES)
 
-def give_length_for_assemblies(input_format):
-    if input_format == "contigs":
-        return expand("output/1_abricate_c/{assembly_name}/{assembly_name}.length", assembly_name=ASSEMBLY_NAMES)
-    elif input_format == "assemblies":
-        return expand("output/1_abricate_a/{assembly_name}/{assembly_name}.length", assembly_name=ASSEMBLY_NAMES)
 
 
 rule abricate_merge:
@@ -183,38 +178,26 @@ rule filter_abricate_quality:
         print(i, file = output_report)
         output_report.close
 
-rule merge_length_files:
-    input:
-        give_length_for_assemblies(config["input_format"])
-    output:
-        temp("output/2_filter_gene_observations/3_all_contig.lengths")
-    shell:
-        "cat {input} > {output}"
+
 
 
 rule filter_abricate_space_for_flanks:
     input:
-        length="output/2_filter_gene_observations/3_all_contig.lengths",
         tsv="output/2_filter_gene_observations/2_abricate_filter_qual.tsv"
     output:
         tsv="output/2_filter_gene_observations/3_final_gene_results.tsv",
         report="output/2_filter_gene_observations/3_abricate_filter_length.report"
     run:
-        LENGTH_DICT = {}
         counter_accepted = 0
-        input_length = open("output/2_filter_gene_observations/3_all_contig.lengths", "r")
-        for line in input_length:
-            line = line.strip()
-            line_list = line.split()
-            LENGTH_DICT[line_list[0]] = int(line_list[1])
-        input_length.close
-        
+
         # Counter of how many observations that would be discarted at each threshold
         UP_user, UP_half, UP_double, DOWN_user, DOWN_half, DOWN_double = 0, 0, 0, 0, 0, 0 
+        
         total_input_observations, total_discarded_observation = 0, 0  
         col_index_ASSEMBLY_PATH, col_index_SEQ, col_index_START, col_index_END, col_index_STRAND  = 0, 1, 2, 3, 4
         user_upstreams=float(config["flank_length_upstreams"])
-        user_downstreams=float(config["flank_length_downstreams"])         
+        user_downstreams=float(config["flank_length_downstreams"])
+                 
 
         input_tsv = open("output/2_filter_gene_observations/2_abricate_filter_qual.tsv", "r")
         output_tsv = open("output/2_filter_gene_observations/3_final_gene_results.tsv", "w")
@@ -230,12 +213,33 @@ rule filter_abricate_space_for_flanks:
                 gene_start = int(line_list[col_index_START])
                 gene_end = int(line_list[col_index_END])
                 gene_strand = line_list[col_index_STRAND]
+                
+                assembly_name = PATH_ASSEMBLY_NAME_DICT[path]
+                
+                if config["input_format"] == "contigs":
+                    path_to_length_file = "output/" + "1_abricate_c/" + assembly_name + "/" + assembly_name + ".length"
+                elif config["input_format"] == "assemblies":
+                    path_to_length_file = "output/" + "1_abricate_a/" + assembly_name + "/" + assembly_name + ".length"
+                
+                
+                this_contig_len = "unknown"
+                        
+                input_length = open(path_to_length_file, "r")
+                for line_l in input_length:
+                    if this_contig_len == "unknown":
+                        line_l = line_l.strip()
+                        line_l_list = line_l.split()
+                        if line_l_list[0] == seq_name:
+                            this_contig_len = int(line_l_list[1])
+                input_length.close  
+                    
+                
                 if gene_strand == "+":
                     space_for_flank_up = gene_start - 1
-                    space_for_flank_down = int(LENGTH_DICT[seq_name]) - gene_end
+                    space_for_flank_down = this_contig_len - gene_end
                 if gene_strand == "-":
                     space_for_flank_down = gene_start - 1
-                    space_for_flank_up = int(LENGTH_DICT[seq_name]) - gene_end
+                    space_for_flank_up = this_contig_len - gene_end
                 if space_for_flank_up < round(user_upstreams * 2):
                     UP_double += 1
                     if space_for_flank_up < user_upstreams:
@@ -250,7 +254,6 @@ rule filter_abricate_space_for_flanks:
                             DOWN_half += 1
                 if  space_for_flank_up >= user_upstreams and space_for_flank_down >= user_downstreams:
                     counter_accepted += 1
-                    assembly_name = PATH_ASSEMBLY_NAME_DICT[path]
                     new_line = line + "\t" + assembly_name + "\t" + "i" + str(counter_accepted)
                     print(new_line, file = output_tsv)
                 else:
