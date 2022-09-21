@@ -26,7 +26,7 @@ The output can be visualized in RStudio with the R script [plot_gene_clusters_fr
 
 ## How to run Flankophile
 
-### [Computerome user? - quick guide for running Flankophile on Computerome](quick_start.md)
+### [Computerome user? - quick guide for running Flankophile](quick_start.md)
 
 Download this repository to your computer.
 
