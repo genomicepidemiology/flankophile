@@ -2,8 +2,10 @@
 FLANKOPHILE version 0.0.6
 By Alex Vincent Thorn
 
+![flankophile_logo_2-1_square.jpg](example_output/flankophile_logo_2-1_square.jpg)
 
-## [Quick Guide - for Computerome users](quick_start.md)
+
+
 
 
 ## About Flankophile
@@ -23,6 +25,8 @@ The output can be visualized in RStudio with the R script [plot_gene_clusters_fr
 
 
 ## How to run Flankophile
+
+### [Computerome user? - quick guide for running Flankophile on Computerome](quick_start.md)
 
 Download this repository to your computer.
 
