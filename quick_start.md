@@ -60,11 +60,27 @@ As a default conda will download the packages needed to your root directory on C
 
 After deleting some files then try to run the pipeline again.
 
-If you have a file called .condarc in your personal root directory you can edit it to redirect where conda will store the packages so that they will not end up in the root directory.
+If you want conda to store your packages and enviroments in another location than your root directoty then you can write this in the file called .condarc. It may be in your root directory. If you do not have the file .condarc then you can make one and conda will find it in your root.
+
+```bash
+auto_activate_base: false
+
+pkgs_dirs:
+    - /home/projects/SOMEPATH_YOU_CHOOSE/.conda/pkgs
+
+envs_dirs:
+    - /services/tools/miniconda3/4.11.0/envs
+    - /home/projects/SOMEPATH_YOU_CHOOSE/.conda/envs
+
+```
+
+
+
+[Read the condarc_guide](https://conda.io/projects/conda/en/latest/user-guide/configuration/use-condarc.html#creating-and-editing)
 
 
 
 
 **Visualisation with R studio**
 
-R Studio on Computerome does currently not have the right version of R (June, 2022). You must run the R script on your local computer. Download the R folder to your computer. In the folder that contains the R folder you make a folder called output. In this folder you download folders 2_filter_gene_observations and 5_gene_clusters. Or all results foldes if you have infinite space on your computer. Now run the R script from the R folder. *Remember to use the correct version of R. Try 4.1.2 or 4.1.3.* Save plots as PDF. You can make the PDF longer than A4 if the results are too cramped. If you reach the maximum length that a pdf can be then save as png.
+R Studio on Computerome does **not** currently have the right version of R (June, 2022). You must run the R script on your local computer. Download the R folder to your computer. In the folder that contains the R folder you make a folder called output. In this folder you download folders 2_filter_gene_observations and 5_gene_clusters. Or all results foldes if you have infinite space on your computer. Now run the R script from the R folder. *Remember to use the correct version of R. Try 4.1.2 or 4.1.3.* Save plots as PDF. You can make the PDF longer than A4 if the results are too cramped. If you reach the maximum length that a pdf can be then save as png.
