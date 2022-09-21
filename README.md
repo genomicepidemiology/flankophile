@@ -2,7 +2,7 @@
 FLANKOPHILE version 0.0.6
 By Alex Vincent Thorn
 
-![flankophile_logo_2-1_square.jpg](example_output/flankophile_logo_2-1_square.jpg)
+![flankophile_logo_2-1_square.jpg](example_output/flankophile_logo_2-1_square.jpg){width=30%}
 
 
 
