@@ -72,7 +72,7 @@ The pipeline will ignore lines that start with **#**. This is useful if you want
 
 **Assembly/bin level analysis**
 
-The recommended way is to use assembly-level analysis. This is when you want to analyse the entire assembly/bin and not analyse only a subset of the contigs in the multifasta.  The input file is a tsv file with two columns. The first column has to be a unique name for each input fasta, for example, "sample_1" or "e.coli_bin_32". The name must not contain whitespace or slash or any strange characters, but underscore and dash is fine.
+*The recommended way is to use assembly/bin-level analysis.* This is when you want to analyse the entire assembly/bin and not analyse only a subset of the contigs in the multifasta.  The input file is a tsv file with two columns. The first column has to be a unique name for each input fasta, for example, "sample_1" or "e.coli_bin_32". The name must not contain whitespace or slash or any strange characters, but underscore and dash is fine.
 
 The second column is the full path to the fasta file, including the file name. 
 In [test_input_1000_assemblies_list.tsv](input/example_input_files/test_input_1000_assemblies_list.tsv) you can see an example of an assembly level input file. 
@@ -87,7 +87,7 @@ In [test_input_1000_assemblies_list.tsv](input/example_input_files/test_input_10
 
 **Config level analysis**
 
-You can use this type op input files if you are only interested in a specific contigs from each multifasta. This may be relavant if for example you have used a tool to analyse which contigs in a assembly/bin that are from plasmids and now you only want to run flankophile on those contigs.
+*In most cases this is not the recommended way to run Flankophile.* You can use config level analysis if you are only interested in a specific contigs from each multifasta. This may be relavant if for example you have used a tool to analyse which contigs in a assembly/bin that are from plasmids and now you only want to run flankophile on those contigs. If you want Flankophile to look for the reference genes in all contigs in your input files then you should use assembly/bin-level analysis instead.
 
 The format is a tsv file with three columns. One line per contig. The first column contains a unique nickname for the input fasta. The name must not contain whitespace and is has to be unique for each different fasta path. The third column is the full path to the fasta.  The second column is the name of the contig. The name of the contig is the fasta header without the **>**. This has to be unique within each fasta and must not contain whitespace. In this file there is one line per contig. Since you are propably the interested in many contigs from each fasta the values in column 1 and 3 will be identical for many lines, while the second one will be different. 
 
