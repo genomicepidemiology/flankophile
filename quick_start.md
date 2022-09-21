@@ -53,13 +53,18 @@ Now wait  for results.
 **Problems with conda?**
 
 If running the pipeline gives an error message related to conda then it 
-may be because you already have an enviroment loaded you need to delete. 
+may be because you do not have space for all the packages in your personal root folder.
 
-On Computerome you only have space for 10 GB in your personal root directory and the conda environment takes up some space.
-Go to your personal root `cd ` and delete .conda: `rm -r .conda`. Also delete some other files if you have a lot of junk in your personal dir.
-In the flankophile pipeline directory delete ./snakemake/conda and ./snakemake/conda-archieve.
-Then try running the pipeline again.
+As a default conda will download the packages needed to your root directory on Computerome. This root can only contain 10 GB and the packages for Flankophle takes up about 8 GB. You may need to delete some files in your personal root directory to make space. If you already have many packages in your hidden folder .conda, you may consider to delete it also `rm -r .conda`. 
+
+
+After deleting some files then try to run the pipeline again.
+
+If you have a file called .condarc in your personal root directory you can edit it to redirect where conda will store the packages so that they will not end up in the root directory.
+
+
+
 
 **Visualisation with R studio**
 
-R Studio on Computerome does currently not have the right version of R (June, 2022). You must run the R script on your local computer. Download the R folder to your computer. In the folder that contains the R folder you make a folder called output. In this folder you download folders 2_filter_gene_observations and 5_gene_clusters. Or all results foldes if you have infinite space on your computer. Now run the R script from the R folder. Remember to use the correct version of R. Try 4.1.2 or 4.1.3. Save plots as PDF. You can make the PDF longer than A4 if the results are too cramped.
+R Studio on Computerome does currently not have the right version of R (June, 2022). You must run the R script on your local computer. Download the R folder to your computer. In the folder that contains the R folder you make a folder called output. In this folder you download folders 2_filter_gene_observations and 5_gene_clusters. Or all results foldes if you have infinite space on your computer. Now run the R script from the R folder. *Remember to use the correct version of R. Try 4.1.2 or 4.1.3.* Save plots as PDF. You can make the PDF longer than A4 if the results are too cramped. If you reach the maximum length that a pdf can be then save as png.
