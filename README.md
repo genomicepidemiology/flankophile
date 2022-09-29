@@ -219,14 +219,14 @@ See **[example of output from an induvidual gene family cluster](example_output/
 ## Visualization
 
 The R script [plot_gene_clusters_from_flankophile.R](R/plot_gene_clusters_from_flankophile.R)
- can be used to visualize the results in output folder 5. The script can make 4 different plots and it can be modified to suit your needs. **[See examples of output from flankphile visualized with included R script.](R/demo_plots)** Here is a [plot where the distance tree is based on the flanking region.](R/demo_plots/tree_based_on_flanking_region.pdf)
+ can be used to visualize the results in output folder 5. The script can make 3 different plots and it can be modified to suit your needs. **[See examples of output from flankphile visualized with included R script.](R/demo_plots)** Here is a [plot where the distance tree is based on the flanking region.](R/demo_plots/tree_based_on_flanking_region.pdf)
  
  The script plots distance trees with gene annotation for a gene cluster. 
 The trees are based on the distance matrices. See [distance matrix format](example_output/5_gene_clusters/0_blaSHV-187/0_blaSHV-187.flanks_with_gene_dist). 
 
 The script can be run with RStudio. R version 4.1.2 was used for development. Certain packages will not work with all versions of R. Try 4.1.2 or 4.1.3.
 
-It is possible to visualize metadata along with the plot. Here is an example of **[output from flankphile visualized with metadata.](R/demo_plots/flank_based_tree_with_reference_gene_panel.pdf)** It was made using [plot_gene_clusters_from_flankophile.R](R/plot_gene_clusters_from_flankophile.R).  More metadata can be include in the tree. Here is an example of output made with a custom [R script](R/demo_plots/plot_made_with_custom_made_R_script_for_inspiration.pdf). 
+It is possible to visualize more metadata along with the plot if you read in a metadata table, join it with the cluster_results table and make an info table that can be read by the heatmap function. Here is an example of plot made with a custom [R script](R/demo_plots/plot_made_with_custom_made_R_script_for_inspiration.pdf) which includes metadata on species. 
 
  Read more about tree visualization [here](https://yulab-smu.top/treedata-book/chapter7.html). 
 
