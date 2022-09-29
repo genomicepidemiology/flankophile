@@ -226,7 +226,7 @@ The trees are based on the distance matrices. See [distance matrix format](examp
 
 The script can be run with RStudio. R version 4.1.2 was used for development. Certain packages will not work with all versions of R. Try 4.1.2 or 4.1.3.
 
-It is possible to visualize more metadata along with the plot if you read in a metadata table, join it with the cluster_results table and make an info table that can be read by the heatmap function. Here is an example of plot made with a custom [R script](R/demo_plots/plot_made_with_custom_made_R_script_for_inspiration.pdf) which includes metadata on species. 
+It is possible to visualize more metadata along with the plot if you read in a metadata table, join it with the cluster_results table and make an info table that can be read by the heatmap function. Here is an [example of plot made with a custom R script](R/demo_plots/plot_made_with_custom_made_R_script_for_inspiration.pdf) which includes metadata on species. 
 
  Read more about tree visualization [here](https://yulab-smu.top/treedata-book/chapter7.html). 
 
