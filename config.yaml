@@ -1,5 +1,5 @@
-# FLANKOPHILE version 0.0.6
-# Alex Thorn
+# FLANKOPHILE version 0.1.0
+# Alex Vincent Thorn
 
 
 ## 0 ##
@@ -8,21 +8,13 @@ database: "input/example_input_files/Resfinder_08_02_2022_dub_rem.fa"         # 
 
 ## 1 ##
 
+input_format: "assemblies"                     # "assemblies" for assembly list.  "contigs" for contigs list.
 #input_format: "contigs"
-input_format: "assemblies"                                # "assemblies" for assembly list.  "contigs" for contigs list.
 
 input_list: "input/example_input_files/test_input_1000_assemblies_list.tsv"               # Path to input_list.
+
+# See README.md for details                                                          
                                                           
-                                                          
-
-# For "assemblies": input_list is a tsv file with assembly/sample/bin name in collumn 1 and
-#  full path to fasta in collumn 2.
-
-# For "contigs": input_list is a tsv file with assembly/sample/bin name in collumn 1 and
-# contig name in collumn 2. Full path to assembly fasta in collumn 3. This option is used
-# when you are only interested in certain contigs from each multi fasta but it
-# is to much work to make new induvidual fastas for these contigs.
-
  
 ## 2 ##
 
@@ -46,7 +38,7 @@ cluster_length_dif_cd_hit: "0.9"     # -s
 #See https://github.com/weizhongli/cdhit/wiki/3.-User's-Guide#CDHITEST
 
 
-## 5 ##
+## 5 + 6 ##
 
 Kmersize_kma: "16"                       # Kmersize used by kma index. Try with "16" if in doubt.  
 

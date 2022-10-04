@@ -1,4 +1,4 @@
-# FLANKOPHILE version 0.0.6
+# FLANKOPHILE version 0.1.0
 # Alex Vincent Thorn
 
 configfile: "config.yaml"
@@ -34,8 +34,6 @@ rule all:
        "output/2_filter_gene_observations/3_final_gene_results.tsv",
        # extract flanks and gene sequences and cluster refernce genes by identity.
        "output/4_cluster_by_gene_family/cd_hit.processed",
-       # Make gene annotation and distance trees
-       "output/99_trees_and_distance_matrixes_done",
        # Last step, always run. Save config file in output folder so record is kept
        "output/99_config.yaml"
 
@@ -681,54 +679,31 @@ rule kma_dist:
 
 
 
-rule clearcut:
-    input:
-        f="output/5_gene_clusters/{c}/{c}.flanks_with_gene_dist",
-        m="output/5_gene_clusters/{c}/{c}.masked_gene_dist",
-        j="output/5_gene_clusters/{c}/{c}.just_gene_dist"
-    output:
-        f="output/5_gene_clusters/{c}/{c}.flanks_with_gene_tree",
-        m="output/5_gene_clusters/{c}/{c}.masked_gene_tree",
-        j="output/5_gene_clusters/{c}/{c}.just_gene_tree"
 
-    conda: "environment.yaml"
-    shell:
-        '''
-        echo To few leaves to make a tree > {output.f};
-        echo To few leaves to make a tree > {output.m};
-        echo To few leaves to make a tree > {output.j};
-        clearcut --in={input.f} --out={output.f} --neighbor || true ;
-        clearcut --in={input.m} --out={output.m} --neighbor || true ;
-        clearcut --in={input.j} --out={output.j} --neighbor || true 
-        '''
-        
-
-
-def tree_input(wildcards):
+def dist_input(wildcards):
     checkpoint_output = checkpoints.split_cd_hit_results.get(**wildcards).output[0]
-    return expand("output/5_gene_clusters/{c}/{c}.masked_gene_tree",
+    return expand("output/5_gene_clusters/{c}/{c}.masked_gene_dist",
            c=glob_wildcards(os.path.join(checkpoint_output, "{c}.tsv")).c)
 
 
 ## 99 #############################################
 
 
-rule get_trees:
-    input:
-        tree_input
-    output:
-        "output/99_trees_and_distance_matrixes_done"
-    shell:
-        '''
-        echo done > {output}
-        '''
-
-
-
-
 rule finito:
+    input:
+        dist_input
     output:
-        "output/99_config.yaml"
+        config="output/99_config.yaml",
+        txt="output/6_plots/completed.txt"
+    conda: "environment.yaml"
     shell:
-        "cp config.yaml {output}"
+        '''
+        cp config.yaml {output.config};
+        echo plots_completed > {output.txt};
+        Rscript bin/plot_gene_clusters_from_flankophile.R
+        '''
+
+
+
+
 

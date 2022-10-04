@@ -1,5 +1,5 @@
 # FLANKOPHILE
-FLANKOPHILE version 0.0.6
+FLANKOPHILE version 0.1.0
 By Alex Vincent Thorn
 
 ![flankophile_logo_2-1_square.jpg](example_output/flankophile_logo_2-1_square.jpg)
