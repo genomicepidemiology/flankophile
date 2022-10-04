@@ -14,7 +14,7 @@ Flankophile is a pipeline build for easy analysis of gene synthony - the genetic
 
 Requied input: Assempled genetic data from multiple samples in fasta format plus a reference gene database in fasta format.
 
-Output: Distance matrix, neighbor joining trees, genetic sequences of genes and flanking regions. 
+Output: Results tables, Distance matrix, genetic sequences of genes and flanking regions. 
 
 The output can be visualized in RStudio with the R script [plot_gene_clusters_from_flankophile.R](bin/plot_gene_clusters_from_flankophile.R).
 
@@ -216,6 +216,11 @@ See **[example of output from an induvidual gene family cluster](example_output/
 | just_gene        | The DNA sequence of target gene only.                                                |
 | masked_gene      | The DNA sequence of flanks of target gene. Target genes is included but masked as N. |
 
+
+**6_plots**
+
+Contains all the plots produced by Flankophile using the R script [plot_gene_clusters_from_flankophile.R](bin/plot_gene_clusters_from_flankophile.R).
+
 ## Visualization
 
 The R script [plot_gene_clusters_from_flankophile.R](bin/plot_gene_clusters_from_flankophile.R)
@@ -224,7 +229,7 @@ The R script [plot_gene_clusters_from_flankophile.R](bin/plot_gene_clusters_from
  The script plots distance trees with gene annotation for a gene cluster. 
 The trees are based on the distance matrices. See [distance matrix format](example_output/5_gene_clusters/0_blaSHV-187/0_blaSHV-187.flanks_with_gene_dist). 
 
-The script can be run with RStudio. R version 4.1.2 was used for development. Certain packages will not work with all versions of R. Try 4.1.2 or 4.1.3.
+
 
 It is possible to visualize more metadata along with the plot if you read in a metadata table, join it with the cluster_results table and make an info table that can be read by the heatmap function. Here is an [example of plot made with a custom R script](R/demo_plots/plot_made_with_custom_made_R_script_for_inspiration.pdf) which includes metadata on species. 
 
