@@ -16,7 +16,7 @@ Requied input: Assempled genetic data from multiple samples in fasta format plus
 
 Output: Distance matrix, neighbor joining trees, genetic sequences of genes and flanking regions. 
 
-The output can be visualized in RStudio with the R script [plot_gene_clusters_from_flankophile.R](R/plot_gene_clusters_from_flankophile.R).
+The output can be visualized in RStudio with the R script [plot_gene_clusters_from_flankophile.R](bin/plot_gene_clusters_from_flankophile.R).
 
 **[Examples of plots made with the pipeline](R/demo_plots)**
 
@@ -218,7 +218,7 @@ See **[example of output from an induvidual gene family cluster](example_output/
 
 ## Visualization
 
-The R script [plot_gene_clusters_from_flankophile.R](R/plot_gene_clusters_from_flankophile.R)
+The R script [plot_gene_clusters_from_flankophile.R](bin/plot_gene_clusters_from_flankophile.R)
  can be used to visualize the results in output folder 5. The script can make 3 different plots and it can be modified to suit your needs. **[See examples of output from flankphile visualized with included R script.](R/demo_plots)** Here is a [plot where the distance tree is based on the flanking region.](R/demo_plots/tree_based_on_flanking_region.pdf)
  
  The script plots distance trees with gene annotation for a gene cluster. 
