@@ -186,18 +186,18 @@ In step 3 the [tsv](example_output/2_filter_gene_observations/2_abricate_filter_
 
 **3_extract_sequences**
 
-These files are just temperaty files and can be deleted by the user without loss of important data.
+This directory can be deleted if you are entirely done with the analysis, but keep it if you may want to rerun the analysis later.
 
 **4_cluster_by_gene_family**
 
 cd_hit.clstr contains the results of clustering the reference genes used as templates by identity.
-The rest of the contents of this folder can be deleted by the user without loss of important data.
+
   
 **5_gene_clusters**
 
 Contains one directory for each reference gene cluster. Directory names have two parts. The first part is a unique number. 
 The second part after the underscore is the first part of the name of the gene that seeded the cluster. 
-See **[example of output from an induvidual gene family cluster](example_output/5_gene_clusters/0_blaSHV-187/)**.
+See [example of output from an induvidual gene family cluster](example_output/5_gene_clusters/0_blaSHV-187/).
 
 | **Nickname**     | **Explanation**                                                                      |
 |------------------|--------------------------------------------------------------------------------------|
@@ -208,7 +208,7 @@ See **[example of output from an induvidual gene family cluster](example_output/
 
 **6_plots**
 
-Contains all the plots produced by Flankophile using the R script [plot_gene_clusters_from_flankophile.R](bin/plot_gene_clusters_from_flankophile.R).
+Contains all the plots produced by Flankophile using the R script [plot_gene_clusters_from_flankophile.R](bin/plot_gene_clusters_from_flankophile.R). Plots are made for each cluster in 5_gene_clusters.
 
 [Examples of plots made with the pipeline](example_output/6_plots).
 
