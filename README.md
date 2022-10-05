@@ -151,7 +151,7 @@ If you want to rerun the pipeline with new config settings you must look in the 
 
 If you want to add more data you must delete all output except 
 0_setup_abricate_db and 1_abricate. You add more data by appending more lines to the
- input_list file. If you want to use a difference reference database you must delete the entire
+ input_list file. If you want to use a different reference database you must delete the entire
  output directory and start over. 
 
 
@@ -160,27 +160,29 @@ If you want to add more data you must delete all output except
 
 ## Output
 
-The output directories are created by Flankophile in the order of the numbers. The files in the first directory are used to produced the files in the second directory and so on. This is usefull since it is then easy to run the analysis with different parameters without having to redo the whole analysis.
+The output directories are created by Flankophile in the order of the numbers. The files in the first directory are used to produced the files in the second directory and so on. This is usefull since it is then easy to rerun the analysis with different parameters without having to redo the whole analysis.
 
+
+**0_setup_abricate_db**
+
+Contains the placeholder file abricate.txt which signals to Snakemake that the reference database has been indexed. The actual database is placed in bin/abricate/db/user_db/. 0_setup_abricate_db can be deleted if you are entirely done with the analysis, but keep it if you may want to rerun the analysis later.
 
 **1_abricate**
 
-Contains one directory per input fasta. Can be deleted if one is done with the analysis.
+Contains one directory per input fasta. This directory can be deleted if you are entirely done with the analysis, but keep it if you may want to rerun the analysis later.
 
 **2_filter_gene_observations**
 
 In this directory abricate results from all the samples have been merged. It contains 3 reports and 3 tsv files.
-In step 1 no filtering has taken place yet. The raw collective abricate results can be found in 1_abricate_all.tsv.
-In step 2 the results have been filtered on minimum coverage and minimum sequence identity. 
-2_abricate_filter_qual.report contains information on how many gene observtions that were discarded during filtering.
+In step 1 no filtering has taken place yet. The raw collective abricate results can be found in [1_abricate_all.tsv](example_output/2_filter_gene_observations/1_abricate_all.tsv).
+In step 2 the results have been filtered on the minimum coverage and minimum sequence identity chosen in the config file. See [2_abricate_filter_qual.tsv](example_output/2_filter_gene_observations/2_abricate_filter_qual.tsv). 
+[2_abricate_filter_qual.report](example_output/2_filter_gene_observations/2_abricate_filter_qual.report) contains information on how many gene observtions that were discarded during filtering.
 
-In step 3 the tsv from step 2 has been filtered on flank length. Gene observations that are so close to the
+In step 3 the [tsv](example_output/2_filter_gene_observations/2_abricate_filter_qual.tsv) from step 2 has been filtered on flank length. Gene observations that are so close to the
  edge of a contig that there is not space for the full desired flank length are discarded. 
- 3_abricate_filter_length.report contains information on how many gene observtions that were discarded during filtering.
- 3_final_gene_results.tsv contains all the gene observations that are included in the further analysis.
+ [3_abricate_filter_length.report](example_output/2_filter_gene_observations/3_abricate_filter_length.report) contains information on how many gene observtions that were discarded during filtering.
+ [3_final_gene_results.tsv](example_output/2_filter_gene_observations/3_final_gene_results.tsv) contains all the gene observations that are included in the further analysis.
  
- See **[example of output folder 2 for a full flankophile run](example_output/2_filter_gene_observations/)**.
-
 
 **3_extract_sequences**
 
