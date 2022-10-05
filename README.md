@@ -324,12 +324,19 @@ Bioinformatics 2014 Jul 15;30(14):2068-9. [PMID:24642063](https://pubmed.ncbi.nl
 **R packages**
 
 R base - 4.1.3
+
 Tidyverse - 1.3.2
+
 ggtree - 3.2.0
+
 gggenes - 0.4.1
+
 treeio - 1.18.0
+
 ape - 5.6
+
 ggnewscale - 0.4.7
+
 
 
 **seqkit**
