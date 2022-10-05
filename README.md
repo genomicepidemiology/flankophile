@@ -12,13 +12,13 @@ By Alex Vincent Thorn
 
 Flankophile is a pipeline build for easy analysis and visualization of gene synteny - the genetic context of genes. Flankophile is especially usefull for comparing the flanking regions of specific genes across different samples. 
 
-Input: Assembled genetic data in fasta format plus a reference gene database in fasta format.
+**Input:** Assembled genetic data in fasta format plus a reference gene database in fasta format.
 
-Output: Gene synteny plots, results tables, distance matrices, genetic sequences of genes and flanking regions in fasta format. 
+**Output:** [Gene synteny plots](example_output/6_plots), [results tables](example_output/2_filter_gene_observations/), distance matrices, genetic sequences of genes and flanking regions in fasta format. 
 
 
 
-**[Examples of plots made with the pipeline](example_output/6_plots)**
+
 
 ![Demo_R_plot.PNG](example_output/6_plots/Demo_R_plot.PNG)
 
@@ -55,14 +55,10 @@ The path to the input files must be given in the config file [config.yaml](confi
 
 #### Reference database
 
-The reference database contains reference sequences of all the genes that you want to search for in your data. 
-Flankophile will find these genes in your data and extract the gene sequence and the flanking sequences on each side of the gene.
-The reference database can contain reference genes that are not homologs. Flankophile will cluster the reference genes by percentage identity and report the results separately for each cluster.
-The reference database must be a multifasta file. The resfinder database is given as an example of a reference database.
+The reference database contains reference sequences of all the genes that you want to perform gene synteny analysis on. It has to be a multi fasta file with unique headers and the headers must not contain whitespace or super strange characters. Characters used in the [ResFinder database](https://bitbucket.org/genomicepidemiology/resfinder_db/src/master/) are allowed. The reference database can contain from 1 to thousands of genes. The reference database can contain reference genes that are not homologs. Flankophile will cluster the reference genes by percentage identity and report the results separately for each cluster.
 
-It can be found here [Resfinder_08_02_2022_dub_rem.fa](input/example_input_files/Resfinder_08_02_2022_dub_rem.fa). The ResFinder database consists 
-of acquired antimicrobial resistance genes. The version found in this repository is from February 8 2022. 
-The up-to-date ResFinder database is found [here](https://bitbucket.org/genomicepidemiology/resfinder_db/src/master/).
+
+The [ResFinder database](input/example_input_files/Resfinder_08_02_2022_dub_rem.fa) is include in Flankophile as an example of a reference database. The ResFinder database consists of acquired antimicrobial resistance genes. The version found in this repository is from February 8 2022. The up-to-date ResFinder database is found [here](https://bitbucket.org/genomicepidemiology/resfinder_db/src/master/). If you want to use the included version of the ResFinder database for your analysis then you do not need to change the database variable in the contig file.
 
 
 #### Sample input list
