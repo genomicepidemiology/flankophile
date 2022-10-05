@@ -18,9 +18,9 @@ Output: Results tables, Distance matrix, genetic sequences of genes and flanking
 
 The output can be visualized in RStudio with the R script [plot_gene_clusters_from_flankophile.R](bin/plot_gene_clusters_from_flankophile.R).
 
-**[Examples of plots made with the pipeline](R/demo_plots)**
+**[Examples of plots made with the pipeline](example_output/6_plots)**
 
-![Demo_R_plot.PNG](R/demo_plots/Demo_R_plot.PNG)
+![Demo_R_plot.PNG](example_output/6_plots/Demo_R_plot.PNG)
 
 
 
@@ -224,14 +224,14 @@ Contains all the plots produced by Flankophile using the R script [plot_gene_clu
 ## Visualization
 
 The R script [plot_gene_clusters_from_flankophile.R](bin/plot_gene_clusters_from_flankophile.R)
- can be used to visualize the results in output folder 5. The script can make 3 different plots and it can be modified to suit your needs. **[See examples of output from flankphile visualized with included R script.](R/demo_plots)** Here is a [plot where the distance tree is based on the flanking region.](R/demo_plots/tree_based_on_flanking_region.pdf)
+ can be used to visualize the results in output folder 5. The script can make 3 different plots and it can be modified to suit your needs. **[See examples of output from flankphile visualized with included R script.](example_output/6_plots)** Here is a [plot where the distance tree is based on the flanking region.](example_output/6_plots/tree_based_on_flanking_region.pdf)
  
  The script plots distance trees with gene annotation for a gene cluster. 
 The trees are based on the distance matrices. See [distance matrix format](example_output/5_gene_clusters/0_blaSHV-187/0_blaSHV-187.flanks_with_gene_dist). 
 
 
 
-It is possible to visualize more metadata along with the plot if you read in a metadata table, join it with the cluster_results table and make an info table that can be read by the heatmap function. Here is an [example of plot made with a custom R script](R/demo_plots/plot_made_with_custom_made_R_script_for_inspiration.pdf) which includes metadata on species. 
+It is possible to visualize more metadata along with the plot if you read in a metadata table, join it with the cluster_results table and make an info table that can be read by the heatmap function. Here is an [example of plot made with a custom R script](example_output/6_plots/plot_made_with_custom_made_R_script_for_inspiration.pdf) which includes metadata on species. 
 
  Read more about tree visualization [here](https://yulab-smu.top/treedata-book/chapter7.html). 
 
