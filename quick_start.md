@@ -52,15 +52,14 @@ Now wait  for results.
 
 **Problems with conda?**
 
-If running the pipeline gives an error message related to conda then it 
+If running the pipeline gives an error message related to conda and packages then it 
 may be because you do not have space for all the packages in your personal root folder.
 
-As a default conda will download the packages needed to your root directory on Computerome. This root can only contain 10 GB and the packages for Flankophle takes up about 8 GB. You may need to delete some files in your personal root directory to make space. If you already have many packages in your hidden folder .conda, you may consider to delete it also `rm -r .conda`. 
+As a default conda will download the packages needed to your root directory on Computerome. This root can only contain 10 GB and the packages for Flankophle takes up more than 8 GB. 
 
+You may need to force  conda to store your packages and enviroments in another location than your root directoty. You can write where in the file called ".condarc". It may be in your root directory. If you do not have the file ".condarc" in then you can make one and place it in your root and conda will find it.
 
-After deleting some files then try to run the pipeline again.
-
-If you want conda to store your packages and enviroments in another location than your root directoty then you can write this in the file called ".condarc". It may be in your root directory. If you do not have the file ".condarc" then you can make one and place it in your root and conda will find it.
+Here is what you need to write:
 
 ```bash
 auto_activate_base: false

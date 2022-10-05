@@ -155,7 +155,20 @@ If you want to add more data you must delete all output except
  output directory and start over. 
 
 
+#### Redirect where to store conda packages
+As a default conda will download the packages needed to your root directory.
+If you want conda to store your packages and enviroments in another location than your root directoty then you can write this in the file called ".condarc". It may be in your root directory. If you do not have the file ".condarc" then you can make one and place it in your root and conda will find it.
 
+```bash
+auto_activate_base: false
+
+pkgs_dirs:
+    - /SOMEPATH_YOU_CHOOSE/.conda/pkgs
+
+envs_dirs:
+    - /SOMEPATH_YOU_CHOOSE/.conda/envs
+
+```
 
 
 ## Output
@@ -309,6 +322,7 @@ Bioinformatics 2014 Jul 15;30(14):2068-9. [PMID:24642063](https://pubmed.ncbi.nl
 
 
 **R packages**
+
 R base - 4.1.3
 Tidyverse - 1.3.2
 ggtree - 3.2.0
