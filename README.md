@@ -10,13 +10,13 @@ By Alex Vincent Thorn
 
 ## About Flankophile
 
-Flankophile is a pipeline build for easy analysis of gene synthony - the genetic context of genes. Flankophile locates genes of interest in the input data and extracts the gene plus the upstream and downstream flanking regions.
+Flankophile is a pipeline build for easy analysis and visualization of gene synteny - the genetic context of genes. Flankophile is especially usefull for comparing the flanking regions of specific genes across different samples. 
 
-Requied input: Assempled genetic data from multiple samples in fasta format plus a reference gene database in fasta format.
+Input: Assembled genetic data in fasta format plus a reference gene database in fasta format.
 
-Output: Results tables, Distance matrix, genetic sequences of genes and flanking regions. 
+Output: Gene synteny plots, results tables, distance matrices, genetic sequences of genes and flanking regions in fasta format. 
 
-The output can be visualized in RStudio with the R script [plot_gene_clusters_from_flankophile.R](bin/plot_gene_clusters_from_flankophile.R).
+
 
 **[Examples of plots made with the pipeline](example_output/6_plots)**
 
@@ -28,7 +28,11 @@ The output can be visualized in RStudio with the R script [plot_gene_clusters_fr
 
 ### [Computerome user? - quick guide for running Flankophile](quick_start.md)
 
-Download this repository to your computer.
+
+
+### Prerequisites
+
+Clone this repository to your computer.
 
 ```bash
 git clone https://avthorn@bitbucket.org/genomicepidemiology/flankophile.git
@@ -38,10 +42,8 @@ git clone https://avthorn@bitbucket.org/genomicepidemiology/flankophile.git
 Flankophile is a Snakemake based pipeline. Snakemake is a python based workflow management system.
 The [Snakefile](Snakefile) contains the main pipeline code.
 
-### Prerequisites
 
-
-You need to Miniconda and Snakemake to run Flankophile. Flankofile is conda based and uses a conda env. You can see it in the file environment.yaml.
+You need to Miniconda and Snakemake to run Flankophile. Flankophile is conda based and uses a conda env. You can see it in the file [environment.yaml](environment.yaml).
  You do not need to load the conda enviroment manually. Snakemake will automatically download the necessary conda packages when running the pipeline for the first time. For this reason, the pipeline will take a longer time to run the first time.
 
 ### Input files
@@ -220,6 +222,10 @@ See **[example of output from an induvidual gene family cluster](example_output/
 **6_plots**
 
 Contains all the plots produced by Flankophile using the R script [plot_gene_clusters_from_flankophile.R](bin/plot_gene_clusters_from_flankophile.R).
+
+[Examples of plots made with the pipeline](example_output/6_plots).
+
+
 
 ## Visualization
 
