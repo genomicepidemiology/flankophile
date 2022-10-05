@@ -197,7 +197,7 @@ cd_hit.clstr contains the results of clustering the reference genes used as temp
 
 Contains one directory for each reference gene cluster. Directory names have two parts. The first part is a unique number. 
 The second part after the underscore is the first part of the name of the gene that seeded the cluster. 
-See [example of output from an induvidual gene family cluster](example_output/5_gene_clusters/0_blaSHV-187/).
+See [example of output from an induvidual gene family cluster](example_output/5_gene_clusters/0_blaSHV-187/). The folder contains [distance matrices](example_output/5_gene_clusters/0_blaSHV-187/0_blaSHV-187.flanks_with_gene_dist), cluster results as tsv, fasta files and output from Prokka.
 
 | **Nickname**     | **Explanation**                                                                      |
 |------------------|--------------------------------------------------------------------------------------|
@@ -208,7 +208,7 @@ See [example of output from an induvidual gene family cluster](example_output/5_
 
 **6_plots**
 
-Contains all the plots produced by Flankophile using the R script [plot_gene_clusters_from_flankophile.R](bin/plot_gene_clusters_from_flankophile.R). Plots are made for each cluster in 5_gene_clusters.
+Contains all the plots produced by Flankophile from the R script [plot_gene_clusters_from_flankophile.R](bin/plot_gene_clusters_from_flankophile.R). Plots are made for each cluster in 5_gene_clusters. The distance matrices are used to produce distance trees and the gene annotation is then plotted with the tree. 
 
 [Examples of plots made with the pipeline](example_output/6_plots).
 
@@ -216,15 +216,7 @@ Contains all the plots produced by Flankophile using the R script [plot_gene_clu
 
 ## Visualization
 
-The R script [plot_gene_clusters_from_flankophile.R](bin/plot_gene_clusters_from_flankophile.R)
- can be used to visualize the results in output folder 5. The script can make 3 different plots and it can be modified to suit your needs. **[See examples of output from flankphile visualized with included R script.](example_output/6_plots)** Here is a [plot where the distance tree is based on the flanking region.](example_output/6_plots/tree_based_on_flanking_region.pdf)
- 
- The script plots distance trees with gene annotation for a gene cluster. 
-The trees are based on the distance matrices. See [distance matrix format](example_output/5_gene_clusters/0_blaSHV-187/0_blaSHV-187.flanks_with_gene_dist). 
-
-
-
-It is possible to visualize more metadata along with the plot if you read in a metadata table, join it with the cluster_results table and make an info table that can be read by the heatmap function. Here is an [example of plot made with a custom R script](example_output/6_plots/plot_made_with_custom_made_R_script_for_inspiration.pdf) which includes metadata on species. 
+Flankophile automaticly output plots for each cluster from the results produced by the pipeline, but it is possible to visualize more metadata along with the plot. You can create your own custom plot, perhaps based on [this script](bin/plot_gene_clusters_stand_alone_version.R). Use the same versions of the packages as in this [script](bin/plot_gene_clusters_from_flankophile.R) Modify the script to read in a metadata table, join it with the cluster_results table and make an info table that can be read by the heatmap function. Here is an [example of plot made with a custom R script](example_output/6_plots/plot_made_with_custom_made_R_script_for_inspiration.pdf) which includes metadata on species. 
 
  Read more about tree visualization [here](https://yulab-smu.top/treedata-book/chapter7.html). 
 
@@ -284,11 +276,6 @@ By Torsten Seemann.
 [CD-HIT: accelerated for clustering the next-generation sequencing data](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3516142/)
 
 
-**clearcut**
-
-[Clearcut: a fast implementation of relaxed neighbor joining](https://academic.oup.com/bioinformatics/article/22/22/2823/197536)
-
-
 
 **clstr2txt.pl**
 
@@ -310,7 +297,7 @@ Philip T.L.C. Clausen, Frank M. Aarestrup & Ole Lund, "Rapid and precise alignme
 
 
 
-**prokka**
+**Prokka**
 
 By Torsten Seemann.
 
@@ -320,6 +307,15 @@ Seemann T.
 [Prokka: rapid prokaryotic genome annotation](https://academic.oup.com/bioinformatics/article/30/14/2068/2390517) 
 Bioinformatics 2014 Jul 15;30(14):2068-9. [PMID:24642063](https://pubmed.ncbi.nlm.nih.gov/24642063/)
 
+
+**R packages**
+R base - 4.1.3
+Tidyverse - 1.3.2
+ggtree - 3.2.0
+gggenes - 0.4.1
+treeio - 1.18.0
+ape - 5.6
+ggnewscale - 0.4.7
 
 
 **seqkit**
