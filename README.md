@@ -55,25 +55,25 @@ The path to the input files must be given in the config file [config.yaml](confi
 
 #### Reference database
 
-The reference database contains reference sequences of all the genes that you want to perform gene synteny analysis on. It has to be a multi fasta file with unique headers and the headers must not contain whitespace or super strange characters. Characters used in the [ResFinder database](https://bitbucket.org/genomicepidemiology/resfinder_db/src/master/) are allowed. The reference database can contain from 1 to thousands of genes. The reference database can contain reference genes that are not homologs. Flankophile will cluster the reference genes by percentage identity and report the results separately for each cluster.
+The reference database contains reference sequences of all the genes that you want to perform gene synteny analysis on. It has to be a multi fasta file with unique headers and the headers must not contain whitespace or super strange characters. Characters used in the [official version of the ResFinder database](https://bitbucket.org/genomicepidemiology/resfinder_db/src/master/) are allowed. The reference database can contain from 1 to thousands of genes. The reference database can contain reference genes that are not homologs. Flankophile will cluster the reference genes by percentage identity and report the results separately for each cluster.
 
 
-The [ResFinder database](input/example_input_files/Resfinder_08_02_2022_dub_rem.fa) is include in Flankophile as an example of a reference database. The ResFinder database consists of acquired antimicrobial resistance genes. The version found in this repository is from February 8 2022. The up-to-date ResFinder database is found [here](https://bitbucket.org/genomicepidemiology/resfinder_db/src/master/). If you want to use the included version of the ResFinder database for your analysis then you do not need to change the database variable in the contig file.
+The [ResFinder database](input/example_input_files/Resfinder_08_02_2022_dub_rem.fa) is included in Flankophile as an example of a reference database. The ResFinder database consists of acquired antimicrobial resistance genes. The version found in this repository is from February 8 2022. The up-to-date ResFinder database is found [here](https://bitbucket.org/genomicepidemiology/resfinder_db/src/master/). If you want to use the included version of the ResFinder database for your analysis then you do not need to change the database variable in the contig file.
 
 
 #### Sample input list
 
-Your sample input data must consist of a number of assemblies or genomes in DNA multifasta format. One multifasta per sample. You can input as many samples as wanted. You have to use one of two input file formats: assembly input file or contig input file. Instead of entire assemblies you can also use induvidual bins from a binned assembly and use those induvidual bins as "assemblies". It does not matter, any collection of contigs in a multifasta file will work.
+Your sample input data must consist of a number of assemblies, contigs or genomes in DNA multifasta format. One multifasta per sample. You can input as many samples as wanted. You have to use one of two input file formats: assembly input file or contig input file. Instead of entire assemblies you can also use induvidual bins from a binned assembly and use those induvidual bins as "assemblies". It does not matter, any collection of contigs in a multifasta file will work.
 
 The pipeline will ignore lines that start with **#**. This is useful if you want to add human-readable headers between different datasets in the file.
 
 
-**Assembly/bin level analysis**
+**Assembly mode**
 
-*The recommended way is to use assembly/bin-level analysis.* This is when you want to analyse the entire assembly/bin and not analyse only a subset of the contigs in the multifasta.  The input file is a tsv file with two columns. The first column has to be a unique name for each input fasta, for example, "sample_1" or "e.coli_bin_32". The name must not contain whitespace or slash or any strange characters, but underscore and dash is fine.
+*The recommended way is to use Assembly mode.* This is when you want to analyse all contigs in your input fasta files. The input file is a tsv file with two columns. The first column has to be a unique name for each input fasta, for example, "sample_1" or "e.coli_bin_32". The name must not contain whitespace or slash or any strange characters, but underscore and dash is fine.
 
 The second column is the full path to the fasta file, including the file name. 
-In [test_input_1000_assemblies_list.tsv](input/example_input_files/test_input_1000_assemblies_list.tsv) you can see an example of an assembly level input file. 
+In [test_input_1000_assemblies_list.tsv](input/example_input_files/test_input_1000_assemblies_list.tsv) you can see an example of an Assembly mode input file. 
 
 | #assembly_name | path                                   |
 |----------------|----------------------------------------|
@@ -83,14 +83,13 @@ In [test_input_1000_assemblies_list.tsv](input/example_input_files/test_input_10
 | cat_sample     | home/data/old/cat_ER34793_sample.fasta |
 
 
-**Config level analysis**
+**Contig mode**
 
-*In most cases this is not the recommended way to run Flankophile.* You can use config level analysis if you are only interested in a specific contigs from each multifasta. This may be relavant if for example you have used a tool to analyse which contigs in a assembly/bin that are from plasmids and now you only want to run flankophile on those contigs. If you want Flankophile to look for the reference genes in all contigs in your input files then you should use assembly/bin-level analysis instead.
+*In most cases this is not the recommended way to run Flankophile.* You can use Contig mode if you are only interested in analysing specific contigs from your input fastas. This may be relavant if for example you have used a tool to analyse which contigs in a assembly that are from plasmids and now you only want to run Flankophile on those contigs, but you are to lazy to make new fasta files with only the plasmid contigs. If you want Flankophile to look for the reference genes in all contigs in your input files then you should use Assembly mode instead.
 
-The format is a tsv file with three columns. One line per contig. The first column contains a unique nickname for the input fasta. The name must not contain whitespace and is has to be unique for each different fasta path. The third column is the full path to the fasta.  The second column is the name of the contig. The name of the contig is the fasta header without the **>**. This has to be unique within each fasta and must not contain whitespace. In this file there is one line per contig. Since you are propably the interested in many contigs from each fasta the values in column 1 and 3 will be identical for many lines, while the second one will be different. 
-
- It has to be a unique for each input fasta, but contigs from the same assembly/bin will have the same name in collumn 1. The second column is the name of the contig. This has to be unique for each input fasta.  
-In [test_input_contig_list_small.tsv](input/example_input_files/test_input_contig_list_small.tsv) you can see an example of a contig level input file. 
+The format of the input list is a tsv file with three columns. One row per contig. The first column contains a unique nickname for the input fasta. The name must not contain whitespace and is has to be unique for each different fasta path.  The third column is the full path to the fasta. Contigs from the same assembly will have the same nickname in collumn 1 and same path in collumn 3 since this refer to the assembly. The second column is the name of the contig. The name of the contig is the fasta header without the **>**. This has to be unique within each fasta and must not contain whitespace.  Since you are propably the interested in many contigs from each fasta the values in column 1 and 3 will be identical for many lines, while the second one will be different. 
+ 
+In [test_input_contig_list_small.tsv](input/example_input_files/test_input_contig_list_small.tsv) you can see an example of a Contig mode input file. 
 
 | #assembly_name | contig_name  | path                                   |
 |----------------|--------------|----------------------------------------|
