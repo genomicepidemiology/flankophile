@@ -129,25 +129,15 @@ The configuation file contains numbered sections. Each number refer to an output
 
 Enter the flankophile folder.
 
+Make sure you have the prerequisites.
+
 Run the pipeline: 
 `snakemake --use-conda --cores 39` 
 
 Cores is the number of cores available. For more info on flags visit: 
-https://snakemake.readthedocs.io/en/stable/executing/cli.html#command-line-interface To add more samples. Delete folders and files numbered 2 and up.
+https://snakemake.readthedocs.io/en/stable/executing/cli.html#command-line-interface 
 
 
-#### Running only part of the pipeline
-
-If your dataset is very large you may want to run the pipeline in 3 stages. That way you may avoid
-spending compute time rerunning the later stages again and again while you parametrize the first stages.
-In the Snakefile around line 30 you find *rule all*. There are 4 files under the rule. 
-The first and last file must always be included. 
-
-If you write a # in front of "output/99_trees_and_distance_matrixes_done" 
-then you do not run the last stage, step 5 of the pipeline. You can remove the # again later to run this step.
-If you write a # in front of both
-"output/4_cluster_by_gene_family/cd_hit.processed" and "output/99_trees_and_distance_matrixes_done"
- then you will only run the first stage, step 1 and 2 of the pipeline.
 
 #### Rerunning the pipeline
 If you want to rerun part of the pipeline you simply delete output folders and files and 
