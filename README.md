@@ -149,8 +149,7 @@ If you want to rerun the pipeline with new config settings you must look in the 
  and take note of the numbered sections. If you want to change a parameters you must delete all output
  with a number equal or higher than the number of the section. 
 
-If you want to add more data you must delete all output except 
-0_setup_abricate_db and 1_abricate. You add more data by appending more lines to the
+If you want to add more data you must delete all output except  1_abricate. You add more data by appending more lines to the
  input_list file. If you want to use a different reference database you must delete the entire
  output directory and start over. 
 
