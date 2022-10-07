@@ -10,11 +10,11 @@ By Alex Vincent Thorn
 
 ## About Flankophile
 
-Flankophile is a pipeline build for easy analysis and visualization of gene synteny - the genetic context of genes. Flankophile is especially usefull for comparing the flanking regions of specific genes across different samples. 
+Flankophile is a pipeline build for easy analysis and visualization of gene synteny - the genetic context of genes. Flankophile is especially usefull for comparing the flanking regions of specific genes or other target sequences across different samples. 
 
-**Input:** Assembled genetic data in fasta format plus a reference gene database in fasta format.
+**Input:** Assembled genetic data in fasta format plus a reference database containing target sequences in fasta format.
 
-**Output:** [Gene synteny plots](example_output/6_plots), [results tables](example_output/2_filter_gene_observations/), distance matrices, genetic sequences of genes and flanking regions in fasta format. 
+**Output:** [Gene synteny plots](example_output/6_plots), [results tables](example_output/2_filter_gene_observations/), [distance matrices](example_output/5_gene_clusters/0_blaSHV-187/0_blaSHV-187.flanks_with_gene_dist), genetic sequences of genes and flanking regions in fasta format. 
 
 
 
@@ -55,7 +55,7 @@ The path to the input files must be given in the config file [config.yaml](confi
 
 #### Reference database
 
-The reference database contains reference sequences of all the genes that you want to perform gene synteny analysis on. It has to be a multi fasta file with unique headers and the headers must not contain whitespace or super strange characters. Characters used in the [official version of the ResFinder database](https://bitbucket.org/genomicepidemiology/resfinder_db/src/master/) are allowed. The reference database can contain from 1 to thousands of genes. The reference database can contain reference genes that are not homologs. Flankophile will cluster the reference genes by percentage identity and report the results separately for each cluster.
+The reference database contains reference sequences of all the genes or target sequences that you want to perform gene synteny analysis on. It has to be a multi fasta file with unique headers and the headers must not contain whitespace or super strange characters. Characters used in the [official version of the ResFinder database](https://bitbucket.org/genomicepidemiology/resfinder_db/src/master/) are allowed. The reference database can contain from one to thousands of sequences. The reference database can contain reference genes or sequences that are not homologs. Flankophile will cluster the reference sequences by percentage identity and report the results separately for each cluster.
 
 
 The [ResFinder database](input/example_input_files/ResFinder_08_02_2022.fa) is included in Flankophile as an example of a reference database. The ResFinder database consists of acquired antimicrobial resistance genes. The version found in this repository is from February 8 2022. The up-to-date ResFinder database is found [here](https://bitbucket.org/genomicepidemiology/resfinder_db/src/master/). If you want to use the included version of the ResFinder database for your analysis then you do not need to change the database variable in the contig file.
@@ -214,9 +214,9 @@ See [example of output from an induvidual gene family cluster](example_output/5_
 
 | **Nickname**     | **Explanation**                                                                      |
 |------------------|--------------------------------------------------------------------------------------|
-| flanks_with_gene | The DNA sequence of target gene and upstreams and downstreams flanking regions.      |
-| just_gene        | The DNA sequence of target gene only.                                                |
-| masked_gene      | The DNA sequence of flanks of target gene. Target genes is included but masked as N. |
+| flanks_with_gene | The DNA sequence of target sequence and upstreams and downstreams flanking regions.  |
+| just_gene        | The DNA sequence of target sequence only.                                            |
+| masked_gene      | The DNA sequence of the flanking regions. Target sequence is included but masked.    |
 
 
 **6_plots**
