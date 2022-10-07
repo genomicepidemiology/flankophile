@@ -1,20 +1,16 @@
-# FLANKOPHILE version 0.1.0
+# FLANKOPHILE version 0.1.1
 # Alex Vincent Thorn
 
 
-## 0 ##
+## 1 ##
 
 database: "input/example_input_files/ResFinder_08_02_2022.fa"         # a multifasta file
-
-## 1 ##
 
 input_format: "assemblies"                     # "assemblies" for assembly list.  "contigs" for contigs list.
 #input_format: "contigs"
 
-input_list: "input/example_input_files/test_input_1000_assemblies_list.tsv"               # Path to input_list.
-
-# See README.md for details                                                          
-                                                          
+input_list: "input/example_input_files/input_list_example_assembly_mode.tsv"               # Path to input_list.
+                                                                                                               
  
 ## 2 ##
 

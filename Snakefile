@@ -1,4 +1,4 @@
-# FLANKOPHILE version 0.1.0
+# FLANKOPHILE version 0.1.1
 # Alex Vincent Thorn
 
 configfile: "config.yaml"
@@ -15,7 +15,7 @@ with open(config["input_list"], 'r') as file:
     for line in file:
         line = line.strip()
         if not line.startswith("#"):
-            line_list = line.split()
+            line_list = line.split("\t")
             assembly_name = line_list[0]
             assembly_path = line_list[-1]
             if assembly_name not in ASSEMBLY_NAMES:
@@ -40,11 +40,23 @@ rule all:
 
 ####################################################################################
 
-rule user_db:
+rule user_db_a:
     input:
         config["database"]
     output:
-        "output/0_setup_abricate_db/abricate.txt"
+        temp("output/1_abricate_a/abricate.txt")
+    conda: "environment.yaml"
+    shell:
+        "cp {input} bin/abricate/db/user_db/sequences;"
+        "echo {input} > {output};"
+        "./bin/abricate/bin/abricate --setupdb >> {output}"
+
+
+rule user_db_c:
+    input:
+        config["database"]
+    output:
+        temp("output/1_abricate_c/abricate.txt")
     conda: "environment.yaml"
     shell:
         "cp {input} bin/abricate/db/user_db/sequences;"
@@ -56,7 +68,7 @@ rule user_db:
 
 rule abricate_a:
     input:
-        db="output/0_setup_abricate_db/abricate.txt"
+        db="output/1_abricate_a/abricate.txt"
     output:
         tsv="output/1_abricate_a/{assembly_name}/{assembly_name}.tsv",
         length="output/1_abricate_a/{assembly_name}/{assembly_name}.length"
@@ -82,7 +94,7 @@ rule make_contig_list_c:
 
 rule abricate_c:
     input:
-        db="output/0_setup_abricate_db/abricate.txt",
+        db="output/1_abricate_c/abricate.txt",
         contig_txt="output/1_abricate_c/{assembly_name}/{assembly_name}.contig_list"
     output:
         abricate="output/1_abricate_c/{assembly_name}/{assembly_name}.tsv",
@@ -138,7 +150,7 @@ rule filter_abricate_quality:
                 print(line, file = output_tsv)
             else:
                 total_input_observations += 1
-                line_list = line.split()
+                line_list = line.split("\t")
                 COV_per = float(line_list[col_index_COV])
                 ID_per = float(line_list[col_index_ID])
                 
@@ -205,7 +217,7 @@ rule filter_abricate_space_for_flanks:
             else:
                 space_for_flank_up, space_for_flank_down = 0, 0
                 total_input_observations += 1
-                line_list = line.split()
+                line_list = line.split("\t")
                 path = line_list[col_index_ASSEMBLY_PATH]
                 seq_name = line_list[col_index_SEQ]
                 gene_start = int(line_list[col_index_START])
@@ -226,7 +238,7 @@ rule filter_abricate_space_for_flanks:
                 for line_l in input_length:
                     if this_contig_len == "unknown":
                         line_l = line_l.strip()
-                        line_l_list = line_l.split()
+                        line_l_list = line_l.split("\t")
                         if line_l_list[0] == seq_name:
                             this_contig_len = int(line_l_list[1])
                 input_length.close  

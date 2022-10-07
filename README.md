@@ -1,5 +1,5 @@
 # FLANKOPHILE
-FLANKOPHILE version 0.1.0
+FLANKOPHILE version 0.1.1
 By Alex Vincent Thorn
 
 ![flankophile_logo_2-1_square.jpg](example_output/flankophile_logo_2-1_square.jpg)
@@ -70,10 +70,10 @@ The pipeline will ignore lines that start with **#**. This is useful if you want
 
 **Assembly mode**
 
-*The recommended way is to use Assembly mode.* This is when you want to analyse all contigs in your input fasta files. The input file is a tsv file with two columns. The first column has to be a unique name for each input fasta, for example, "sample_1" or "e.coli_bin_32". The name must not contain whitespace or slash or any strange characters, but underscore and dash is fine.
+*The recommended way is to use Assembly mode.* This is when you want to analyse all contigs in your input fasta files. The input file is a tsv file with two columns. The first column has to be a unique name for each input fasta, for example, "sample_1" or "e.coli_bin_32". The name must not contain whitespace or slash but underscore, dot and dash is fine.
 
 The second column is the full path to the fasta file, including the file name. 
-In [test_input_1000_assemblies_list.tsv](input/example_input_files/test_input_1000_assemblies_list.tsv) you can see an example of an Assembly mode input file. 
+In [input_list_example_assembly_mode.tsv](input/example_input_files/input_list_example_assembly_mode.tsv) you can see an example of an Assembly mode input file. 
 
 | #assembly_name | path                                   |
 |----------------|----------------------------------------|
@@ -89,7 +89,7 @@ In [test_input_1000_assemblies_list.tsv](input/example_input_files/test_input_10
 
 The format of the input list is a tsv file with three columns. One row per contig. The first column contains a unique nickname for the input fasta. The name must not contain whitespace and is has to be unique for each different fasta path.  The third column is the full path to the fasta. Contigs from the same assembly will have the same nickname in collumn 1 and same path in collumn 3 since this refer to the assembly. The second column is the name of the contig. The name of the contig is the fasta header without the **>**. This has to be unique within each fasta and must not contain whitespace.  Since you are propably the interested in many contigs from each fasta the values in column 1 and 3 will be identical for many lines, while the second one will be different. 
  
-In [test_input_contig_list_small.tsv](input/example_input_files/test_input_contig_list_small.tsv) you can see an example of a Contig mode input file. 
+In [input_list_example_contig_mode.tsv](input/example_input_files/input_list_example_contig_mode.tsv) you can see an example of a Contig mode input file. 
 
 | #assembly_name | contig_name  | path                                   |
 |----------------|--------------|----------------------------------------|
@@ -111,7 +111,7 @@ The configuation file contains numbered sections. Each number refer to an output
 
 | **Variable name**                   | **Suggestion**        | **Variable**    | **Notes**                                                                                          |
 |-------------------------------------|-----------------------|-----------------|----------------------------------------------------------------------------------------------------|
-| database                            | "input/db.fa"         | Path to file.   | Step 0. Multifasta file of genes of interest, DNA.                                                 |
+| database                            | "input/db.fa"         | Path to file.   | Step 1. Multifasta file of genes of interest, DNA.                                                 |
 | input_format                        | "assemblies"          | Format.         | Step 1.                                                                                            |
 | input_list                          | "input/sa.tsv"        | Path to file.   | Step 1. tsv file.                                                                                  |
 | flank_length_upstreams              | "3000"                | Length in bp.   | Step 2.                                                                                            |
@@ -176,9 +176,6 @@ envs_dirs:
 The output directories are created by Flankophile in the order of the numbers. The files in the first directory are used to produced the files in the second directory and so on. This is usefull since it is then easy to rerun the analysis with different parameters without having to redo the whole analysis.
 
 
-**0_setup_abricate_db**
-
-Contains the placeholder file abricate.txt which signals to Snakemake that the reference database has been indexed. The actual database is placed in bin/abricate/db/user_db/. 0_setup_abricate_db can be deleted if you are entirely done with the analysis, but keep it if you may want to rerun the analysis later.
 
 **1_abricate**
 
