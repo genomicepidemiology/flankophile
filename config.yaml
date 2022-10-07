@@ -4,7 +4,7 @@
 
 ## 0 ##
 
-database: "input/example_input_files/Resfinder_08_02_2022_dub_rem.fa"         # a multifasta file
+database: "input/example_input_files/ResFinder_08_02_2022.fa"         # a multifasta file
 
 ## 1 ##
 
