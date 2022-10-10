@@ -192,7 +192,7 @@ make_plots <- function(cluster_name) {
       theme(legend.text = element_text(size=5))
     
     
-    t4 <- t3 + ggtitle(paste0("Cluster ", cluster_name, " - distance tree based on ", "flanks only", " sequences")) + 
+    t4 <- t3 + ggtitle(paste0("Cluster ", cluster_name, " - distance tree based on flanking region sequences")) + 
       new_scale_fill()
     
     t4
@@ -219,7 +219,7 @@ make_plots <- function(cluster_name) {
       scale_fill_hue() + new_scale_fill() +
       theme(legend.text = element_text(size=5))
     
-    t4 <- t3 + ggtitle(paste0("Cluster ", cluster_name, " - distance tree based on ","gene only", " sequences")) + 
+    t4 <- t3 + ggtitle(paste0("Cluster ", cluster_name, " - distance tree based on gene sequences")) + 
       new_scale_fill()
     
     t4
@@ -247,7 +247,7 @@ make_plots <- function(cluster_name) {
       scale_fill_hue() + new_scale_fill() +
       theme(legend.text = element_text(size=5))
     
-    t4 <- t3 + ggtitle(paste0("Cluster ", cluster_name, " - distance tree based on ", "flanks plus gene", " sequences")) + 
+    t4 <- t3 + ggtitle(paste0("Cluster ", cluster_name, " - distance tree based on flanking region plus gene sequences")) + 
       new_scale_fill()
     
     t4
