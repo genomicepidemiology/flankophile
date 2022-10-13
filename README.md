@@ -14,13 +14,13 @@ Flankophile is a pipeline build for easy analysis and visualization of gene synt
 
 **Input:** Assembled genetic data in fasta format plus a reference database containing target sequences in fasta format.
 
-**Output:** [Gene synteny plots](example_output/6_plots), [results tables](example_output/2_filter/), [distance matrices](example_output/4_cluster_results/0_blaSHV-187/0_blaSHV-187.flanks_with_gene_dist), genetic sequences of genes and flanking regions in fasta format. 
+**Output:** [Gene synteny plots](example_output/5_plots), [results tables](example_output/2_filter/), [distance matrices](example_output/4_cluster_results/0_blaSHV-187/0_blaSHV-187.flanks_with_gene_dist), genetic sequences of genes and flanking regions in fasta format. 
 
 
 
 
 
-![Demo_R_plot.PNG](example_output/6_plots/Demo_R_plot.PNG)
+![Demo_R_plot.PNG](example_output/5_plots/Demo_R_plot.PNG)
 
 
 
@@ -94,8 +94,8 @@ The configuation file contains numbered sections. Each number refer to an output
 | cluster_identity_cd_hit             | "0.95"                | 1 equals 100 %. | Step 3.     github.com/weizhongli/cdhit/wiki/3.-User's-Guide#CDHITEST                              |
 | cluster_wordsize_cd_hit             | "9"                   |                 | Step 3.     github.com/weizhongli/cdhit/wiki/3.-User's-Guide#CDHITEST                              |
 | cluster_length_dif_cd_hit           | "0.9"                 |                 | Step 3.     github.com/weizhongli/cdhit/wiki/3.-User's-Guide#CDHITEST                              |
-| Kmersize_kma                        | "16"                  | Kmer size.      | Step 5. For kma index.                                                                             |
-| distance_measure                    | "1"                   | Distmatrix      | Step 5.- 1 k-mer hamming distance 64 Jaccard distance 256 Cosine distance 4096 Chi-square distance |
+| Kmersize_kma                        | "16"                  | Kmer size.      | Step 4. For kma index.                                                                             |
+| distance_measure                    | "1"                   | Distmatrix      | Step 4.- 1 k-mer hamming distance 64 Jaccard distance 256 Cosine distance 4096 Chi-square distance |
 
 
 ### Running the pipeline
@@ -180,13 +180,13 @@ See [example of output from an induvidual gene family cluster](example_output/4_
 
 Contains all the plots produced by Flankophile from the R script [plot_gene_clusters_from_flankophile.R](bin/plot_gene_clusters_from_flankophile.R). Plots are made for each cluster in 4_cluster_results. The distance matrices are used to produce distance trees and the gene annotation is then plotted with the tree. 
 
-[Examples of plots made with the pipeline](example_output/6_plots).
+[Examples of plots made with the pipeline](example_output/5_plots).
 
 
 
 ## Visualization
 
-Flankophile automaticly output plots for each cluster from the results produced by the pipeline, but it is possible to visualize more metadata along with the plot. You can create your own custom plot, perhaps based on [this script](bin/plot_gene_clusters_stand_alone_version.R). Use the same versions of the packages as in this [script](bin/plot_gene_clusters_from_flankophile.R) Modify the script to read in a metadata table, join it with the cluster_results table and make an info table that can be read by the heatmap function. Here is an [example of plot made with a custom R script](example_output/6_plots/plot_made_with_custom_made_R_script_for_inspiration.pdf) which includes metadata on species. 
+Flankophile automaticly output plots for each cluster from the results produced by the pipeline, but it is possible to visualize more metadata along with the plot. You can create your own custom plot, perhaps based on [this script](bin/plot_gene_clusters_stand_alone_version.R). Use the same versions of the packages as in this [script](bin/plot_gene_clusters_from_flankophile.R) Modify the script to read in a metadata table, join it with the cluster_results table and make an info table that can be read by the heatmap function. Here is an [example of plot made with a custom R script](example_output/5_plots/plot_made_with_custom_made_R_script_for_inspiration.pdf) which includes metadata on species. 
 
  Read more about tree visualization [here](https://yulab-smu.top/treedata-book/chapter7.html). 
 
