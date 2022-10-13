@@ -17,9 +17,9 @@
 
 ### Settings ######################################################################################################
 
-cluster_name <- "23_aph"   # Enter the name of a subfolder in output folder 5_gene_clusters.
+cluster_name <- "23_aph"   # Enter the name of a subfolder in output folder 4_cluster_results.
 
-path_to_output_folder <- "../output/5_gene_clusters/"   # relative path the the 5_gene_clusters folder
+path_to_output_folder <- "../output/4_cluster_results/"   # relative path the the 4_cluster_results folder
 
 
 # Choose desired legend position. "none" or "bottom". Use "None" if plot is very big, else use "bottom" to see the legend.
