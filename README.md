@@ -122,9 +122,7 @@ If you want to rerun the pipeline with new config settings you must look in the 
  and take note of the numbered sections. If you want to change a parameters you must delete all output
  with a number equal or higher than the number of the section. 
 
-If you want to add more data you must delete all output except  1_abricate. You add more data by appending more lines to the
- input_list file. If you want to use a different reference database you must delete the entire
- output directory and start over. 
+If you want to add more data or use a different reference database you must delete the entire output folder. 
 
 
 #### Redirect where to store conda packages
@@ -151,7 +149,7 @@ The output directories are created by Flankophile in the order of the numbers. T
 
 **1_abricate**
 
-Contains one directory per input fasta. This directory can be deleted if you are entirely done with the analysis, but keep it if you may want to rerun the analysis later.
+This directory can be deleted if you are entirely done with the analysis, but keep it if you may want to rerun the data with different parameters as this will save time.
 
 **2_filter_gene_observations**
 
