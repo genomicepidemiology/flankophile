@@ -1,4 +1,4 @@
-# FLANKOPHILE version 0.1.1
+# FLANKOPHILE version 0.1.2
 # Alex Vincent Thorn
 
 configfile: "config.yaml"
@@ -9,7 +9,6 @@ import re
 ASSEMBLY_NAMES = []
 ASSEMBLY_NAME_PATH_DICT = {}
 PATH_ASSEMBLY_NAME_DICT = {}
-ASSEMBLY_NAME_CONTIG_LIST_DICT = {}
 
 with open(config["input_list"], 'r') as file:
     for line in file:
@@ -22,41 +21,22 @@ with open(config["input_list"], 'r') as file:
                 ASSEMBLY_NAMES.append(assembly_name)
                 ASSEMBLY_NAME_PATH_DICT[assembly_name] = assembly_path
                 PATH_ASSEMBLY_NAME_DICT[assembly_path] = assembly_name
-            if config["input_format"] == "contigs":
-                contig_name = line_list[1]
-                if assembly_name in ASSEMBLY_NAME_CONTIG_LIST_DICT:
-                    ASSEMBLY_NAME_CONTIG_LIST_DICT[assembly_name].append(contig_name)
-                else: ASSEMBLY_NAME_CONTIG_LIST_DICT[assembly_name] = [contig_name]
+
             
 rule all:
     input: 
-       # Run abricate for all samples and filter results
        "output/2_filter_gene_observations/3_final_gene_results.tsv",
-       # extract flanks and gene sequences and cluster refernce genes by identity.
        "output/4_cluster_by_gene_family/cd_hit.processed",
-       # Last step, always run. Save config file in output folder so record is kept
        "output/99_config.yaml"
 
 
 ####################################################################################
 
-rule user_db_a:
+rule user_db:
     input:
         config["database"]
     output:
-        temp("output/1_abricate_a/abricate.txt")
-    conda: "environment.yaml"
-    shell:
-        "cp {input} bin/abricate/db/user_db/sequences;"
-        "echo {input} > {output};"
-        "./bin/abricate/bin/abricate --setupdb >> {output}"
-
-
-rule user_db_c:
-    input:
-        config["database"]
-    output:
-        temp("output/1_abricate_c/abricate.txt")
+        temp("output/1_abricate/abricate.txt")
     conda: "environment.yaml"
     shell:
         "cp {input} bin/abricate/db/user_db/sequences;"
@@ -65,70 +45,40 @@ rule user_db_c:
 
 
 
-
-rule abricate_a:
+rule abricate:
     input:
-        db="output/1_abricate_a/abricate.txt"
+        db="output/1_abricate/abricate.txt"
     output:
-        tsv="output/1_abricate_a/{assembly_name}/{assembly_name}.tsv",
-        length="output/1_abricate_a/{assembly_name}/{assembly_name}.length"
+        tsv=temp("output/1_abricate/tsv/{assembly_name}/{assembly_name}.tsv"),
+        length="output/1_abricate/contig_length/{assembly_name}/{assembly_name}.length"
     params:
         assembly_path = lambda wildcards: ASSEMBLY_NAME_PATH_DICT[wildcards.assembly_name]
     conda: "environment.yaml"
     shell:
         "./bin/abricate/bin/abricate --db user_db {params.assembly_path} > {output.tsv};"
-        "seqkit fx2tab --length --name  {params.assembly_path} | awk -v  OFS='\t' '{{print $1, $2}}' > {output.length}"
-
-
-rule make_contig_list_c:
-    output:
-        contig_txt="output/1_abricate_c/{assembly_name}/{assembly_name}.contig_list"
-    params:
-        contig_list = lambda wildcards: ASSEMBLY_NAME_CONTIG_LIST_DICT[wildcards.assembly_name]
-    run:
-        contig_txt=open(output[0],"w")
-        for contig in params[0]:
-            print(contig, file=contig_txt)
-        contig_txt.close()
-
-
-rule abricate_c:
-    input:
-        db="output/1_abricate_c/abricate.txt",
-        contig_txt="output/1_abricate_c/{assembly_name}/{assembly_name}.contig_list"
-    output:
-        abricate="output/1_abricate_c/{assembly_name}/{assembly_name}.tsv",
-        fasta=temp("output/1_abricate_c/{assembly_name}/{assembly_name}.fasta"),
-        length="output/1_abricate_c/{assembly_name}/{assembly_name}.length"
-    params:
-        assembly_path = lambda wildcards: ASSEMBLY_NAME_PATH_DICT[wildcards.assembly_name]
-    conda: "environment.yaml"
-    shell:
-        "seqkit grep -n -f {input.contig_txt} {params.assembly_path} -o {output.fasta};"
-        "./bin/abricate/bin/abricate --db user_db {params.assembly_path} > {output.abricate};"
-        "seqkit fx2tab --length --name  {output.fasta} | awk -v  OFS='\t' '{{print $1, $2}}' > {output.length}"
-
-
-def give_abricate_output(input_format):
-    if input_format == "contigs":
-        return expand("output/1_abricate_c/{assembly_name}/{assembly_name}.tsv", assembly_name=ASSEMBLY_NAMES)
-    elif input_format == "assemblies":
-        return expand("output/1_abricate_a/{assembly_name}/{assembly_name}.tsv", assembly_name=ASSEMBLY_NAMES)
+        "seqkit fx2tab --length --name  {params.assembly_path} | awk -v  OFS='\t' '{{print $1, $NF}}' > {output.length}"
 
 
 
 rule abricate_merge:
     input:
-        give_abricate_output(config["input_format"])
+        expand("output/1_abricate/tsv/{assembly_name}/{assembly_name}.tsv", assembly_name=ASSEMBLY_NAMES)
     output:
-         no_head=temp("output/2_filter_gene_observations/1_abricate_all_raw_no_header.tsv"),
-         tsv="output/2_filter_gene_observations/1_abricate_all.tsv",
-         report="output/2_filter_gene_observations/1_abricate_all.report"
+         no_head=temp("output/1_abricate/abricate_all_raw_no_header.tsv"),
+         tsv="output/1_abricate/abricate_all.tsv"
     shell:
         "cat  {input} | grep -v '^#'| sed 's/\t\t/\t/g'   > {output.no_head};"
         "cat bin/abricate_header.txt {output.no_head} > {output.tsv};"
-        "echo Total number of gene observations in unfiltered abricate results: > {output.report};"
-        "cat {output.no_head} | wc -l  >> {output.report}"
+
+rule copy_abricate_results:
+    input:
+        "output/1_abricate/abricate_all.tsv"
+    output:
+        "output/2_filter_gene_observations/1_abricate_all.tsv"
+    shell:
+        "cp {input} {output}"
+         
+
 
 rule filter_abricate_quality:
     input:
@@ -226,11 +176,7 @@ rule filter_abricate_space_for_flanks:
                 
                 assembly_name = PATH_ASSEMBLY_NAME_DICT[path]
                 
-                if config["input_format"] == "contigs":
-                    path_to_length_file = "output/" + "1_abricate_c/" + assembly_name + "/" + assembly_name + ".length"
-                elif config["input_format"] == "assemblies":
-                    path_to_length_file = "output/" + "1_abricate_a/" + assembly_name + "/" + assembly_name + ".length"
-                
+                path_to_length_file = "output/" + "1_abricate/contig_length/" + assembly_name + "/" + assembly_name + ".length"
                 
                 this_contig_len = "unknown"
                         

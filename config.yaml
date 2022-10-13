@@ -1,4 +1,4 @@
-# FLANKOPHILE version 0.1.1
+# FLANKOPHILE version 0.1.2
 # Alex Vincent Thorn
 
 
@@ -6,28 +6,25 @@
 
 database: "input/example_input_files/ResFinder_08_02_2022.fa"         # a multifasta file
 
-input_format: "assemblies"                     # "assemblies" for assembly list.  "contigs" for contigs list.
-#input_format: "contigs"
-
 input_list: "input/example_input_files/input_list_example_assembly_mode.tsv"               # Path to input_list.
                                                                                                                
  
 ## 2 ##
 
-flank_length_upstreams: "2000"
+flank_length_upstreams: "1500"
 
-flank_length_downstreams: "2000"
+flank_length_downstreams: "1500"
 
-min_coverage_abricate: "95"   # percentage
+min_coverage_abricate: "98"   # percentage
 
-min_identity_abricate: "95"   # percentage
+min_identity_abricate: "98"   # percentage
 
 
 ## 4 ##
 
-cluster_identity_cd_hit: "0.95"       # -c 
+cluster_identity_cd_hit: "0.98"       # -c 
 
-cluster_wordsize_cd_hit: "9"        # -n 
+cluster_wordsize_cd_hit: "10"        # -n 
 
 cluster_length_dif_cd_hit: "0.9"     # -s 
 
