@@ -1,4 +1,4 @@
-# FLANKOPHILE version 0.1.2
+# FLANKOPHILE version 0.1.3
 # Alex Vincent Thorn
 
 configfile: "config.yaml"
@@ -25,8 +25,8 @@ with open(config["input_list"], 'r') as file:
             
 rule all:
     input: 
-       "output/2_filter_gene_observations/3_final_gene_results.tsv",
-       "output/4_cluster_by_gene_family/cd_hit.processed",
+       "output/2_filter/3_final_gene_results.tsv",
+       "output/3_cluster_by_gene_family/cd_hit.processed",
        "output/99_config.yaml"
 
 
@@ -36,7 +36,7 @@ rule user_db:
     input:
         config["database"]
     output:
-        temp("output/1_abricate/abricate.txt")
+        temp("output/1_search/abricate.txt")
     conda: "environment.yaml"
     shell:
         "cp {input} bin/abricate/db/user_db/sequences;"
@@ -47,10 +47,10 @@ rule user_db:
 
 rule abricate:
     input:
-        db="output/1_abricate/abricate.txt"
+        db="output/1_search/abricate.txt"
     output:
-        tsv=temp("output/1_abricate/tsv/{assembly_name}/{assembly_name}.tsv"),
-        length="output/1_abricate/contig_length/{assembly_name}/{assembly_name}.length"
+        tsv=temp("output/1_search/tsv/{assembly_name}/{assembly_name}.tsv"),
+        length="output/1_search/contig_length/{assembly_name}/{assembly_name}.length"
     params:
         assembly_path = lambda wildcards: ASSEMBLY_NAME_PATH_DICT[wildcards.assembly_name]
     conda: "environment.yaml"
@@ -62,19 +62,19 @@ rule abricate:
 
 rule abricate_merge:
     input:
-        expand("output/1_abricate/tsv/{assembly_name}/{assembly_name}.tsv", assembly_name=ASSEMBLY_NAMES)
+        expand("output/1_search/tsv/{assembly_name}/{assembly_name}.tsv", assembly_name=ASSEMBLY_NAMES)
     output:
-         no_head=temp("output/1_abricate/abricate_all_raw_no_header.tsv"),
-         tsv="output/1_abricate/abricate_all.tsv"
+         no_head=temp("output/1_search/abricate_all_raw_no_header.tsv"),
+         tsv="output/1_search/abricate_all.tsv"
     shell:
         "cat  {input} | grep -v '^#'| sed 's/\t\t/\t/g'   > {output.no_head};"
         "cat bin/abricate_header.txt {output.no_head} > {output.tsv};"
 
 rule copy_abricate_results:
     input:
-        "output/1_abricate/abricate_all.tsv"
+        "output/1_search/abricate_all.tsv"
     output:
-        "output/2_filter_gene_observations/1_abricate_all.tsv"
+        "output/2_filter/1_abricate_all.tsv"
     shell:
         "cp {input} {output}"
          
@@ -82,18 +82,18 @@ rule copy_abricate_results:
 
 rule filter_abricate_quality:
     input:
-        tsv="output/2_filter_gene_observations/1_abricate_all.tsv"
+        tsv="output/2_filter/1_abricate_all.tsv"
     output:
-        tsv="output/2_filter_gene_observations/2_abricate_filter_qual.tsv",
-        report="output/2_filter_gene_observations/2_abricate_filter_qual.report"
+        tsv="output/2_filter/2_abricate_filter_qual.tsv",
+        report="output/2_filter/2_abricate_filter_qual.report"
     run:
         # Counter of how many observations that would be discarted at each threshold
         COV_user, COV_100, COV_95, COV_90, COV_85, ID_user, ID_100, ID_95, ID_90, ID_85 = 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
         total_input_observations, total_discarded_observation,  col_index_COV, col_index_ID  = 0, 0, 9, 10 
         user_COV_threshold, user_ID_threshold  = float(config["min_coverage_abricate"]), float(config["min_identity_abricate"])
         
-        input_tsv = open("output/2_filter_gene_observations/1_abricate_all.tsv", "r")
-        output_tsv = open("output/2_filter_gene_observations/2_abricate_filter_qual.tsv","w")
+        input_tsv = open("output/2_filter/1_abricate_all.tsv", "r")
+        output_tsv = open("output/2_filter/2_abricate_filter_qual.tsv","w")
         for line in input_tsv:
             line = line = line.strip()
             if line.startswith("#"):
@@ -125,7 +125,7 @@ rule filter_abricate_quality:
                     total_discarded_observation += 1 
         input_tsv.close
         output_tsv.close
-        output_report = open("output/2_filter_gene_observations/2_abricate_filter_qual.report","w")
+        output_report = open("output/2_filter/2_abricate_filter_qual.report","w")
         a = "Minimum coverage in percentage threshold:" + "\t" + str(user_COV_threshold) + ".\t" + "Sequences excluded due to low coverage:           " + "\t" + str(COV_user)
         b = a +"\nMinimum sequence identity  in percentage threshold::" + "\t" + str(user_ID_threshold )  + ".\t" + "Sequences excluded due to low identity:" + "\t" + str(ID_user)
         c = b + "\n\nNumber of gene observations before quality filtering:" + "\t" + str(total_input_observations)
@@ -143,10 +143,10 @@ rule filter_abricate_quality:
 
 rule filter_abricate_space_for_flanks:
     input:
-        tsv="output/2_filter_gene_observations/2_abricate_filter_qual.tsv"
+        tsv="output/2_filter/2_abricate_filter_qual.tsv"
     output:
-        tsv="output/2_filter_gene_observations/3_final_gene_results.tsv",
-        report="output/2_filter_gene_observations/3_abricate_filter_length.report"
+        tsv="output/2_filter/3_final_gene_results.tsv",
+        report="output/2_filter/3_abricate_filter_length.report"
     run:
         counter_accepted = 0
 
@@ -159,8 +159,8 @@ rule filter_abricate_space_for_flanks:
         user_downstreams=float(config["flank_length_downstreams"])
                  
 
-        input_tsv = open("output/2_filter_gene_observations/2_abricate_filter_qual.tsv", "r")
-        output_tsv = open("output/2_filter_gene_observations/3_final_gene_results.tsv", "w")
+        input_tsv = open("output/2_filter/2_abricate_filter_qual.tsv", "r")
+        output_tsv = open("output/2_filter/3_final_gene_results.tsv", "w")
         for line in input_tsv:
             line = line.strip()
             if line.startswith("#"): print(line, file = output_tsv)
@@ -176,7 +176,7 @@ rule filter_abricate_space_for_flanks:
                 
                 assembly_name = PATH_ASSEMBLY_NAME_DICT[path]
                 
-                path_to_length_file = "output/" + "1_abricate/contig_length/" + assembly_name + "/" + assembly_name + ".length"
+                path_to_length_file = "output/1_search/contig_length/" + assembly_name + "/" + assembly_name + ".length"
                 
                 this_contig_len = "unknown"
                         
@@ -216,7 +216,7 @@ rule filter_abricate_space_for_flanks:
                     total_discarded_observation += 1
         input_tsv.close
         output_tsv.close
-        output_report = open("output/2_filter_gene_observations/3_abricate_filter_length.report", "w")
+        output_report = open("output/2_filter/3_abricate_filter_length.report", "w")
         a = "Flank length upstreams:" + "\t" + str(int(user_upstreams))
         b = a +"\nFlank length downstreams:" + "\t" + str(int(user_downstreams))
         c = b + "\n\nNumber of gene observations before flank space filtering:" + "\t" + str(total_input_observations)
@@ -235,9 +235,9 @@ rule filter_abricate_space_for_flanks:
 
 rule add_file_name_to_tsv:
     input:
-        "output/2_filter_gene_observations/3_final_gene_results.tsv"
+        "output/2_filter/3_final_gene_results.tsv"
     output:
-        temp("output/3_extract_sequences/final_gene_results_with_future_filename.tsv")
+        temp("output/temp_1/final_gene_results_with_future_filename.tsv")
     run:
         input=open(input[0], "r")
         output=open(output[0], "w")
@@ -253,24 +253,22 @@ rule add_file_name_to_tsv:
         
 checkpoint split_abricate_results:
     input:
-        "output/3_extract_sequences/final_gene_results_with_future_filename.tsv"
+        "output/temp_1/final_gene_results_with_future_filename.tsv"
     output:
-        clusters=directory("output/3_extract_sequences/1_abricate_results_per_assembly")
+        clusters=directory("output/temp_1/1_abricate_results_per_assembly")
     shell:
-        "mkdir output/3_extract_sequences/1_abricate_results_per_assembly;"
-        "cd output/3_extract_sequences/1_abricate_results_per_assembly;"
+        "mkdir output/temp_1/1_abricate_results_per_assembly;"
+        "cd output/temp_1/1_abricate_results_per_assembly;"
         "cat ../final_gene_results_with_future_filename.tsv | grep -v '^#' | awk  '{{print>$16}}'"
-# split into files named as assembly_name
-
 
 
 rule make_bedfiles:
     input:
-        "output/3_extract_sequences/1_abricate_results_per_assembly/{a}.tsv"
+        "output/temp_1/1_abricate_results_per_assembly/{a}.tsv"
     output:
-        "output/3_extract_sequences/2_bedfiles/flanks_with_gene/{a}/{a}.bed",
-        "output/3_extract_sequences/2_bedfiles/just_gene/{a}/{a}.bed",
-        "output/3_extract_sequences/2_bedfiles/masked_gene/{a}/{a}.bed"
+        temp("output/temp_2/bedfiles/flanks_with_gene/{a}/{a}.bed"),
+        temp("output/temp_2/bedfiles/just_gene/{a}/{a}.bed"),
+        temp("output/temp_2/bedfiles/masked_gene/{a}/{a}.bed")
     run:
         input=open(input[0], "r")
         output_flanks_with_gene=open(output[0], "w")
@@ -320,9 +318,9 @@ rule make_bedfiles:
 
 rule bedtools_flanks_with_gene:
     input:
-        bed="output/3_extract_sequences/2_bedfiles/flanks_with_gene/{a}/{a}.bed"
+        bed="output/temp_2/bedfiles/flanks_with_gene/{a}/{a}.bed"
     output:
-        fasta="output/3_extract_sequences/3_gene_fasta_files_per_assembly/flanks_with_gene/{a}/{a}.fa"
+        fasta=temp("output/temp_2/gene_fasta_files_per_assembly/flanks_with_gene/{a}/{a}.fa")
     conda: "environment.yaml"
     params:
         assembly_path=lambda wildcards: ASSEMBLY_NAME_PATH_DICT[wildcards.a]
@@ -334,10 +332,10 @@ rule bedtools_flanks_with_gene:
 
 rule bedtools_just_gene:
     input:
-        whole_flank="output/3_extract_sequences/4_gene_fasta_files_pooled/flanks_with_gene.fa",
-        bed="output/3_extract_sequences/2_bedfiles/just_gene/{a}/{a}.bed"
+        whole_flank="output/2_filter/4_gene_fasta_files_pooled/flanks_with_gene.fa",
+        bed="output/temp_2/bedfiles/just_gene/{a}/{a}.bed"
     output:
-        fasta="output/3_extract_sequences/3_gene_fasta_files_per_assembly/just_gene/{a}/{a}.fa"
+        fasta=temp("output/temp_2/gene_fasta_files_per_assembly/just_gene/{a}/{a}.fa")
     conda: "environment.yaml"
     params:
         assembly_path=lambda wildcards: ASSEMBLY_NAME_PATH_DICT[wildcards.a]
@@ -350,11 +348,11 @@ rule bedtools_just_gene:
 
 rule bedtools_masked_gene:
     input:
-        just_gene="output/3_extract_sequences/4_gene_fasta_files_pooled/just_gene.fa",
-        bed="output/3_extract_sequences/2_bedfiles/masked_gene/{a}/{a}.bed",
-        fasta="output/3_extract_sequences/3_gene_fasta_files_per_assembly/flanks_with_gene/{a}/{a}.fa"
+        just_gene="output/2_filter/4_gene_fasta_files_pooled/just_gene.fa",
+        bed="output/temp_2/bedfiles/masked_gene/{a}/{a}.bed",
+        fasta="output/temp_2/gene_fasta_files_per_assembly/flanks_with_gene/{a}/{a}.fa"
     output:
-        fasta="output/3_extract_sequences/3_gene_fasta_files_per_assembly/masked_gene/{a}/{a}.fa"
+        fasta=temp("output/temp_2/gene_fasta_files_per_assembly/masked_gene/{a}/{a}.fa")
     conda: "environment.yaml"
     shell:
         "bedtools maskfasta -fi {input.fasta} -bed {input.bed} -fo {output.fasta}"
@@ -363,20 +361,20 @@ rule bedtools_masked_gene:
 
 def flanks_with_gene_input(wildcards):
     checkpoint_output = checkpoints.split_abricate_results.get(**wildcards).output[0]
-    return expand("output/3_extract_sequences/3_gene_fasta_files_per_assembly/flanks_with_gene/{a}/{a}.fa",
+    return expand("output/temp_2/gene_fasta_files_per_assembly/flanks_with_gene/{a}/{a}.fa",
            a=glob_wildcards(os.path.join(checkpoint_output, "{a}.tsv")).a)
 
 
 
 def just_gene_input(wildcards):
     checkpoint_output = checkpoints.split_abricate_results.get(**wildcards).output[0]
-    return expand("output/3_extract_sequences/3_gene_fasta_files_per_assembly/just_gene/{a}/{a}.fa",
+    return expand("output/temp_2/gene_fasta_files_per_assembly/just_gene/{a}/{a}.fa",
            a=glob_wildcards(os.path.join(checkpoint_output, "{a}.tsv")).a)
 
 
 def masked_gene_input(wildcards):
     checkpoint_output = checkpoints.split_abricate_results.get(**wildcards).output[0]
-    return expand("output/3_extract_sequences/3_gene_fasta_files_per_assembly/masked_gene/{a}/{a}.fa",
+    return expand("output/temp_2/gene_fasta_files_per_assembly/masked_gene/{a}/{a}.fa",
            a=glob_wildcards(os.path.join(checkpoint_output, "{a}.tsv")).a)
 
 
@@ -384,20 +382,21 @@ rule pool_flanks_with_gene:
     input:
         flanks_with_gene_input
     output:
-        temp=temp("output/3_extract_sequences/4_gene_fasta_files_pooled/temp_flanks_with_gene.fa"),
-        fasta="output/3_extract_sequences/4_gene_fasta_files_pooled/flanks_with_gene.fa"
+        temp=temp("output/temp_2/gene_fasta_files_pooled/temp_flanks_with_gene.fa"),
+        fasta="output/2_filter/4_gene_fasta_files_pooled/flanks_with_gene.fa"
     conda: "environment.yaml"
     shell:
         "cat {input}  > {output.temp};"
-        "cat {output.temp} | seqkit sort -N -i -2  > {output.fasta}"
+        "cat {output.temp} | seqkit sort -N -i -2  > {output.fasta};"
+        "rm -r output/temp_1"
 
 
 rule pool_just_gene:
     input:
         just_gene_input
     output:
-        temp=temp("output/3_extract_sequences/4_gene_fasta_files_pooled/temp_just_gene.fa"),
-        fasta="output/3_extract_sequences/4_gene_fasta_files_pooled/just_gene.fa"
+        temp=temp("output/temp_2/gene_fasta_files_pooled/temp_just_gene.fa"),
+        fasta="output/2_filter/4_gene_fasta_files_pooled/just_gene.fa"
     conda: "environment.yaml"
     shell:
         "cat {input}  > {output.temp};"
@@ -408,8 +407,8 @@ rule pool_masked_gene:
     input:
         masked_gene_input
     output:
-        temp=temp("output/3_extract_sequences/4_gene_fasta_files_pooled/temp_masked_gene.fa"),
-        fasta="output/3_extract_sequences/4_gene_fasta_files_pooled/masked_gene.fa"
+        temp=temp("output/temp_2/gene_fasta_files_pooled/temp_masked_gene.fa"),
+        fasta="output/2_filter/4_gene_fasta_files_pooled/masked_gene.fa"
     conda: "environment.yaml"
     shell:
         "cat {input}  > {output.temp};"
@@ -418,13 +417,13 @@ rule pool_masked_gene:
 
 rule extract_relavant_reference_sequences:
     input:
-        flanks="output/3_extract_sequences/4_gene_fasta_files_pooled/flanks_with_gene.fa",
-        just_gene="output/3_extract_sequences/4_gene_fasta_files_pooled/just_gene.fa",
-        masked="output/3_extract_sequences/4_gene_fasta_files_pooled/masked_gene.fa",
-        final_results="output/2_filter_gene_observations/3_final_gene_results.tsv"
+        flanks="output/2_filter/4_gene_fasta_files_pooled/flanks_with_gene.fa",
+        just_gene="output/2_filter/4_gene_fasta_files_pooled/just_gene.fa",
+        masked="output/2_filter/4_gene_fasta_files_pooled/masked_gene.fa",
+        final_results="output/2_filter/3_final_gene_results.tsv"
     output:
-        list=temp("output/4_cluster_by_gene_family/final_output_list.txt"),
-        fasta="output/4_cluster_by_gene_family/relevant_ref_seqs.fasta"
+        list=temp("output/3_cluster_by_gene_family/final_output_list.txt"),
+        fasta="output/3_cluster_by_gene_family/relevant_ref_seqs.fasta"
     conda: "environment.yaml"
     shell:
         "awk '{{print $13}}' {input.final_results} |awk 'NR>1' | sort -u > {output.list};"
@@ -433,12 +432,12 @@ rule extract_relavant_reference_sequences:
 
 rule cd_hit:
     input:
-        "output/4_cluster_by_gene_family/relevant_ref_seqs.fasta"
+        "output/3_cluster_by_gene_family/relevant_ref_seqs.fasta"
     output:
-        clus="output/4_cluster_by_gene_family/cd_hit.clstr",
-        genes=temp("output/4_cluster_by_gene_family/cd_hit"),
-        new_head=temp("output/4_cluster_by_gene_family/cd_hit.txt"),
-        temp=temp("output/4_cluster_by_gene_family/cd_hit.temp")
+        clus="output/3_cluster_by_gene_family/cd_hit.clstr",
+        genes=temp("output/3_cluster_by_gene_family/cd_hit"),
+        new_head=temp("output/3_cluster_by_gene_family/cd_hit.txt"),
+        temp=temp("output/3_cluster_by_gene_family/cd_hit.temp")
     conda: "environment.yaml"
     params:
         c= config["cluster_identity_cd_hit"],
@@ -454,9 +453,9 @@ rule cd_hit:
 
 rule process_cd_hit_results:
     input: 
-        "output/4_cluster_by_gene_family/cd_hit.txt"
+        "output/3_cluster_by_gene_family/cd_hit.txt"
     output:
-        "output/4_cluster_by_gene_family/cd_hit.processed"
+        "output/3_cluster_by_gene_family/cd_hit.processed"
     run:
         dict = {}
         input=open(input[0], "r")
@@ -481,21 +480,21 @@ rule process_cd_hit_results:
 
 checkpoint split_cd_hit_results:
     input:
-        "output/4_cluster_by_gene_family/cd_hit.processed"
+        "output/3_cluster_by_gene_family/cd_hit.processed"
     output:
-        clusters=directory("output/4_cluster_by_gene_family/cd_hit_per_cluster")
+        clusters=directory("output/3_cluster_by_gene_family/cd_hit_per_cluster")
     shell:
-        "mkdir output/4_cluster_by_gene_family/cd_hit_per_cluster;"
-        "cd output/4_cluster_by_gene_family/cd_hit_per_cluster;"
+        "mkdir output/3_cluster_by_gene_family/cd_hit_per_cluster;"
+        "cd output/3_cluster_by_gene_family/cd_hit_per_cluster;"
         "cat ../cd_hit.processed | awk  '{{print>$8}}'"
 
-## 5 ########################################################
+
 
 
 rule extract_cluster_rows_from_results_file:
     input:
-        results="output/2_filter_gene_observations/3_final_gene_results.tsv",
-        list="output/4_cluster_by_gene_family/cd_hit_per_cluster/{c}.tsv"
+        results="output/2_filter/3_final_gene_results.tsv",
+        list="output/3_cluster_by_gene_family/cd_hit_per_cluster/{c}.tsv"
     output:
         results="output/5_gene_clusters/{c}/{c}.tsv",
         temp=temp("output/5_gene_clusters/{c}/{c}.temp")
@@ -511,9 +510,9 @@ rule extract_cluster_rows_from_results_file:
 rule extract_cluster_fastas:
     input:
         tsv="output/5_gene_clusters/{c}/{c}.tsv",
-        flanks_with_gene_fasta="output/3_extract_sequences/4_gene_fasta_files_pooled/flanks_with_gene.fa",
-        just_gene_fasta="output/3_extract_sequences/4_gene_fasta_files_pooled/just_gene.fa",
-        masked_gene_fasta="output/3_extract_sequences/4_gene_fasta_files_pooled/masked_gene.fa"
+        flanks_with_gene_fasta="output/2_filter/4_gene_fasta_files_pooled/flanks_with_gene.fa",
+        just_gene_fasta="output/2_filter/4_gene_fasta_files_pooled/just_gene.fa",
+        masked_gene_fasta="output/2_filter/4_gene_fasta_files_pooled/masked_gene.fa"
     output:
         ID_list=temp("output/5_gene_clusters/{c}/{c}.ID_list"),
         flanks_with_gene_fasta="output/5_gene_clusters/{c}/{c}.flanks_with_gene_fasta",
@@ -644,7 +643,7 @@ def dist_input(wildcards):
            c=glob_wildcards(os.path.join(checkpoint_output, "{c}.tsv")).c)
 
 
-## 99 #############################################
+
 
 
 rule finito:

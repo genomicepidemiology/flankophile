@@ -1,5 +1,5 @@
 # FLANKOPHILE
-FLANKOPHILE version 0.1.2
+FLANKOPHILE version 0.1.3
 By Alex Vincent Thorn
 
 ![flankophile_logo_2-1_square.jpg](example_output/flankophile_logo_2-1_square.jpg)
@@ -91,9 +91,9 @@ The configuation file contains numbered sections. Each number refer to an output
 | flank_length_downstreams            | "3000"                | Length in bp.   | Step 2.                                                                                            |
 | min_coverage_abricate               | "95"                  | In %.           | Step 2.                                                                                            |
 | min_identity_abricate               | "95"                  | In %.           | Step 2.                                                                                            |
-| cluster_identity_cd_hit             | "0.95"                | 1 equals 100 %. | Step 5.     github.com/weizhongli/cdhit/wiki/3.-User's-Guide#CDHITEST                              |
-| cluster_wordsize_cd_hit             | "9"                   |                 | Step 5.     github.com/weizhongli/cdhit/wiki/3.-User's-Guide#CDHITEST                              |
-| cluster_length_dif_cd_hit           | "0.9"                 |                 | Step 5.     github.com/weizhongli/cdhit/wiki/3.-User's-Guide#CDHITEST                              |
+| cluster_identity_cd_hit             | "0.95"                | 1 equals 100 %. | Step 3.     github.com/weizhongli/cdhit/wiki/3.-User's-Guide#CDHITEST                              |
+| cluster_wordsize_cd_hit             | "9"                   |                 | Step 3.     github.com/weizhongli/cdhit/wiki/3.-User's-Guide#CDHITEST                              |
+| cluster_length_dif_cd_hit           | "0.9"                 |                 | Step 3.     github.com/weizhongli/cdhit/wiki/3.-User's-Guide#CDHITEST                              |
 | Kmersize_kma                        | "16"                  | Kmer size.      | Step 5. For kma index.                                                                             |
 | distance_measure                    | "1"                   | Distmatrix      | Step 5.- 1 k-mer hamming distance 64 Jaccard distance 256 Cosine distance 4096 Chi-square distance |
 
@@ -119,7 +119,7 @@ If you want to rerun the pipeline with new config settings, you must look in the
  and take note of the numbered sections. If you want to change parameters you must delete all output
  with a number equal to or higher than the number of the section. You simply delete output in descending order starting with 99 and down to where you do not want to rerun anymore. Snakemake will rerun these parts of the pipeline with the new config settings when you give the run command `snakemake --use-conda --cores 39` again. 
 
-Be aware that the step that produces the folder 1_abricate  is not deterministic, so if you delete this folder and rerun the pipeline, you may not get exactly the same results again. If you want to add more data or use a different reference database, you must delete the entire output folder. 
+Be aware that the step that produces the folder 1_search  is not deterministic, so if you delete this folder and rerun the pipeline, you may not get exactly the same results again. If you want to add more data or use a different reference database, you must delete the entire output folder. 
 
 
 #### Redirect where to store conda packages
@@ -141,13 +141,13 @@ envs_dirs:
 ## Output
 
 
-**1_abricate**
+**1_search**
 
 This directory can be deleted if you are entirely done with the analysis, but keep it if you may want to rerun the data with different parameters, as this will save time.
 
-**2_filter_gene_observations**
+**2_filter**
 
-In this directory abricate results from all the samples have been merged. It contains 3 reports and 3 tsv files.
+In this directory abricate results from all the samples have been merged. It contains 2 reports and 3 tsv files.
 In step 1 no filtering has taken place yet. The raw collective abricate results can be found in [1_abricate_all.tsv](example_output/2_filter_gene_observations/1_abricate_all.tsv).
 In step 2 the results have been filtered on the minimum coverage and minimum sequence identity chosen in the config file. See [2_abricate_filter_qual.tsv](example_output/2_filter_gene_observations/2_abricate_filter_qual.tsv). 
 [2_abricate_filter_qual.report](example_output/2_filter_gene_observations/2_abricate_filter_qual.report) contains information on how many gene observtions that were discarded during filtering.
@@ -158,11 +158,7 @@ In step 3 the [tsv](example_output/2_filter_gene_observations/2_abricate_filter_
  [3_final_gene_results.tsv](example_output/2_filter_gene_observations/3_final_gene_results.tsv) contains all the gene observations that are included in the further analysis.
  
 
-**3_extract_sequences**
-
-This directory can be deleted if you are entirely done with the analysis, but keep it if you may want to rerun the analysis later.
-
-**4_cluster_by_gene_family**
+**3_cluster_by_gene_family**
 
 cd_hit.clstr contains the results of clustering the reference genes used as templates by identity.
 
