@@ -113,16 +113,13 @@ https://snakemake.readthedocs.io/en/stable/executing/cli.html#command-line-inter
 
 
 #### Rerunning the pipeline
-If you want to rerun part of the pipeline you simply delete output folders and files and 
-Snakemake will rerun these part of the pipeline when you give the run command `snakemake --use-conda --cores 39` again. 
-You must delete output in descending order starting with 99 and down to where you do not want to rerun anymore. 
-Be aware that the step that produces the folder 1_abricate  is not deterministic so if you delete this folder and rerun the pipeline you will not get exactly the same results. If you want want to rerun the pipeline from the start delete the entire output folder.
+Flankophile creates the output directories in the order of the numbers. The files in the first directory are used to produce the files in the second directory, and so on. This is useful since it is then easy to rerun the analysis with different parameters without having to redo the whole analysis.
 
-If you want to rerun the pipeline with new config settings you must look in the config file [config.yaml](config.yaml)
- and take note of the numbered sections. If you want to change a parameters you must delete all output
- with a number equal or higher than the number of the section. 
+If you want to rerun the pipeline with new config settings, you must look in the config file [config.yaml](config.yaml)
+ and take note of the numbered sections. If you want to change parameters you must delete all output
+ with a number equal to or higher than the number of the section. You simply delete output in descending order starting with 99 and down to where you do not want to rerun anymore. Snakemake will rerun these parts of the pipeline with the new config settings when you give the run command `snakemake --use-conda --cores 39` again. 
 
-If you want to add more data or use a different reference database you must delete the entire output folder. 
+Be aware that the step that produces the folder 1_abricate  is not deterministic, so if you delete this folder and rerun the pipeline, you may not get exactly the same results again. If you want to add more data or use a different reference database, you must delete the entire output folder. 
 
 
 #### Redirect where to store conda packages
@@ -143,13 +140,10 @@ envs_dirs:
 
 ## Output
 
-The output directories are created by Flankophile in the order of the numbers. The files in the first directory are used to produced the files in the second directory and so on. This is usefull since it is then easy to rerun the analysis with different parameters without having to redo the whole analysis.
-
-
 
 **1_abricate**
 
-This directory can be deleted if you are entirely done with the analysis, but keep it if you may want to rerun the data with different parameters as this will save time.
+This directory can be deleted if you are entirely done with the analysis, but keep it if you may want to rerun the data with different parameters, as this will save time.
 
 **2_filter_gene_observations**
 
