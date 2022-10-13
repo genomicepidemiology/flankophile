@@ -3,7 +3,7 @@
 # Companion script for Flankophile. 
 # By Alex Vincent Thorn
 
-# R version 4.1.2 was used for development. Try with 4.1.2 or 4.1.3.  
+# Try with R version 4.1.2 or 4.1.3.  
 
 
 
@@ -23,13 +23,6 @@ library(ggnewscale)   # ggnewscale_0.4.7
 path_to_output_folder <- "output"   # relative path to the entire flankophile output folder
 
 
-
-
-
-path_to_folder_for_plots <- "output/6_plots"                               # relative path to folder where plots are printed to
-
-
-
 cutoff_limit_gene_arrow_labels <- 10  # Try with shorter value if some genes labels are not shown on the arrow.
 
 
@@ -37,12 +30,11 @@ cutoff_limit_gene_arrow_labels <- 10  # Try with shorter value if some genes lab
 ############################################################################################################################
 
 
+path_to_folder_for_plots <- paste0(path_to_output_folder, "/5_plots") 
 
 
 
-
-
-path_to_all_cluster_folders <- paste0(path_to_output_folder, "/5_gene_clusters/")
+path_to_all_cluster_folders <- paste0(path_to_output_folder, "/4_cluster_results/")
 
 path_to_config_file <- paste0("config.yaml")
 

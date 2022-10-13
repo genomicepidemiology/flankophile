@@ -1,5 +1,5 @@
 # FLANKOPHILE
-FLANKOPHILE version 0.1.3
+FLANKOPHILE version 0.1.4
 By Alex Vincent Thorn
 
 ![flankophile_logo_2-1_square.jpg](example_output/flankophile_logo_2-1_square.jpg)
@@ -158,12 +158,12 @@ In step 3 the [tsv](example_output/2_filter/2_abricate_filter_qual.tsv) from ste
  [3_final_gene_results.tsv](example_output/2_filter/3_final_gene_results.tsv) contains all the gene observations that are included in the further analysis.
  
 
-**3_cluster_by_gene_family**
+**3_define_clusters**
 
 cd_hit.clstr contains the results of clustering the reference genes used as templates by identity.
 
   
-**5_gene_clusters**
+**4_cluster_results**
 
 Contains one directory for each reference gene cluster. Directory names have two parts. The first part is a unique number. 
 The second part after the underscore is the first part of the name of the gene that seeded the cluster. 
@@ -176,7 +176,7 @@ See [example of output from an induvidual gene family cluster](example_output/5_
 | masked_gene      | The DNA sequence of the flanking regions. Target sequence is included but masked.    |
 
 
-**6_plots**
+**5_plots**
 
 Contains all the plots produced by Flankophile from the R script [plot_gene_clusters_from_flankophile.R](bin/plot_gene_clusters_from_flankophile.R). Plots are made for each cluster in 5_gene_clusters. The distance matrices are used to produce distance trees and the gene annotation is then plotted with the tree. 
 

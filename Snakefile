@@ -1,4 +1,4 @@
-# FLANKOPHILE version 0.1.3
+# FLANKOPHILE version 0.1.4
 # Alex Vincent Thorn
 
 configfile: "config.yaml"
@@ -26,7 +26,7 @@ with open(config["input_list"], 'r') as file:
 rule all:
     input: 
        "output/2_filter/3_final_gene_results.tsv",
-       "output/3_cluster_by_gene_family/cd_hit.processed",
+       "output/3_define_clusters/cd_hit.processed",
        "output/99_config.yaml"
 
 
@@ -422,8 +422,8 @@ rule extract_relavant_reference_sequences:
         masked="output/2_filter/4_gene_fasta_files_pooled/masked_gene.fa",
         final_results="output/2_filter/3_final_gene_results.tsv"
     output:
-        list=temp("output/3_cluster_by_gene_family/final_output_list.txt"),
-        fasta="output/3_cluster_by_gene_family/relevant_ref_seqs.fasta"
+        list=temp("output/3_define_clusters/final_output_list.txt"),
+        fasta="output/3_define_clusters/relevant_ref_seqs.fasta"
     conda: "environment.yaml"
     shell:
         "awk '{{print $13}}' {input.final_results} |awk 'NR>1' | sort -u > {output.list};"
@@ -432,12 +432,12 @@ rule extract_relavant_reference_sequences:
 
 rule cd_hit:
     input:
-        "output/3_cluster_by_gene_family/relevant_ref_seqs.fasta"
+        "output/3_define_clusters/relevant_ref_seqs.fasta"
     output:
-        clus="output/3_cluster_by_gene_family/cd_hit.clstr",
-        genes=temp("output/3_cluster_by_gene_family/cd_hit"),
-        new_head=temp("output/3_cluster_by_gene_family/cd_hit.txt"),
-        temp=temp("output/3_cluster_by_gene_family/cd_hit.temp")
+        clus="output/3_define_clusters/cd_hit.clstr",
+        genes=temp("output/3_define_clusters/cd_hit"),
+        new_head=temp("output/3_define_clusters/cd_hit.txt"),
+        temp=temp("output/3_define_clusters/cd_hit.temp")
     conda: "environment.yaml"
     params:
         c= config["cluster_identity_cd_hit"],
@@ -453,9 +453,9 @@ rule cd_hit:
 
 rule process_cd_hit_results:
     input: 
-        "output/3_cluster_by_gene_family/cd_hit.txt"
+        "output/3_define_clusters/cd_hit.txt"
     output:
-        "output/3_cluster_by_gene_family/cd_hit.processed"
+        "output/3_define_clusters/cd_hit.processed"
     run:
         dict = {}
         input=open(input[0], "r")
@@ -480,12 +480,12 @@ rule process_cd_hit_results:
 
 checkpoint split_cd_hit_results:
     input:
-        "output/3_cluster_by_gene_family/cd_hit.processed"
+        "output/3_define_clusters/cd_hit.processed"
     output:
-        clusters=directory("output/3_cluster_by_gene_family/cd_hit_per_cluster")
+        clusters=directory("output/3_define_clusters/cd_hit_per_cluster")
     shell:
-        "mkdir output/3_cluster_by_gene_family/cd_hit_per_cluster;"
-        "cd output/3_cluster_by_gene_family/cd_hit_per_cluster;"
+        "mkdir output/3_define_clusters/cd_hit_per_cluster;"
+        "cd output/3_define_clusters/cd_hit_per_cluster;"
         "cat ../cd_hit.processed | awk  '{{print>$8}}'"
 
 
@@ -494,10 +494,10 @@ checkpoint split_cd_hit_results:
 rule extract_cluster_rows_from_results_file:
     input:
         results="output/2_filter/3_final_gene_results.tsv",
-        list="output/3_cluster_by_gene_family/cd_hit_per_cluster/{c}.tsv"
+        list="output/3_define_clusters/cd_hit_per_cluster/{c}.tsv"
     output:
-        results="output/5_gene_clusters/{c}/{c}.tsv",
-        temp=temp("output/5_gene_clusters/{c}/{c}.temp")
+        results="output/4_cluster_results/{c}/{c}.tsv",
+        temp=temp("output/4_cluster_results/{c}/{c}.temp")
     params:
         awk="'NR==FNR{a[$1];next}($13 in a){{print $0}}'"
     shell:
@@ -509,15 +509,15 @@ rule extract_cluster_rows_from_results_file:
 
 rule extract_cluster_fastas:
     input:
-        tsv="output/5_gene_clusters/{c}/{c}.tsv",
+        tsv="output/4_cluster_results/{c}/{c}.tsv",
         flanks_with_gene_fasta="output/2_filter/4_gene_fasta_files_pooled/flanks_with_gene.fa",
         just_gene_fasta="output/2_filter/4_gene_fasta_files_pooled/just_gene.fa",
         masked_gene_fasta="output/2_filter/4_gene_fasta_files_pooled/masked_gene.fa"
     output:
-        ID_list=temp("output/5_gene_clusters/{c}/{c}.ID_list"),
-        flanks_with_gene_fasta="output/5_gene_clusters/{c}/{c}.flanks_with_gene_fasta",
-        just_gene_fasta="output/5_gene_clusters/{c}/{c}.just_gene_fasta",
-        masked_gene_fasta="output/5_gene_clusters/{c}/{c}.masked_gene_fasta"
+        ID_list=temp("output/4_cluster_results/{c}/{c}.ID_list"),
+        flanks_with_gene_fasta="output/4_cluster_results/{c}/{c}.flanks_with_gene_fasta",
+        just_gene_fasta="output/4_cluster_results/{c}/{c}.just_gene_fasta",
+        masked_gene_fasta="output/4_cluster_results/{c}/{c}.masked_gene_fasta"
     conda: "environment.yaml"
     shell:
         "awk '{{print $15}}' {input.tsv} > {output.ID_list};"
@@ -530,7 +530,7 @@ rule extract_cluster_fastas:
 
 def split_just_gene_fasta_file_input(wildcards):
     checkpoint_output = checkpoints.split_cd_hit_results.get(**wildcards).output[0]
-    return expand("output/5_gene_clusters/{c}/{c}.just_gene_fasta",
+    return expand("output/4_cluster_results/{c}/{c}.just_gene_fasta",
            c=glob_wildcards(os.path.join(checkpoint_output, "{c}.tsv")).c)
 
 
@@ -549,11 +549,11 @@ rule translate_reference_database:
 rule prokka:
     input:
         AA_db="output/user_db",
-        fasta="output/5_gene_clusters/{c}/{c}.flanks_with_gene_fasta"
+        fasta="output/4_cluster_results/{c}/{c}.flanks_with_gene_fasta"
     output:
-        gff="output/5_gene_clusters/{c}/prokka/{c}.gff"
+        gff="output/4_cluster_results/{c}/prokka/{c}.gff"
     params:
-        outdir=lambda wildcards: "output/5_gene_clusters/" +  wildcards.c + "/prokka",
+        outdir=lambda wildcards: "output/4_cluster_results/" +  wildcards.c + "/prokka",
         c=lambda wildcards: wildcards.c
     conda: "environment.yaml" 
     shell:
@@ -563,9 +563,9 @@ rule prokka:
 
 rule make_gggenes_input:
     input:
-        "output/5_gene_clusters/{c}/prokka/{c}.gff"
+        "output/4_cluster_results/{c}/prokka/{c}.gff"
     output:
-        "output/5_gene_clusters/{c}/{c}.gggenes"
+        "output/4_cluster_results/{c}/{c}.gggenes"
     shell:
         "python3 ./bin/gff_to_gggenes.py {input} {output}"
 
@@ -573,28 +573,28 @@ rule make_gggenes_input:
 
 rule kma_index:
     input:
-        gggenes="output/5_gene_clusters/{c}/{c}.gggenes",
-        flanks_with_gene="output/5_gene_clusters/{c}/{c}.flanks_with_gene_fasta",
-        masked="output/5_gene_clusters/{c}/{c}.masked_gene_fasta",
-        just_gene="output/5_gene_clusters/{c}/{c}.just_gene_fasta"
+        gggenes="output/4_cluster_results/{c}/{c}.gggenes",
+        flanks_with_gene="output/4_cluster_results/{c}/{c}.flanks_with_gene_fasta",
+        masked="output/4_cluster_results/{c}/{c}.masked_gene_fasta",
+        just_gene="output/4_cluster_results/{c}/{c}.just_gene_fasta"
     output:
-        temp("output/5_gene_clusters/{c}/kma_index/flanks_with_gene.comp.b"),
-        temp("output/5_gene_clusters/{c}/kma_index/flanks_with_gene.length.b"),
-        temp("output/5_gene_clusters/{c}/kma_index/flanks_with_gene.name"),
-        temp("output/5_gene_clusters/{c}/kma_index/flanks_with_gene.seq.b"),
-        temp("output/5_gene_clusters/{c}/kma_index/masked_gene.comp.b"),
-        temp("output/5_gene_clusters/{c}/kma_index/masked_gene.length.b"),
-        temp("output/5_gene_clusters/{c}/kma_index/masked_gene.name"),
-        temp("output/5_gene_clusters/{c}/kma_index/masked_gene.seq.b"),
-        temp("output/5_gene_clusters/{c}/kma_index/just_gene.comp.b"),
-        temp("output/5_gene_clusters/{c}/kma_index/just_gene.length.b"),
-        temp("output/5_gene_clusters/{c}/kma_index/just_gene.name"),
-        temp("output/5_gene_clusters/{c}/kma_index/just_gene.seq.b")
+        temp("output/4_cluster_results/{c}/kma_index/flanks_with_gene.comp.b"),
+        temp("output/4_cluster_results/{c}/kma_index/flanks_with_gene.length.b"),
+        temp("output/4_cluster_results/{c}/kma_index/flanks_with_gene.name"),
+        temp("output/4_cluster_results/{c}/kma_index/flanks_with_gene.seq.b"),
+        temp("output/4_cluster_results/{c}/kma_index/masked_gene.comp.b"),
+        temp("output/4_cluster_results/{c}/kma_index/masked_gene.length.b"),
+        temp("output/4_cluster_results/{c}/kma_index/masked_gene.name"),
+        temp("output/4_cluster_results/{c}/kma_index/masked_gene.seq.b"),
+        temp("output/4_cluster_results/{c}/kma_index/just_gene.comp.b"),
+        temp("output/4_cluster_results/{c}/kma_index/just_gene.length.b"),
+        temp("output/4_cluster_results/{c}/kma_index/just_gene.name"),
+        temp("output/4_cluster_results/{c}/kma_index/just_gene.seq.b")
     conda: "environment.yaml"
     params:
-        outfolder_flanks_with_gene=lambda wildcards: "output/5_gene_clusters/" +  wildcards.c + "/kma_index/flanks_with_gene",
-        outfolder_masked=lambda wildcards: "output/5_gene_clusters/" +  wildcards.c + "/kma_index/masked_gene",
-        outfolder_just_gene=lambda wildcards: "output/5_gene_clusters/" +  wildcards.c + "/kma_index/just_gene",
+        outfolder_flanks_with_gene=lambda wildcards: "output/4_cluster_results/" +  wildcards.c + "/kma_index/flanks_with_gene",
+        outfolder_masked=lambda wildcards: "output/4_cluster_results/" +  wildcards.c + "/kma_index/masked_gene",
+        outfolder_just_gene=lambda wildcards: "output/4_cluster_results/" +  wildcards.c + "/kma_index/just_gene",
         k=config["Kmersize_kma"]
     shell:
         "kma index -k {params.k} -i {input.flanks_with_gene} -o {params.outfolder_flanks_with_gene};"
@@ -606,26 +606,26 @@ rule kma_index:
 
 rule kma_dist:
     input:
-        ja="output/5_gene_clusters/{c}/kma_index/just_gene.comp.b",
-        jb="output/5_gene_clusters/{c}/kma_index/just_gene.length.b",
-        jc="output/5_gene_clusters/{c}/kma_index/just_gene.name",
-        fa="output/5_gene_clusters/{c}/kma_index/flanks_with_gene.comp.b",
-        fb="output/5_gene_clusters/{c}/kma_index/flanks_with_gene.length.b",
-        fc="output/5_gene_clusters/{c}/kma_index/flanks_with_gene.name",
-        ma="output/5_gene_clusters/{c}/kma_index/masked_gene.comp.b",
-        mb="output/5_gene_clusters/{c}/kma_index/masked_gene.length.b",
-        mc="output/5_gene_clusters/{c}/kma_index/masked_gene.name",
-        f="output/5_gene_clusters/{c}/kma_index/flanks_with_gene.seq.b",
-        m="output/5_gene_clusters/{c}/kma_index/masked_gene.seq.b",
-        j="output/5_gene_clusters/{c}/kma_index/just_gene.seq.b"
+        ja="output/4_cluster_results/{c}/kma_index/just_gene.comp.b",
+        jb="output/4_cluster_results/{c}/kma_index/just_gene.length.b",
+        jc="output/4_cluster_results/{c}/kma_index/just_gene.name",
+        fa="output/4_cluster_results/{c}/kma_index/flanks_with_gene.comp.b",
+        fb="output/4_cluster_results/{c}/kma_index/flanks_with_gene.length.b",
+        fc="output/4_cluster_results/{c}/kma_index/flanks_with_gene.name",
+        ma="output/4_cluster_results/{c}/kma_index/masked_gene.comp.b",
+        mb="output/4_cluster_results/{c}/kma_index/masked_gene.length.b",
+        mc="output/4_cluster_results/{c}/kma_index/masked_gene.name",
+        f="output/4_cluster_results/{c}/kma_index/flanks_with_gene.seq.b",
+        m="output/4_cluster_results/{c}/kma_index/masked_gene.seq.b",
+        j="output/4_cluster_results/{c}/kma_index/just_gene.seq.b"
     output:
-        f="output/5_gene_clusters/{c}/{c}.flanks_with_gene_dist",
-        m="output/5_gene_clusters/{c}/{c}.masked_gene_dist",
-        j="output/5_gene_clusters/{c}/{c}.just_gene_dist"
+        f="output/4_cluster_results/{c}/{c}.flanks_with_gene_dist",
+        m="output/4_cluster_results/{c}/{c}.masked_gene_dist",
+        j="output/4_cluster_results/{c}/{c}.just_gene_dist"
     params:
-        f_db=lambda wildcards: "output/5_gene_clusters/" +  wildcards.c + "/kma_index/flanks_with_gene",
-        m_db=lambda wildcards: "output/5_gene_clusters/" +  wildcards.c + "/kma_index/masked_gene",
-        j_db=lambda wildcards: "output/5_gene_clusters/" +  wildcards.c + "/kma_index/just_gene",
+        f_db=lambda wildcards: "output/4_cluster_results/" +  wildcards.c + "/kma_index/flanks_with_gene",
+        m_db=lambda wildcards: "output/4_cluster_results/" +  wildcards.c + "/kma_index/masked_gene",
+        j_db=lambda wildcards: "output/4_cluster_results/" +  wildcards.c + "/kma_index/just_gene",
         dist_measure=config["distance_measure"]
      
     conda: "environment.yaml"
@@ -639,7 +639,7 @@ rule kma_dist:
 
 def dist_input(wildcards):
     checkpoint_output = checkpoints.split_cd_hit_results.get(**wildcards).output[0]
-    return expand("output/5_gene_clusters/{c}/{c}.masked_gene_dist",
+    return expand("output/4_cluster_results/{c}/{c}.masked_gene_dist",
            c=glob_wildcards(os.path.join(checkpoint_output, "{c}.tsv")).c)
 
 
@@ -651,7 +651,7 @@ rule finito:
         dist_input
     output:
         config="output/99_config.yaml",
-        txt="output/6_plots/completed.txt"
+        txt="output/5_plots/completed.txt"
     conda: "environment.yaml"
     shell:
         '''
