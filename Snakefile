@@ -39,7 +39,7 @@ rule user_db:
         temp("output/1_search/abricate.txt")
     conda: "environment.yaml"
     shell:
-        "cp {input} bin/abricate/db/user_db/sequences;"
+        "cat {input} | awk -F' ' '{{print $1}}' > bin/abricate/db/user_db/sequences;"
         "echo {input} > {output};"
         "./bin/abricate/bin/abricate --setupdb >> {output}"
 
@@ -540,10 +540,8 @@ rule translate_reference_database:
     output:
         temp("output/user_db")
     conda: "environment.yaml"
-    params:
-        fasta=config["database"]
     shell:
-        "seqkit translate {params.fasta} > {output}"
+        "seqkit translate bin/abricate/db/user_db/sequences > {output}"
 
 
 rule prokka:
