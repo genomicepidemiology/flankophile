@@ -14,7 +14,7 @@ Flankophile is a pipeline build for easy analysis and visualization of gene synt
 
 **Input:** Assembled genetic data in fasta format plus a reference database containing target sequences in fasta format.
 
-**Output:** [Gene synteny plots](example_output/6_plots), [results tables](example_output/2_filter/), [distance matrices](example_output/5_gene_clusters/0_blaSHV-187/0_blaSHV-187.flanks_with_gene_dist), genetic sequences of genes and flanking regions in fasta format. 
+**Output:** [Gene synteny plots](example_output/6_plots), [results tables](example_output/2_filter/), [distance matrices](example_output/4_cluster_results/0_blaSHV-187/0_blaSHV-187.flanks_with_gene_dist), genetic sequences of genes and flanking regions in fasta format. 
 
 
 
@@ -167,7 +167,7 @@ cd_hit.clstr contains the results of clustering the reference genes used as temp
 
 Contains one directory for each reference gene cluster. Directory names have two parts. The first part is a unique number. 
 The second part after the underscore is the first part of the name of the gene that seeded the cluster. 
-See [example of output from an induvidual gene family cluster](example_output/5_gene_clusters/0_blaSHV-187/). The folder contains [distance matrices](example_output/5_gene_clusters/0_blaSHV-187/0_blaSHV-187.flanks_with_gene_dist), cluster results as tsv, fasta files and output from Prokka.
+See [example of output from an induvidual gene family cluster](example_output/4_cluster_results/0_blaSHV-187/). The folder contains [distance matrices](example_output/4_cluster_results/0_blaSHV-187/0_blaSHV-187.flanks_with_gene_dist), cluster results as tsv, fasta files and output from Prokka.
 
 | **Nickname**     | **Explanation**                                                                      |
 |------------------|--------------------------------------------------------------------------------------|
@@ -178,7 +178,7 @@ See [example of output from an induvidual gene family cluster](example_output/5_
 
 **5_plots**
 
-Contains all the plots produced by Flankophile from the R script [plot_gene_clusters_from_flankophile.R](bin/plot_gene_clusters_from_flankophile.R). Plots are made for each cluster in 5_gene_clusters. The distance matrices are used to produce distance trees and the gene annotation is then plotted with the tree. 
+Contains all the plots produced by Flankophile from the R script [plot_gene_clusters_from_flankophile.R](bin/plot_gene_clusters_from_flankophile.R). Plots are made for each cluster in 4_cluster_results. The distance matrices are used to produce distance trees and the gene annotation is then plotted with the tree. 
 
 [Examples of plots made with the pipeline](example_output/6_plots).
 
