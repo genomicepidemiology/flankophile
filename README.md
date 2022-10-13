@@ -14,7 +14,7 @@ Flankophile is a pipeline build for easy analysis and visualization of gene synt
 
 **Input:** Assembled genetic data in fasta format plus a reference database containing target sequences in fasta format.
 
-**Output:** [Gene synteny plots](example_output/6_plots), [results tables](example_output/2_filter_gene_observations/), [distance matrices](example_output/5_gene_clusters/0_blaSHV-187/0_blaSHV-187.flanks_with_gene_dist), genetic sequences of genes and flanking regions in fasta format. 
+**Output:** [Gene synteny plots](example_output/6_plots), [results tables](example_output/2_filter/), [distance matrices](example_output/5_gene_clusters/0_blaSHV-187/0_blaSHV-187.flanks_with_gene_dist), genetic sequences of genes and flanking regions in fasta format. 
 
 
 
@@ -148,14 +148,14 @@ This directory can be deleted if you are entirely done with the analysis, but ke
 **2_filter**
 
 In this directory abricate results from all the samples have been merged. It contains 2 reports and 3 tsv files.
-In step 1 no filtering has taken place yet. The raw collective abricate results can be found in [1_abricate_all.tsv](example_output/2_filter_gene_observations/1_abricate_all.tsv).
-In step 2 the results have been filtered on the minimum coverage and minimum sequence identity chosen in the config file. See [2_abricate_filter_qual.tsv](example_output/2_filter_gene_observations/2_abricate_filter_qual.tsv). 
-[2_abricate_filter_qual.report](example_output/2_filter_gene_observations/2_abricate_filter_qual.report) contains information on how many gene observtions that were discarded during filtering.
+In step 1 no filtering has taken place yet. The raw collective abricate results can be found in [1_abricate_all.tsv](example_output/2_filter/1_abricate_all.tsv).
+In step 2 the results have been filtered on the minimum coverage and minimum sequence identity chosen in the config file. See [2_abricate_filter_qual.tsv](example_output/2_filter/2_abricate_filter_qual.tsv). 
+[2_abricate_filter_qual.report](example_output/2_filter/2_abricate_filter_qual.report) contains information on how many gene observtions that were discarded during filtering.
 
-In step 3 the [tsv](example_output/2_filter_gene_observations/2_abricate_filter_qual.tsv) from step 2 has been filtered on flank length. Gene observations that are so close to the
+In step 3 the [tsv](example_output/2_filter/2_abricate_filter_qual.tsv) from step 2 has been filtered on flank length. Gene observations that are so close to the
  edge of a contig that there is not space for the full desired flank length are discarded. 
- [3_abricate_filter_length.report](example_output/2_filter_gene_observations/3_abricate_filter_length.report) contains information on how many gene observtions that were discarded during filtering.
- [3_final_gene_results.tsv](example_output/2_filter_gene_observations/3_final_gene_results.tsv) contains all the gene observations that are included in the further analysis.
+ [3_abricate_filter_length.report](example_output/2_filter/3_abricate_filter_length.report) contains information on how many gene observtions that were discarded during filtering.
+ [3_final_gene_results.tsv](example_output/2_filter/3_final_gene_results.tsv) contains all the gene observations that are included in the further analysis.
  
 
 **3_cluster_by_gene_family**
