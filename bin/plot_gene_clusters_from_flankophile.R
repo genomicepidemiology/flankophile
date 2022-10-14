@@ -92,7 +92,8 @@ make_plots <- function(cluster_name) {
     relocate(id) %>% 
     rename(IDENTITY = "%IDENTITY") %>% 
     mutate(Gene = str_c(GENE, IDENTITY, "%", sep = "_")) %>% 
-    select(id, Gene) %>% 
+    select(id, Gene) %>%
+    rename(Identity = Gene) %>%
     column_to_rownames(., var = "id") 
   
   
@@ -174,13 +175,13 @@ make_plots <- function(cluster_name) {
                      data = cluster_prokka, geom = geom_motif, panel = 'Alignment',
                      on = "TARGET", label = 'gene_arrow_label', align = 'left') +
       labs(fill = "Gene") + 
-      scale_fill_hue() + new_scale_fill()
+      scale_fill_hue(direction = 1) + new_scale_fill()
     
     
     t3 <- gheatmap(t2, info_gene_ID,  width=0.1, hjust=1,
                    colnames=TRUE, offset = off, font.size = 1, colnames_position = "bottom", colnames_angle = 0) +
       labs(fill = "Target - Reference DB % identity") + 
-      scale_fill_hue() + new_scale_fill() +
+      scale_fill_hue(direction = -1, l = 70, c = 30) + new_scale_fill() +
       theme(legend.text = element_text(size=5))
     
     
@@ -202,13 +203,13 @@ make_plots <- function(cluster_name) {
                      data = cluster_prokka, geom = geom_motif, panel = 'Alignment',
                      on = "TARGET", label = 'gene_arrow_label', align = 'left') +
       labs(fill = "Gene") + 
-      scale_fill_hue() + new_scale_fill()
+      scale_fill_hue(direction = 1) + new_scale_fill()
     
     
     t3 <- gheatmap(t2, info_gene_ID,  width=0.1, hjust=1,
                    colnames=TRUE, offset = off, font.size = 1, colnames_position = "bottom", colnames_angle = 0) +
       labs(fill = "Target - Reference DB % identity") + 
-      scale_fill_hue() + new_scale_fill() +
+      scale_fill_hue(direction = -1, l = 70, c = 30) + new_scale_fill() +
       theme(legend.text = element_text(size=5))
     
     t4 <- t3 + ggtitle(paste0("Cluster ", cluster_name, " - distance tree based on gene sequences")) + 
@@ -230,13 +231,13 @@ make_plots <- function(cluster_name) {
                      data = cluster_prokka, geom = geom_motif, panel = 'Alignment',
                      on = "TARGET", label = 'gene_arrow_label', align = 'left') +
       labs(fill = "Gene") + 
-      scale_fill_hue() + new_scale_fill()
+      scale_fill_hue(direction = 1) + new_scale_fill()
     
     
     t3 <- gheatmap(t2, info_gene_ID,  width=0.1, hjust=1,
                    colnames=TRUE, offset = off, font.size = 1, colnames_position = "bottom", colnames_angle = 0) +
       labs(fill = "Target - Reference DB % identity") + 
-      scale_fill_hue() + new_scale_fill() +
+      scale_fill_hue(direction = -1, l = 70, c = 30) + new_scale_fill() +
       theme(legend.text = element_text(size=5))
     
     t4 <- t3 + ggtitle(paste0("Cluster ", cluster_name, " - distance tree based on flanking region plus gene sequences")) + 
