@@ -1,5 +1,5 @@
 # FLANKOPHILE
-FLANKOPHILE version 0.1.4
+FLANKOPHILE version 0.1.5
 By Alex Vincent Thorn
 
 ![flankophile_logo_2-1_square.jpg](example_output/flankophile_logo_2-1_square.jpg)
@@ -87,13 +87,13 @@ The configuation file contains numbered sections. Each number refer to an output
 |-------------------------------------|-----------------------|-----------------|----------------------------------------------------------------------------------------------------|
 | database                            | "input/db.fa"         | Path to file.   | Step 1. Multifasta file of genes of interest, DNA.                                                 |
 | input_list                          | "input/sa.tsv"        | Path to file.   | Step 1. tsv file.                                                                                  |
-| flank_length_upstreams              | "3000"                | Length in bp.   | Step 2.                                                                                            |
-| flank_length_downstreams            | "3000"                | Length in bp.   | Step 2.                                                                                            |
+| flank_length_upstreams              | "1500"                | Length in bp.   | Step 2.                                                                                            |
+| flank_length_downstreams            | "1500"                | Length in bp.   | Step 2.                                                                                            |
 | min_coverage_abricate               | "95"                  | In %.           | Step 2.                                                                                            |
 | min_identity_abricate               | "95"                  | In %.           | Step 2.                                                                                            |
-| cluster_identity_cd_hit             | "0.95"                | 1 equals 100 %. | Step 3.     github.com/weizhongli/cdhit/wiki/3.-User's-Guide#CDHITEST                              |
-| cluster_wordsize_cd_hit             | "9"                   |                 | Step 3.     github.com/weizhongli/cdhit/wiki/3.-User's-Guide#CDHITEST                              |
-| cluster_length_dif_cd_hit           | "0.9"                 |                 | Step 3.     github.com/weizhongli/cdhit/wiki/3.-User's-Guide#CDHITEST                              |
+| cluster_identity_cd_hit             | "0.95"                | 1 equals 100 %. | Step 3.     -c github.com/weizhongli/cdhit/wiki/3.-User's-Guide#CDHITEST                           |
+| cluster_wordsize_cd_hit             | "9"                   | Wordsize        | Step 3.     -n github.com/weizhongli/cdhit/wiki/3.-User's-Guide#CDHITEST                           |
+| cluster_length_dif_cd_hit           | "0.9"                 | 1 equals 100 %. | Step 3.     Length difference cutoff.                                                              |
 | Kmersize_kma                        | "16"                  | Kmer size.      | Step 4. For kma index.                                                                             |
 | distance_measure                    | "1"                   | Distmatrix      | Step 4.- 1 k-mer hamming distance 64 Jaccard distance 256 Cosine distance 4096 Chi-square distance |
 

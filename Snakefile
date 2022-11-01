@@ -1,4 +1,4 @@
-# FLANKOPHILE version 0.1.4
+# FLANKOPHILE version 0.1.5
 # Alex Vincent Thorn
 
 configfile: "config.yaml"
@@ -16,7 +16,7 @@ with open(config["input_list"], 'r') as file:
         if not line.startswith("#"):
             line_list = line.split("\t")
             assembly_name = line_list[0]
-            assembly_path = line_list[-1]
+            assembly_path = line_list[1]
             if assembly_name not in ASSEMBLY_NAMES:
                 ASSEMBLY_NAMES.append(assembly_name)
                 ASSEMBLY_NAME_PATH_DICT[assembly_name] = assembly_path
@@ -50,13 +50,17 @@ rule abricate:
         db="output/1_search/abricate.txt"
     output:
         tsv=temp("output/1_search/tsv/{assembly_name}/{assembly_name}.tsv"),
-        length="output/1_search/contig_length/{assembly_name}/{assembly_name}.length"
+        length="output/1_search/contig_length/{assembly_name}/{assembly_name}.length",
+        tsv_c2=temp("output/1_search/tsv/{assembly_name}/{assembly_name}.tsv_c2"),
+        length_temp=temp("output/1_search/contig_length/{assembly_name}/{assembly_name}.length_temp")
     params:
         assembly_path = lambda wildcards: ASSEMBLY_NAME_PATH_DICT[wildcards.assembly_name]
     conda: "environment.yaml"
     shell:
         "./bin/abricate/bin/abricate --db user_db {params.assembly_path} > {output.tsv};"
-        "seqkit fx2tab --length --name  {params.assembly_path} | awk -v  OFS='\t' '{{print $1, $NF}}' > {output.length}"
+        "seqkit fx2tab --length --name  {params.assembly_path} | awk -v  OFS='\t' '{{print $1, $NF}}' > {output.length_temp};"
+        "cut -f2 {output.tsv} > {output.tsv_c2};"
+        "grep -wFf {output.tsv_c2} {output.length_temp} > {output.length} || true"
 
 
 
@@ -423,7 +427,7 @@ rule extract_relavant_reference_sequences:
         final_results="output/2_filter/3_final_gene_results.tsv"
     output:
         list=temp("output/3_define_clusters/final_output_list.txt"),
-        fasta="output/3_define_clusters/relevant_ref_seqs.fasta"
+        fasta=temp("output/3_define_clusters/relevant_ref_seqs.fasta")
     conda: "environment.yaml"
     shell:
         "awk '{{print $13}}' {input.final_results} |awk 'NR>1' | sort -u > {output.list};"
@@ -549,7 +553,22 @@ rule prokka:
         AA_db="output/user_db",
         fasta="output/4_cluster_results/{c}/{c}.flanks_with_gene_fasta"
     output:
-        gff="output/4_cluster_results/{c}/prokka/{c}.gff"
+        gff="output/4_cluster_results/{c}/prokka/{c}.gff",
+        gbk="output/4_cluster_results/{c}/prokka/{c}.gbk",
+        p1=temp("output/4_cluster_results/{c}/prokka/proteins.pot"),
+        p2=temp("output/4_cluster_results/{c}/prokka/proteins.pdb"),
+        p3=temp("output/4_cluster_results/{c}/prokka/proteins.ptf"),
+        p4=temp("output/4_cluster_results/{c}/prokka/proteins.pto"),
+        err=temp("output/4_cluster_results/{c}/prokka/{c}.err"),
+        log=temp("output/4_cluster_results/{c}/prokka/{c}.log"),
+        faa=temp("output/4_cluster_results/{c}/prokka/{c}.faa"),
+        fnn=temp("output/4_cluster_results/{c}/prokka/{c}.ffn"),
+        fna=temp("output/4_cluster_results/{c}/prokka/{c}.fna"),
+        txt=temp("output/4_cluster_results/{c}/prokka/{c}.txt"),
+        tbl=temp("output/4_cluster_results/{c}/prokka/{c}.tbl"),
+        sqn=temp("output/4_cluster_results/{c}/prokka/{c}.sqn"),
+        tsv=temp("output/4_cluster_results/{c}/prokka/{c}.tsv"),
+        fsa=temp("output/4_cluster_results/{c}/prokka/{c}.fsa")
     params:
         outdir=lambda wildcards: "output/4_cluster_results/" +  wildcards.c + "/prokka",
         c=lambda wildcards: wildcards.c
@@ -654,6 +673,7 @@ rule finito:
     shell:
         '''
         cp config.yaml {output.config};
+        rm -r output/3_define_clusters/cd_hit_per_cluster;
         echo plots_completed > {output.txt};
         Rscript bin/plot_gene_clusters_from_flankophile.R
         '''

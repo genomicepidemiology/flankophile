@@ -22,13 +22,13 @@ min_identity_abricate: "98"   # percentage
 
 ## 3 ##
 
-cluster_identity_cd_hit: "0.98"       # -c 
+cluster_identity_cd_hit: "0.98"       # CD-HIT parameter = -c   0.98 = cluster at 98 % identity
 
-cluster_wordsize_cd_hit: "10"        # -n 
+cluster_wordsize_cd_hit: "10"        # CD-HIT parameter = -n    See https://github.com/weizhongli/cdhit/wiki/3.-User's-Guide#CDHITEST for apropiate wordsize.
 
-cluster_length_dif_cd_hit: "0.9"     # -s 
+cluster_length_dif_cd_hit: "0.9"     # CD-HIT parameter = -s    Length difference cutoff, if set to 0.9, the shorter sequences need to be at least 90% length of the representative of the cluster.
 
-#See https://github.com/weizhongli/cdhit/wiki/3.-User's-Guide#CDHITEST for apropiate wordsize.
+
 
 
 ## 4 + 5 ##
