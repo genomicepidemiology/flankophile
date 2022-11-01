@@ -27,8 +27,7 @@ screen -S session_name
 Now book and interactive node via the qsub system. Here is an example on how to do it.
 
 ```bash
-qsub -W group_list=<<GROUPNAME>> -A <<GROUPNAME>> -l nodes=1:ppn=40,mem=20gb,walltime=14400 -I
-
+qsub -W group_list=<<GROUPNAME>> -A <<GROUPNAME>> -l nodes=1:thinnode:ppn=40,mem=180gb,walltime=21600 -I
 ```
 Now you need to load the right modules:
 
