@@ -150,7 +150,7 @@ This directory can be deleted if you are entirely done with the analysis, but ke
 In this directory abricate results from all the samples have been merged. It contains 2 reports and 3 tsv files.
 In step 1 no filtering has taken place yet. The raw collective abricate results can be found in [1_abricate_all.tsv](example_output/2_filter/1_abricate_all.tsv).
 In step 2 the results have been filtered on the minimum coverage and minimum sequence identity chosen in the config file. See [2_abricate_filter_qual.tsv](example_output/2_filter/2_abricate_filter_qual.tsv). 
-[2_abricate_filter_qual.report](example_output/2_filter/2_abricate_filter_qual.report) contains information on how many gene observtions that were discarded during filtering.
+
 
 In step 3 the [tsv](example_output/2_filter/2_abricate_filter_qual.tsv) from step 2 has been filtered on flank length. Gene observations that are so close to the
  edge of a contig that there is not space for the full desired flank length are discarded. 
