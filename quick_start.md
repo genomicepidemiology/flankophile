@@ -17,7 +17,7 @@ For details see [README](README.md). You can put these files in the input folder
 Edit the [config file](config.yaml). Change the path of the input files so they refer to your input files. 
 Change the values of other variables if you want to. See see [README](README.md) for more details.
 
-Now use screen to to make a new session on computerome.
+Now use screen to to make a new session on Computerome.
 
 ```bash
 screen -S session_name
@@ -27,7 +27,7 @@ screen -S session_name
 Now book and interactive node via the qsub system. Here is an example on how to do it.
 
 ```bash
-qsub -W group_list=<<GROUPNAME>> -A <<GROUPNAME>> -l nodes=1:thinnode:ppn=40,mem=180gb,walltime=21600 -I
+qsub -W group_list=<<GROUPNAME>> -A <<GROUPNAME>> -l nodes=1:thinnode:ppn=40,mem=180gb,walltime=25200 -I
 ```
 Now you need to load the right modules:
 
@@ -45,8 +45,6 @@ Go to the flankophile folder. To run the pipeline:
 snakemake --use-conda --cores 39
 
 ```
-
-Now wait  for results.
 
 
 **Problems with conda?**
