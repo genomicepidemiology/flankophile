@@ -1,4 +1,4 @@
-# FLANKOPHILE version 0.1.5
+# FLANKOPHILE version 0.1.6
 # Alex Vincent Thorn
 
 configfile: "config.yaml"
@@ -54,10 +54,12 @@ rule abricate:
         tsv_c2=temp("output/1_search/tsv/{assembly_name}/{assembly_name}.tsv_c2"),
         length_temp=temp("output/1_search/contig_length/{assembly_name}/{assembly_name}.length_temp")
     params:
-        assembly_path = lambda wildcards: ASSEMBLY_NAME_PATH_DICT[wildcards.assembly_name]
+        assembly_path = lambda wildcards: ASSEMBLY_NAME_PATH_DICT[wildcards.assembly_name],
+        cov=config["min_coverage_abricate"],
+        id=config["min_identity_abricate"]
     conda: "environment.yaml"
     shell:
-        "./bin/abricate/bin/abricate --db user_db {params.assembly_path} > {output.tsv};"
+        "./bin/abricate/bin/abricate --db user_db --minid {params.id} --mincov {params.cov} {params.assembly_path} > {output.tsv};"
         "seqkit fx2tab --length --name  {params.assembly_path} | awk -v  OFS='\t' '{{print $1, $NF}}' > {output.length_temp};"
         "cut -f2 {output.tsv} > {output.tsv_c2};"
         "grep -wFf {output.tsv_c2} {output.length_temp} > {output.length} || true"
@@ -69,78 +71,39 @@ rule abricate_merge:
         expand("output/1_search/tsv/{assembly_name}/{assembly_name}.tsv", assembly_name=ASSEMBLY_NAMES)
     output:
          no_head=temp("output/1_search/abricate_all_raw_no_header.tsv"),
-         tsv="output/1_search/abricate_all.tsv"
+         tsv="output/1_search/search_raw.tsv"
     shell:
         "cat  {input} | grep -v '^#'| sed 's/\t\t/\t/g'   > {output.no_head};"
         "cat bin/abricate_header.txt {output.no_head} > {output.tsv};"
 
-rule copy_abricate_results:
-    input:
-        "output/1_search/abricate_all.tsv"
-    output:
-        "output/2_filter/1_abricate_all.tsv"
-    shell:
-        "cp {input} {output}"
-         
 
+         
 
 rule filter_abricate_quality:
     input:
-        tsv="output/2_filter/1_abricate_all.tsv"
+        tsv="output/1_search/search_raw.tsv"
     output:
-        tsv="output/2_filter/2_abricate_filter_qual.tsv",
-        report="output/2_filter/2_abricate_filter_qual.report"
+        tsv="output/2_filter/2_abricate_filter_qual.tsv"
     run:
-        # Counter of how many observations that would be discarted at each threshold
-        COV_user, COV_100, COV_95, COV_90, COV_85, ID_user, ID_100, ID_95, ID_90, ID_85 = 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-        total_input_observations, total_discarded_observation,  col_index_COV, col_index_ID  = 0, 0, 9, 10 
-        user_COV_threshold, user_ID_threshold  = float(config["min_coverage_abricate"]), float(config["min_identity_abricate"])
-        
-        input_tsv = open("output/2_filter/1_abricate_all.tsv", "r")
+        input_tsv = open("output/1_search/search_raw.tsv", "r")
         output_tsv = open("output/2_filter/2_abricate_filter_qual.tsv","w")
+        row_count = 0
         for line in input_tsv:
             line = line = line.strip()
             if line.startswith("#"):
                 print(line, file = output_tsv)
             else:
-                total_input_observations += 1
+                row_count += 1
                 line_list = line.split("\t")
-                COV_per = float(line_list[col_index_COV])
-                ID_per = float(line_list[col_index_ID])
-                
-                if COV_per < 100:
-                    COV_100 +=1
-                    if COV_per < 95:
-                        COV_95 += 1
-                        if COV_per < 90:
-                            COV_90 +=1
-                            if COV_per < 85: COV_85 += 1
-                if COV_per < user_COV_threshold: COV_user += 1
-                if ID_per < 100:
-                    ID_100 +=1
-                    if ID_per < 95:
-                        ID_95 += 1
-                        if ID_per < 90:
-                            ID_90 +=1
-                            if ID_per < 85: ID_85 += 1
-                if ID_per < user_ID_threshold: ID_user += 1
-                if  COV_per >= user_COV_threshold and ID_per >= user_ID_threshold: print(line, file = output_tsv)
-                else:
-                    total_discarded_observation += 1 
+                assembly_name = PATH_ASSEMBLY_NAME_DICT[line_list[0]]
+
+
+                new_line = line + "\t" + assembly_name + "\t" + "i" + str(row_count)
+                print(new_line, file = output_tsv)
+
         input_tsv.close
         output_tsv.close
-        output_report = open("output/2_filter/2_abricate_filter_qual.report","w")
-        a = "Minimum coverage in percentage threshold:" + "\t" + str(user_COV_threshold) + ".\t" + "Sequences excluded due to low coverage:           " + "\t" + str(COV_user)
-        b = a +"\nMinimum sequence identity  in percentage threshold::" + "\t" + str(user_ID_threshold )  + ".\t" + "Sequences excluded due to low identity:" + "\t" + str(ID_user)
-        c = b + "\n\nNumber of gene observations before quality filtering:" + "\t" + str(total_input_observations)
-        d = c + "\nNumber of gene observations after quality filtering:" + "\t" + str(total_input_observations - total_discarded_observation)
-        e = d + "\nNumber of gene observations discarded by quality filtering:" + "\t" + str(total_discarded_observation)
-        f = e +"\n\n\nHypothetical number of sequences discarded due to low coverage if the following thresholds were used"
-        g = f + "\nCOV_100" + "\t" + "COV_95" + "\t" + "COV_90" + "\t"  + "COV_85\n" +  str(COV_100) + "\t" + str(COV_95) + "\t" + str(COV_90) + "\t"  + str(COV_85)
-        h = g + "\n\nHypothetical number of sequences discarded due to low sequence identity if the following thresholds were used"
-        i = h + "\nID_100" + "\t" + "ID_95" + "\t" + "ID_90" + "\t"  + "ID_85\n" +  str(ID_100) + "\t" + str(ID_95) + "\t" + str(ID_90) + "\t"  + str(ID_85)
-        print(i, file = output_report)
-        output_report.close
+        
 
 
 
@@ -214,8 +177,10 @@ rule filter_abricate_space_for_flanks:
                             DOWN_half += 1
                 if  space_for_flank_up >= user_upstreams and space_for_flank_down >= user_downstreams:
                     counter_accepted += 1
-                    new_line = line + "\t" + assembly_name + "\t" + "i" + str(counter_accepted)
-                    print(new_line, file = output_tsv)
+                   # new_line = line + "\t" + assembly_name + "\t" + "i" + str(counter_accepted)
+                    #new_line = line + "\t" + "i" + str(counter_accepted)
+                    #print(new_line, file = output_tsv)
+                    print(line, file = output_tsv)
                 else:
                     total_discarded_observation += 1
         input_tsv.close

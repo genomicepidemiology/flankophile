@@ -1,4 +1,4 @@
-# FLANKOPHILE version 0.1.5
+# FLANKOPHILE version 0.1.6
 # Alex Vincent Thorn
 
 
@@ -8,6 +8,11 @@ database: "input/example_input_files/ResFinder_08_02_2022.fa"         # a multif
 
 input_list: "input/example_input_files/input_list_example_assembly_mode.tsv"               # Path to input_list.
                                                                                                                
+min_coverage_abricate: "98"   # percentage
+
+min_identity_abricate: "98"   # percentage
+
+
  
 ## 2 ##
 
@@ -15,9 +20,6 @@ flank_length_upstreams: "1500"
 
 flank_length_downstreams: "1500"
 
-min_coverage_abricate: "98"   # percentage
-
-min_identity_abricate: "98"   # percentage
 
 
 ## 3 ##
