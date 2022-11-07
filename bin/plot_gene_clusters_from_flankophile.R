@@ -88,7 +88,7 @@ make_plots <- function(cluster_name) {
   
   
   info_gene_ID <- cluster_results %>% 
-    mutate(id = Gene_observation_ID) %>% 
+    mutate(id = OBSERVATION_ID) %>% 
     relocate(id) %>% 
     rename(IDENTITY = "%IDENTITY") %>% 
     mutate(Gene = str_c(GENE, IDENTITY, "%", sep = "_")) %>% 
