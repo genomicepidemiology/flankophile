@@ -48,7 +48,7 @@ You need to Miniconda and Snakemake to run Flankophile. Flankophile is conda bas
 
 ### Input files
 
-In order to use the pipeline you need to prepare two input files: The reference database and the data you want to analyse.
+In order to use the pipeline you need to prepare two input files: The reference database and the input list of data you want to analyse.
  
 The path to the input files must be given in the config file [config.yaml](config.yaml).
 
@@ -61,7 +61,7 @@ The reference database contains reference sequences of all the genes or target s
 The [ResFinder database](input/example_input_files/ResFinder_08_02_2022.fa) is included in Flankophile as an example of a reference database. The ResFinder database consists of acquired antimicrobial resistance genes. The version found in this repository is from February 8 2022. The up-to-date ResFinder database is found [here](https://bitbucket.org/genomicepidemiology/resfinder_db/src/master/). If you want to use the included version of the ResFinder database for your analysis then you do not need to change the database variable in the contig file.
 
 
-#### Sample input list
+#### Input list
 
 Your sample input data must consist of a number of assemblies, binned or unbinned contigs or genomes in DNA multifasta format. One multifasta per sample. You can input as many samples as wanted. 
 
