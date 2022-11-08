@@ -63,13 +63,13 @@ The [ResFinder database](input/example_input_files/ResFinder_08_02_2022.fa) is i
 
 #### Input list
 
-Your sample input data must consist of a number of assemblies, binned or unbinned contigs or genomes in DNA multifasta format. One multifasta per sample. You can input as many samples as wanted. 
+Your sample input data must consist of a number of assemblies, binned or unbinned contigs, genomes or other data in DNA multifasta format. One multifasta per sample. You can input as many samples as wanted. 
 
-The input_list file is a tsv file with two columns. Each row represents a sample. The first column is a unique nickname for each input fasta, for example, "sample_1" or "e.coli_bin_32". The name must not contain whitespace or slash but underscore, dot and dash is fine. The second column is the full path to the fasta file, including the file name. The columns must be separated by tab. Flankophile will ignore rows that start with **#**. This is useful if you want to add human-readable headers.
+The input_list file is a tsv file with two columns. Each row represents a sample. The first column is a unique nickname for each input fasta, for example, "sample_1" or "e.coli_bin_32". The name must not contain whitespace or slash but underscore, dot and dash is accepted. The second column is the full path to the fasta file, including the file name. The columns must be separated by tab. Flankophile will ignore rows that start with **#**. This is useful if you want to add headers.
 
-Another useful feature is that if the first one or two characters in the assembly name are alphabetic letters, these will be included in the OBSERVATION_ID, which is used in the plots as tip labels. If you are working with samples from different countries, it will make sense to make the countries' two-letter code the first two letters of the assembly names.
+Another useful feature is that if the first one or two characters in the assembly name are alphabetic letters, these will be included in the OBSERVATION_ID, which is used in the plots as tip labels. If you are working with samples from different countries, it will make sense to make the countries' two-letter code the first two letters of the assembly names. If the assembly name does not start with a letter then the OBSERVATION_ID will start with a lowercase i.
 
-In [input_list_example_assembly_mode.tsv](input/example_input_files/input_list_example_assembly_mode.tsv) you can see an example of an input_list file. 
+See an example of an  [input_list file](input/example_input_files/input_list_example_assembly_mode.tsv). 
 
 | #assembly_name | path                                   |
 |----------------|----------------------------------------|
@@ -82,8 +82,8 @@ In [input_list_example_assembly_mode.tsv](input/example_input_files/input_list_e
 
 ### Configuration file
 
-Fill out [config.yaml](config.yaml) before running the pipeline. The path to input files can be given as relative path to the location of the Snakefile.
-The configuation file contains numbered sections. Each number refer to an output folder.
+Fill out [config.yaml](config.yaml) before running the pipeline. The path to input files can be given as a relative path to the location of the Snakefile.
+The configuration file contains numbered sections. Each number refers to an output folder. Settings in step 1 affect all folders, and step 2 affects all output from 2 and up. And so on.
 
 
 | **Variable name**                   | **Suggestion**        | **Variable**    | **Notes**                                                                                          |
@@ -112,6 +112,8 @@ Run the pipeline:
 
 Cores is the number of cores available. For more info on flags visit: 
 https://snakemake.readthedocs.io/en/stable/executing/cli.html#command-line-interface 
+
+You should run the pipeline with as much memory as possible if you have large input files since the search step uses a large amount of memory.
 
 
 
