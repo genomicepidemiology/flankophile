@@ -10,11 +10,11 @@ By Alex Vincent Thorn
 
 ## About Flankophile
 
-Flankophile is a pipeline build for easy analysis and visualization of gene synteny - the genetic context of genes. Flankophile is especially usefull for comparing the flanking regions of specific genes or other target sequences across different samples. 
+Flankophile is a pipeline built for easy analysis and visualization of gene synteny - the genetic context of genes. Flankophile is especially useful for comparing the flanking regions of specific genes or other target sequences across different samples. Flankophile also outputs the percentage identity of each hit relative to its reference sequence. This allows for incorporating gene variants into the analysis.
 
-**Input:** Assembled genetic data in fasta format plus a reference database containing target sequences in fasta format.
+**Input:** Genetic data in DNA multi-fasta format, such as assemblies plus a reference database containing target sequences in multi-fasta format.
 
-**Output:** [Gene synteny plots](example_output/5_plots), [results tables](example_output/2_filter/), [distance matrices](example_output/4_cluster_results/0_blaSHV-187/0_blaSHV-187.flanks_with_gene_dist), genetic sequences of genes and flanking regions in fasta format. 
+**Output:** [Gene synteny plots](example_output/5_plots), [results tables](example_output/2_filter/hits_with_requested_flanks.tsv), [distance matrices](example_output/4_cluster_results/33_aph_6__Id_1_M28829/33_aph_6__Id_1_M28829.flanks_with_gene_dist), genetic sequences of genes and flanking regions in fasta format. 
 
 
 
@@ -169,7 +169,7 @@ cd_hit.clstr contains the results of clustering the reference genes used as temp
 
 Contains one directory for each reference gene cluster. Directory names have two parts. The first part is a unique number. 
 The second part after the underscore is the first part of the name of the gene that seeded the cluster. 
-See [example of output from an induvidual gene family cluster](example_output/4_cluster_results/0_blaSHV-187/). The folder contains [distance matrices](example_output/4_cluster_results/0_blaSHV-187/0_blaSHV-187.flanks_with_gene_dist), cluster results as tsv, fasta files and output from Prokka.
+See [example of output from an induvidual gene family cluster](example_output/4_cluster_results/33_aph_6__Id_1_M28829/). The folder contains [distance matrices](example_output/4_cluster_results/33_aph_6__Id_1_M28829/33_aph_6__Id_1_M28829.flanks_with_gene_dist), cluster results as tsv, fasta files and output from Prokka.
 
 | **Nickname**     | **Explanation**                                                                      |
 |------------------|--------------------------------------------------------------------------------------|
