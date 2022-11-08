@@ -1,4 +1,4 @@
-# FLANKOPHILE version 0.1.6
+# FLANKOPHILE version 0.1.7
 # Alex Vincent Thorn
 
 configfile: "config.yaml"
@@ -15,17 +15,45 @@ with open(config["input_list"], 'r') as file:
         line = line.strip()
         if not line.startswith("#"):
             line_list = line.split("\t")
+            if len(line_list) > 3:
+                raise Exception("ERROR! Input list must have 2 or 3 collums in each row and be tab separated. Too many collumns in this input file.")
+            if len(line_list) < 2:
+                raise Exception("ERROR! Input list must have 2 or 3 collums in each row and be tab separated. Too few collumns in this input file.")
             assembly_name = line_list[0]
             assembly_path = line_list[1]
+            if assembly_path.find(" ") != -1:
+                raise Exception("ERROR! Paths in the input_list file must not contain white space.")
+            if assembly_name in ASSEMBLY_NAMES:
+                raise Exception("ERROR! Assembly names have to be unique. All assembly names are not unique.")
+            if assembly_name.find(" ") != -1:
+                raise Exception("ERROR! Assembly names in the input_list must not contain white space.")
+            if assembly_name.find("/") != -1:
+                raise Exception("ERROR! Assembly names in the input_list must not contain slash.")
             if assembly_name not in ASSEMBLY_NAMES:
                 ASSEMBLY_NAMES.append(assembly_name)
                 ASSEMBLY_NAME_PATH_DICT[assembly_name] = assembly_path
                 PATH_ASSEMBLY_NAME_DICT[assembly_path] = assembly_name
 
+
+try:
+  int(config["flank_length_upstreams"])
+except:
+  print("ERROR! Flank length must be a positive integer.")
+try:
+  int(config["flank_length_downstreams"])
+except:
+  print("ERROR! Flank length must be a positive integer.")
+
+
+if int(config["flank_length_upstreams"]) == 0 and int(config["flank_length_downstreams"]) == 0:
+    raise Exception("ERROR! Both flank_length_upstreams and flank_length_downstreams cannot both be 0. If you just want to find the genes and not the flanks use the tool Abricate by Torsten Seemann")
+
+if int(config["flank_length_upstreams"]) < 0 or int(config["flank_length_downstreams"]) < 0:
+    raise Exception("ERROR! Flank length must be a positive integer.")
             
 rule all:
     input: 
-       "output/2_filter/3_final_gene_results.tsv",
+       "output/2_filter/hits_with_requested_flanks.tsv",
        "output/3_define_clusters/cd_hit.processed",
        "output/99_config.yaml"
 
@@ -71,7 +99,7 @@ rule abricate_merge:
         expand("output/1_search/tsv/{assembly_name}/{assembly_name}.tsv", assembly_name=ASSEMBLY_NAMES)
     output:
          no_head=temp("output/1_search/abricate_all_raw_no_header.tsv"),
-         tsv="output/1_search/search_raw.tsv"
+         tsv=temp("output/1_search/search_raw.tsv")
     shell:
         "cat  {input} | grep -v '^#'| sed 's/\t\t/\t/g'   > {output.no_head};"
         "cat bin/abricate_header.txt {output.no_head} > {output.tsv};"
@@ -79,26 +107,36 @@ rule abricate_merge:
 
          
 
-rule filter_abricate_quality:
+rule python_enrich_abricate_output:
     input:
         tsv="output/1_search/search_raw.tsv"
     output:
-        tsv="output/2_filter/2_abricate_filter_qual.tsv"
+        tsv="output/1_search/all_hits.tsv"
     run:
         input_tsv = open("output/1_search/search_raw.tsv", "r")
-        output_tsv = open("output/2_filter/2_abricate_filter_qual.tsv","w")
-        row_count = 0
+        output_tsv = open("output/1_search/all_hits.tsv","w")
+        OBS_DICT = {}
         for line in input_tsv:
             line = line = line.strip()
             if line.startswith("#"):
                 print(line, file = output_tsv)
             else:
-                row_count += 1
                 line_list = line.split("\t")
                 assembly_name = PATH_ASSEMBLY_NAME_DICT[line_list[0]]
+                
+                if assembly_name[0:2].isalpha():
+                    letter = assembly_name[0:2]
+                elif assembly_name[0].isalpha():
+                    letter = assembly_name[0]
+                else:
+                    letter = "i"
+                    
+                if letter in OBS_DICT:
+                    OBS_DICT[letter] += 1
+                else:
+                    OBS_DICT[letter] = 1	
 
-
-                new_line = line + "\t" + assembly_name + "\t" + "i" + str(row_count)
+                new_line = line + "\t" + assembly_name + "\t" + letter + str(OBS_DICT[letter])
                 print(new_line, file = output_tsv)
 
         input_tsv.close
@@ -110,10 +148,10 @@ rule filter_abricate_quality:
 
 rule filter_abricate_space_for_flanks:
     input:
-        tsv="output/2_filter/2_abricate_filter_qual.tsv"
+        tsv="output/1_search/all_hits.tsv"
     output:
-        tsv="output/2_filter/3_final_gene_results.tsv",
-        report="output/2_filter/3_abricate_filter_length.report"
+        tsv="output/2_filter/hits_with_requested_flanks.tsv",
+        report="output/2_filter/flank_filtering.report"
     run:
         counter_accepted = 0
 
@@ -126,8 +164,8 @@ rule filter_abricate_space_for_flanks:
         user_downstreams=float(config["flank_length_downstreams"])
                  
 
-        input_tsv = open("output/2_filter/2_abricate_filter_qual.tsv", "r")
-        output_tsv = open("output/2_filter/3_final_gene_results.tsv", "w")
+        input_tsv = open("output/1_search/all_hits.tsv", "r")
+        output_tsv = open("output/2_filter/hits_with_requested_flanks.tsv", "w")
         for line in input_tsv:
             line = line.strip()
             if line.startswith("#"): print(line, file = output_tsv)
@@ -185,7 +223,7 @@ rule filter_abricate_space_for_flanks:
                     total_discarded_observation += 1
         input_tsv.close
         output_tsv.close
-        output_report = open("output/2_filter/3_abricate_filter_length.report", "w")
+        output_report = open("output/2_filter/flank_filtering.report", "w")
         a = "Flank length upstreams:" + "\t" + str(int(user_upstreams))
         b = a +"\nFlank length downstreams:" + "\t" + str(int(user_downstreams))
         c = b + "\n\nNumber of gene observations before flank space filtering:" + "\t" + str(total_input_observations)
@@ -204,7 +242,7 @@ rule filter_abricate_space_for_flanks:
 
 rule add_file_name_to_tsv:
     input:
-        "output/2_filter/3_final_gene_results.tsv"
+        "output/2_filter/hits_with_requested_flanks.tsv"
     output:
         temp("output/temp_1/final_gene_results_with_future_filename.tsv")
     run:
@@ -301,7 +339,7 @@ rule bedtools_flanks_with_gene:
 
 rule bedtools_just_gene:
     input:
-        whole_flank="output/2_filter/4_gene_fasta_files_pooled/flanks_with_gene.fa",
+        whole_flank="output/2_filter/gene_fasta_files_pooled/flanks_with_gene.fa",
         bed="output/temp_2/bedfiles/just_gene/{a}/{a}.bed"
     output:
         fasta=temp("output/temp_2/gene_fasta_files_per_assembly/just_gene/{a}/{a}.fa")
@@ -317,7 +355,7 @@ rule bedtools_just_gene:
 
 rule bedtools_masked_gene:
     input:
-        just_gene="output/2_filter/4_gene_fasta_files_pooled/just_gene.fa",
+        just_gene="output/2_filter/gene_fasta_files_pooled/just_gene.fa",
         bed="output/temp_2/bedfiles/masked_gene/{a}/{a}.bed",
         fasta="output/temp_2/gene_fasta_files_per_assembly/flanks_with_gene/{a}/{a}.fa"
     output:
@@ -352,7 +390,7 @@ rule pool_flanks_with_gene:
         flanks_with_gene_input
     output:
         temp=temp("output/temp_2/gene_fasta_files_pooled/temp_flanks_with_gene.fa"),
-        fasta="output/2_filter/4_gene_fasta_files_pooled/flanks_with_gene.fa"
+        fasta="output/2_filter/gene_fasta_files_pooled/flanks_with_gene.fa"
     conda: "environment.yaml"
     shell:
         "cat {input}  > {output.temp};"
@@ -365,7 +403,7 @@ rule pool_just_gene:
         just_gene_input
     output:
         temp=temp("output/temp_2/gene_fasta_files_pooled/temp_just_gene.fa"),
-        fasta="output/2_filter/4_gene_fasta_files_pooled/just_gene.fa"
+        fasta="output/2_filter/gene_fasta_files_pooled/just_gene.fa"
     conda: "environment.yaml"
     shell:
         "cat {input}  > {output.temp};"
@@ -377,7 +415,7 @@ rule pool_masked_gene:
         masked_gene_input
     output:
         temp=temp("output/temp_2/gene_fasta_files_pooled/temp_masked_gene.fa"),
-        fasta="output/2_filter/4_gene_fasta_files_pooled/masked_gene.fa"
+        fasta="output/2_filter/gene_fasta_files_pooled/masked_gene.fa"
     conda: "environment.yaml"
     shell:
         "cat {input}  > {output.temp};"
@@ -386,10 +424,10 @@ rule pool_masked_gene:
 
 rule extract_relavant_reference_sequences:
     input:
-        flanks="output/2_filter/4_gene_fasta_files_pooled/flanks_with_gene.fa",
-        just_gene="output/2_filter/4_gene_fasta_files_pooled/just_gene.fa",
-        masked="output/2_filter/4_gene_fasta_files_pooled/masked_gene.fa",
-        final_results="output/2_filter/3_final_gene_results.tsv"
+        flanks="output/2_filter/gene_fasta_files_pooled/flanks_with_gene.fa",
+        just_gene="output/2_filter/gene_fasta_files_pooled/just_gene.fa",
+        masked="output/2_filter/gene_fasta_files_pooled/masked_gene.fa",
+        final_results="output/2_filter/hits_with_requested_flanks.tsv"
     output:
         list=temp("output/3_define_clusters/final_output_list.txt"),
         fasta=temp("output/3_define_clusters/relevant_ref_seqs.fasta")
@@ -462,7 +500,7 @@ checkpoint split_cd_hit_results:
 
 rule extract_cluster_rows_from_results_file:
     input:
-        results="output/2_filter/3_final_gene_results.tsv",
+        results="output/2_filter/hits_with_requested_flanks.tsv",
         list="output/3_define_clusters/cd_hit_per_cluster/{c}.tsv"
     output:
         results="output/4_cluster_results/{c}/{c}.tsv",
@@ -479,9 +517,9 @@ rule extract_cluster_rows_from_results_file:
 rule extract_cluster_fastas:
     input:
         tsv="output/4_cluster_results/{c}/{c}.tsv",
-        flanks_with_gene_fasta="output/2_filter/4_gene_fasta_files_pooled/flanks_with_gene.fa",
-        just_gene_fasta="output/2_filter/4_gene_fasta_files_pooled/just_gene.fa",
-        masked_gene_fasta="output/2_filter/4_gene_fasta_files_pooled/masked_gene.fa"
+        flanks_with_gene_fasta="output/2_filter/gene_fasta_files_pooled/flanks_with_gene.fa",
+        just_gene_fasta="output/2_filter/gene_fasta_files_pooled/just_gene.fa",
+        masked_gene_fasta="output/2_filter/gene_fasta_files_pooled/masked_gene.fa"
     output:
         ID_list=temp("output/4_cluster_results/{c}/{c}.ID_list"),
         flanks_with_gene_fasta="output/4_cluster_results/{c}/{c}.flanks_with_gene_fasta",

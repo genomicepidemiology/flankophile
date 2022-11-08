@@ -1,5 +1,5 @@
 # FLANKOPHILE
-FLANKOPHILE version 0.1.6
+FLANKOPHILE version 0.1.7
 By Alex Vincent Thorn
 
 ![flankophile_logo_2-1_square.jpg](example_output/flankophile_logo_2-1_square.jpg)
@@ -66,6 +66,9 @@ The [ResFinder database](input/example_input_files/ResFinder_08_02_2022.fa) is i
 Your sample input data must consist of a number of assemblies, binned or unbinned contigs or genomes in DNA multifasta format. One multifasta per sample. You can input as many samples as wanted. 
 
 The input_list file is a tsv file with two columns. Each row represents a sample. The first column is a unique nickname for each input fasta, for example, "sample_1" or "e.coli_bin_32". The name must not contain whitespace or slash but underscore, dot and dash is fine. The second column is the full path to the fasta file, including the file name. The columns must be separated by tab. Flankophile will ignore rows that start with **#**. This is useful if you want to add human-readable headers.
+
+Another useful feature is that if the first one or two characters in the assembly name are alphabetic letters, these will be included in the OBSERVATION_ID, which is used in the plots as tip labels. If you are working with samples from different countries, it will make sense to make the countries' two-letter code the first two letters of the assembly names.
+
 In [input_list_example_assembly_mode.tsv](input/example_input_files/input_list_example_assembly_mode.tsv) you can see an example of an input_list file. 
 
 | #assembly_name | path                                   |
@@ -86,9 +89,9 @@ The configuation file contains numbered sections. Each number refer to an output
 | **Variable name**                   | **Suggestion**        | **Variable**    | **Notes**                                                                                          |
 |-------------------------------------|-----------------------|-----------------|----------------------------------------------------------------------------------------------------|
 | database                            | "input/db.fa"         | Path to file.   | Step 1. Multifasta file of genes of interest, DNA.                                                 |
-| input_list                          | "input/sa.tsv"        | Path to file.   | Step 1. tsv file.                                                                                  |
-| min_coverage_abricate               | "98"                  | In %.           | Step 1.                                                                                            |
-| min_identity_abricate               | "98"                  | In %.           | Step 1.                                                                                            |
+| input_list                          | "input/sa.tsv"        | Path to file.   | Step 1. Tsv file.                                                                                  |
+| min_coverage_abricate               | "98"                  | In %.           | Step 1. Minimum coverage in percentage compared to reference sequence.                             |
+| min_identity_abricate               | "98"                  | In %.           | Step 1. Minimum percentage identity compared to reference sequence.                                |
 | flank_length_upstreams              | "1500"                | Length in bp.   | Step 2.                                                                                            |
 | flank_length_downstreams            | "1500"                | Length in bp.   | Step 2.                                                                                            |
 | cluster_identity_cd_hit             | "0.95"                | 1 equals 100 %. | Step 3.     -c github.com/weizhongli/cdhit/wiki/3.-User's-Guide#CDHITEST                           |
