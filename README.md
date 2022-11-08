@@ -113,7 +113,12 @@ Run the pipeline:
 Cores is the number of cores available. For more info on flags visit: 
 https://snakemake.readthedocs.io/en/stable/executing/cli.html#command-line-interface 
 
-You should run the pipeline with as much memory as possible if you have large input files since the search step uses a large amount of memory.
+You should run the pipeline with as much memory as possible if you have large input files. The search step uses a large amount of memory, and if too little memory is used, Abricate may not find all possible hits in very large files. If you want to make sure that the computer runs the pipeline with enough memory, then run the pipeline twice with the same config file and compare the files output/1_search/all_hits.tsv from each run using 
+```bash
+diff output1/1_search/all_hits.tsv output2/1_search/all_hits.tsv
+
+``` 
+If they are identical, that means that enough memory was used. 
 
 
 
@@ -121,10 +126,10 @@ You should run the pipeline with as much memory as possible if you have large in
 Flankophile creates the output directories in the order of the numbers. The files in the first directory are used to produce the files in the second directory, and so on. This is useful since it is then easy to rerun the analysis with different parameters without having to redo the whole analysis.
 
 If you want to rerun the pipeline with new config settings, you must look in the config file [config.yaml](config.yaml)
- and take note of the numbered sections. If you want to change parameters you must delete all output
+ and take note of the numbered sections. If you want to change parameters, you must delete all output
  with a number equal to or higher than the number of the section. You simply delete output in descending order starting with 99 and down to where you do not want to rerun anymore. Snakemake will rerun these parts of the pipeline with the new config settings when you give the run command `snakemake --use-conda --cores 39` again. 
 
-Be aware that the step that produces the folder 1_search  is not deterministic, so if you delete this folder and rerun the pipeline, you may not get exactly the same results again. If you want to add more data or use a different reference database, you must delete the entire output folder. 
+You must delete the entire output folder if you want to add more data or use a different reference database. 
 
 
 #### Redirect where to store conda packages
