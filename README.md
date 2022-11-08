@@ -159,14 +159,10 @@ This directory contains all output from step 1, the most time-consuming step, wh
 
 **2_filter**
 
-In this directory abricate results from all the samples have been merged. It contains 1 report and 2 tsv files.
-In step 2 the results have been filtered on the minimum coverage and minimum sequence identity chosen in the config file. See [2_abricate_filter_qual.tsv](example_output/2_filter/2_abricate_filter_qual.tsv). 
+Directory 2_filter contains tsv file [hits_with_requested_flanks.tsv](example_output/2_filter/hits_with_requested_flanks.tsv), which is a filtered version of [all_hits.tsv](example_output/1_search/all_hits.tsv) from step 1. [Hits_with_requested_flanks.tsv](example_output/2_filter/hits_with_requested_flanks.tsv) contains only hits that had space on their contig for the user-requested upstream and downstream flanking region. The rest of the analysis is based on these hits.
 
+The output also contains a [flank_filtering.report](example_output/2_filter/flank_filtering.report) on how many hits were discarded due to insufficient flanking region length. 
 
-In step 3 the [tsv](example_output/2_filter/2_abricate_filter_qual.tsv) from step 2 has been filtered on flank length. Gene observations that are so close to the
- edge of a contig that there is not space for the full desired flank length are discarded. 
- [3_abricate_filter_length.report](example_output/2_filter/3_abricate_filter_length.report) contains information on how many gene observtions that were discarded during filtering.
- [3_final_gene_results.tsv](example_output/2_filter/3_final_gene_results.tsv) contains all the gene observations that are included in the further analysis.
  
 
 **3_define_clusters**
