@@ -134,7 +134,8 @@ You must delete the entire output folder if you want to add more data or use a d
 
 #### Redirect where to store conda packages
 As a default conda will download the packages needed to your root directory.
-If you want conda to store your packages and enviroments in another location than your root directoty then you can write this in the file called ".condarc". It may be in your root directory. If you do not have the file ".condarc" then you can make one and place it in your root and conda will find it.
+If you want conda to store your packages and enviroments in another location than your root directoty then you can write this in the file called ".condarc". Maybe you already have a ".condarc" file in your root directory. If not you can just make one and place it in your root.
+Write this in your ".condarc" file:
 
 ```bash
 auto_activate_base: false
@@ -152,8 +153,9 @@ envs_dirs:
 
 
 **1_search**
+Directory 1_search contains the file [all_hits.tsv](example_output/1_search/all_hits.tsv) with all hits found by Abricate, which have the requested minimum percentage identity and minimum percentage coverage.
 
-This directory can be deleted if you are entirely done with the analysis, but keep it if you may want to rerun the data with different parameters, as this will save time.
+This directory contains all output from step 1, the most time-consuming step, where the input files are searched with Abricate. The later steps can be rerun with other parameters faster if you do not delete this folder when rerunning the pipeline.
 
 **2_filter**
 
