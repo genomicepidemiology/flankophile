@@ -166,8 +166,7 @@ The output also contains a [flank_filtering.report](example_output/2_filter/flan
  
 
 **3_define_clusters**
-
-cd_hit.clstr contains the results of clustering the reference genes used as templates by identity.
+[cd_hit.processed](example_output/3_define_clusters/cd_hit.processed) contains the results of clustering the reference genes used as templates by identity.
 
   
 **4_cluster_results**
