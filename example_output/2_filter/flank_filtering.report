@@ -1,0 +1,15 @@
+Flank length upstreams:	1500
+Flank length downstreams:	1500
+
+Number of gene observations before flank space filtering:	261
+Number of gene observations after flank space filtering:	175
+Number of gene observations discarded by flank space filtering:	86
+
+
+Hypothetical number of sequences discarded due to insufficient upstreams flank space if the following thresholds were used
+750	1500	3000
+42	60	95
+
+Hypothetical number of sequences discarded due to insufficient downstreams flank space if the following thresholds were used
+750	1500	3000
+29	46	72
