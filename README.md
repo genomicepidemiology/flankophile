@@ -43,7 +43,7 @@ Flankophile is a Snakemake based pipeline. Snakemake is a python based workflow 
 The [Snakefile](Snakefile) contains the main pipeline code.
 
 
-You need to Miniconda and Snakemake to run Flankophile. Flankophile is conda based and uses a conda env. You can see it in the file [environment.yaml](environment.yaml).
+You need Miniconda and [Snakemake](https://snakemake.readthedocs.io/en/stable/index.html) to run Flankophile. Flankophile is conda based and uses a conda env. You can see it in the file [environment.yaml](environment.yaml).
  You do not need to load the conda enviroment manually. Snakemake will automatically download the necessary conda packages when running the pipeline for the first time. For this reason, the pipeline will take a longer time to run the first time.
 
 ### Input files
