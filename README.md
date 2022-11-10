@@ -1,5 +1,5 @@
 # FLANKOPHILE
-FLANKOPHILE version 0.1.7
+FLANKOPHILE version 0.1.8
 By Alex Vincent Thorn
 
 ![flankophile_logo_2-1_square.jpg](example_output/flankophile_logo_2-1_square.jpg)
@@ -14,7 +14,7 @@ Flankophile is a pipeline built for easy analysis and visualization of gene synt
 
 **Input:** Genetic data in DNA multi-fasta format, such as assemblies plus a reference database containing target sequences in multi-fasta format.
 
-**Output:** [Gene synteny plots](example_output/5_plots), [results tables](example_output/2_filter/hits_with_requested_flanks.tsv), [distance matrices](example_output/4_cluster_results/33_aph_6__Id_1_M28829/33_aph_6__Id_1_M28829.flanks_with_gene_dist), genetic sequences of genes and flanking regions in fasta format. 
+**Output:** [Gene synteny plots](example_output/5_plots), [results tables](example_output/2_filter/hits_with_requested_flanks.tsv), [clustering table](example_output/3_clustering.tsv), [distance matrices](example_output/4_cluster_results/33_aph_6__Id_1_M28829/33_aph_6__Id_1_M28829.flanks_with_gene_dist), genetic sequences of genes and flanking regions in fasta format. 
 
 
 
@@ -90,8 +90,8 @@ The configuration file contains numbered sections. Each number refers to an outp
 |-------------------------------------|-----------------------|-----------------|----------------------------------------------------------------------------------------------------|
 | database                            | "input/db.fa"         | Path to file.   | Step 1. Multifasta file of genes of interest, DNA.                                                 |
 | input_list                          | "input/sa.tsv"        | Path to file.   | Step 1. Tsv file.                                                                                  |
-| min_coverage_abricate               | "98"                  | In %.           | Step 1. Minimum coverage in percentage compared to reference sequence.                             |
-| min_identity_abricate               | "98"                  | In %.           | Step 1. Minimum percentage identity compared to reference sequence.                                |
+| min_coverage_abricate               | "98"                  | In %. 50 - 100% | Step 1. Minimum coverage in percentage compared to reference sequence.                             |
+| min_identity_abricate               | "98"                  | In %. 50 - 100% | Step 1. Minimum percentage identity compared to reference sequence.                                |
 | flank_length_upstreams              | "1500"                | Length in bp.   | Step 2.                                                                                            |
 | flank_length_downstreams            | "1500"                | Length in bp.   | Step 2.                                                                                            |
 | cluster_identity_cd_hit             | "0.95"                | 1 equals 100 %. | Step 3.     -c github.com/weizhongli/cdhit/wiki/3.-User's-Guide#CDHITEST                           |
@@ -113,9 +113,9 @@ Run the pipeline:
 Cores is the number of cores available. For more info on flags visit: 
 https://snakemake.readthedocs.io/en/stable/executing/cli.html#command-line-interface 
 
-You should run the pipeline with as much memory as possible if you have large input files. The search step uses a large amount of memory, and if too little memory is used, Abricate may not find all possible hits in very large files. If you want to make sure that the computer runs the pipeline with enough memory, then run the pipeline twice with the same config file and compare the files output/1_search/all_hits.tsv from each run using 
+You should run the pipeline with as much memory as possible if you have large input files. The search step uses a large amount of memory, and if too little memory is used, Abricate may not find all possible hits in very large files. If you want to make sure that the computer runs the pipeline with enough memory, then run the pipeline twice with the same config file and compare the files output/1_all_hits.tsv from each run using 
 ```bash
-diff output1/1_search/all_hits.tsv output2/1_search/all_hits.tsv
+diff output1/1_all_hits.tsv output2/1_all_hits.tsv
 
 ``` 
 If they are identical, that means that enough memory was used. 
@@ -152,25 +152,26 @@ envs_dirs:
 ## Output
 
 
-**1_search**
-Directory 1_search contains the file [all_hits.tsv](example_output/1_search/all_hits.tsv) with all hits found by Abricate, which have the requested minimum percentage identity and minimum percentage coverage.
+**Step 1 - Search**
+The file [1_all_hits.tsv](example_output/1_all_hits.tsv) contains the data for all hits found by Abricate, which have the requested minimum percentage identity and minimum percentage coverage.
 
-This directory contains all output from step 1, the most time-consuming step, where the input files are searched with Abricate. The later steps can be rerun with other parameters faster if you do not delete this folder when rerunning the pipeline.
+Step 1 is the most time-consuming step. If you want to rerun the pipeline with other parameters for steps 2-5 then you can save time by deleting the files for the other steps but keeping [1_all_hits.tsv](example_output/1_all_hits.tsv)
 
-**2_filter**
 
-Directory 2_filter contains tsv file [hits_with_requested_flanks.tsv](example_output/2_filter/hits_with_requested_flanks.tsv), which is a filtered version of [all_hits.tsv](example_output/1_search/all_hits.tsv) from step 1. [Hits_with_requested_flanks.tsv](example_output/2_filter/hits_with_requested_flanks.tsv) contains only hits that had space on their contig for the user-requested upstream and downstream flanking region. The rest of the analysis is based on these hits.
+**Step 2 - filter on space for flanking regions*
+
+Directory 2_filter contains tsv file [hits_with_requested_flanks.tsv](example_output/2_filter/hits_with_requested_flanks.tsv), which is a filtered version of [all_hits.tsv](example_output/1_all_hits.tsv) from step 1. [Hits_with_requested_flanks.tsv](example_output/2_filter/hits_with_requested_flanks.tsv) contains only hits that had space on their contig for the user-requested upstream and downstream flanking region. The rest of the analysis is based on these hits.
 
 The output also contains a [flank_filtering.report](example_output/2_filter/flank_filtering.report) on how many hits were discarded due to insufficient flanking region length. 
 
  
 
-**3_define_clusters**
+**Step 3 - define cluster**
 
-[cd_hit.processed](example_output/3_define_clusters/cd_hit.processed) contains the results of clustering the reference genes used as templates by identity.
+[3_clustering.tsv](example_output/3_clustering.tsv) is a table that contains information on which hits that belong to each output cluster, based on their reference sequences. The clustering is based on percentage identity.  
 
   
-**4_cluster_results**
+**Step 4 - analysis of extracted sequences for each cluster**
 
 Contains one directory for each reference gene cluster. Directory names have two parts. The first part is a unique number. 
 The second part after the underscore is the first part of the name of the gene that seeded the cluster. 
@@ -183,7 +184,7 @@ See [example of output from an induvidual gene family cluster](example_output/4_
 | masked_gene      | The DNA sequence of the flanking regions. Target sequence is included but masked.    |
 
 
-**5_plots**
+**Step 5 - plots**
 
 Contains all the plots produced by Flankophile from the R script [plot_gene_clusters_from_flankophile.R](bin/plot_gene_clusters_from_flankophile.R). Plots are made for each cluster in 4_cluster_results. The distance matrices are used to produce distance trees and the gene annotation is then plotted with the tree. 
 

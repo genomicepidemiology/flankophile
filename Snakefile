@@ -1,4 +1,4 @@
-# FLANKOPHILE version 0.1.7
+# FLANKOPHILE version 0.1.8
 # Alex Vincent Thorn
 
 configfile: "config.yaml"
@@ -35,6 +35,8 @@ with open(config["input_list"], 'r') as file:
                 PATH_ASSEMBLY_NAME_DICT[assembly_path] = assembly_name
 
 
+## Input control config file ###########################################################
+
 try:
   int(config["flank_length_upstreams"])
 except:
@@ -50,11 +52,34 @@ if int(config["flank_length_upstreams"]) == 0 and int(config["flank_length_downs
 
 if int(config["flank_length_upstreams"]) < 0 or int(config["flank_length_downstreams"]) < 0:
     raise Exception("ERROR! Flank length must be a positive integer.")
+
+try:
+  float(config["min_coverage_abricate"])
+except:
+  print("ERROR! min_coverage_abricate must be a number, more specifically a float.")
+  raise Exception("ERROR!")
+
+if float(config["min_coverage_abricate"]) < 50 or float(config["min_coverage_abricate"]) > 100:
+    raise Exception("ERROR! min_coverage_abricate must be between 50 and 100.")
+
+
+try:
+  float(config["min_identity_abricate"])
+except:
+  print("ERROR! min_identity_abricate must be a number, more specifically a float.")
+  raise Exception("ERROR!")
+    
+if float(config["min_identity_abricate"]) < 50 or float(config["min_identity_abricate"]) > 100:
+    raise Exception("ERROR! min_identity_abricate must be between 50 and 100.")
+
+
+## Rule all ########################################################################
+
             
 rule all:
     input: 
        "output/2_filter/hits_with_requested_flanks.tsv",
-       "output/3_define_clusters/cd_hit.processed",
+       "output/3_clustering.tsv",
        "output/99_config.yaml"
 
 
@@ -93,7 +118,6 @@ rule abricate:
         "grep -wFf {output.tsv_c2} {output.length_temp} > {output.length} || true"
 
 
-
 rule abricate_merge:
     input:
         expand("output/1_search/tsv/{assembly_name}/{assembly_name}.tsv", assembly_name=ASSEMBLY_NAMES)
@@ -101,20 +125,51 @@ rule abricate_merge:
          no_head=temp("output/1_search/abricate_all_raw_no_header.tsv"),
          tsv=temp("output/1_search/search_raw.tsv")
     shell:
-        "cat  {input} | grep -v '^#'| sed 's/\t\t/\t/g'   > {output.no_head};"
+        "cat  {input} | grep -v '^#'| cut -f1-11   > {output.no_head};"
         "cat bin/abricate_header.txt {output.no_head} > {output.tsv};"
 
-
-         
-
-rule python_enrich_abricate_output:
+rule python_enrich_abricate_output_with_length_and_metadata:
     input:
-        tsv="output/1_search/search_raw.tsv"
+        "output/1_search/search_raw.tsv",
+        expand("output/1_search/contig_length/{assembly_name}/{assembly_name}.length", assembly_name=ASSEMBLY_NAMES)
     output:
-        tsv="output/1_search/all_hits.tsv"
+        temp("output/1_search/search_temp.tsv")            
     run:
         input_tsv = open("output/1_search/search_raw.tsv", "r")
-        output_tsv = open("output/1_search/all_hits.tsv","w")
+        output_tsv = open("output/1_search/search_temp.tsv","w") 
+        for line in input_tsv:
+            line = line = line.strip()
+            if line.startswith("#"):
+                print(line, file = output_tsv)
+            else:
+                line_list = line.split("\t")
+                assembly_name = PATH_ASSEMBLY_NAME_DICT[line_list[0]]
+                path_to_length_file = "output/1_search/contig_length/" + assembly_name + "/" + assembly_name + ".length"
+                this_contig_len = "unknown"
+                        
+                input_length = open(path_to_length_file, "r")
+                for line_l in input_length:
+                    if this_contig_len == "unknown":
+                        line_l = line_l.strip()
+                        line_l_list = line_l.split("\t")           # Split the length file into contig name and length
+                        if line_l_list[0] == line_list[1]:         # If it is the same contig name.
+                            this_contig_len = int(line_l_list[1])  # Save the contig length.
+                input_length.close
+                new_line = line + "\t" + str(this_contig_len) + "\t" + "metadata"  
+                print(new_line, file = output_tsv)
+        input_tsv.close
+        output_tsv.close         
+         
+
+
+rule python_enrich_abricate_output_with_assembly_name_and_observation_ID:
+    input:
+        tsv="output/1_search/search_temp.tsv"
+    output:
+        tsv="output/1_all_hits.tsv"
+    run:
+        input_tsv = open("output/1_search/search_temp.tsv", "r")
+        output_tsv = open("output/1_all_hits.tsv","w")
         OBS_DICT = {}
         for line in input_tsv:
             line = line = line.strip()
@@ -148,7 +203,7 @@ rule python_enrich_abricate_output:
 
 rule filter_abricate_space_for_flanks:
     input:
-        tsv="output/1_search/all_hits.tsv"
+        tsv="output/1_all_hits.tsv"
     output:
         tsv="output/2_filter/hits_with_requested_flanks.tsv",
         report="output/2_filter/flank_filtering.report"
@@ -164,7 +219,7 @@ rule filter_abricate_space_for_flanks:
         user_downstreams=float(config["flank_length_downstreams"])
                  
 
-        input_tsv = open("output/1_search/all_hits.tsv", "r")
+        input_tsv = open("output/1_all_hits.tsv", "r")
         output_tsv = open("output/2_filter/hits_with_requested_flanks.tsv", "w")
         for line in input_tsv:
             line = line.strip()
@@ -178,23 +233,8 @@ rule filter_abricate_space_for_flanks:
                 gene_start = int(line_list[col_index_START])
                 gene_end = int(line_list[col_index_END])
                 gene_strand = line_list[col_index_STRAND]
-                
-                assembly_name = PATH_ASSEMBLY_NAME_DICT[path]
-                
-                path_to_length_file = "output/1_search/contig_length/" + assembly_name + "/" + assembly_name + ".length"
-                
-                this_contig_len = "unknown"
-                        
-                input_length = open(path_to_length_file, "r")
-                for line_l in input_length:
-                    if this_contig_len == "unknown":
-                        line_l = line_l.strip()
-                        line_l_list = line_l.split("\t")
-                        if line_l_list[0] == seq_name:
-                            this_contig_len = int(line_l_list[1])
-                input_length.close  
-                    
-                
+                this_contig_len = int(line_list[11])                #CONTIG_LENGTH column in tsv
+                                                                                  
                 if gene_strand == "+":
                     space_for_flank_up = gene_start - 1
                     space_for_flank_down = this_contig_len - gene_end
@@ -215,9 +255,7 @@ rule filter_abricate_space_for_flanks:
                             DOWN_half += 1
                 if  space_for_flank_up >= user_upstreams and space_for_flank_down >= user_downstreams:
                     counter_accepted += 1
-                   # new_line = line + "\t" + assembly_name + "\t" + "i" + str(counter_accepted)
-                    #new_line = line + "\t" + "i" + str(counter_accepted)
-                    #print(new_line, file = output_tsv)
+
                     print(line, file = output_tsv)
                 else:
                     total_discarded_observation += 1
@@ -264,6 +302,7 @@ checkpoint split_abricate_results:
     output:
         clusters=directory("output/temp_1/1_abricate_results_per_assembly")
     shell:
+        "rm -rf output/1_search;"
         "mkdir output/temp_1/1_abricate_results_per_assembly;"
         "cd output/temp_1/1_abricate_results_per_assembly;"
         "cat ../final_gene_results_with_future_filename.tsv | grep -v '^#' | awk  '{{print>$16}}'"
@@ -433,7 +472,7 @@ rule extract_relavant_reference_sequences:
         fasta=temp("output/3_define_clusters/relevant_ref_seqs.fasta")
     conda: "environment.yaml"
     shell:
-        "awk '{{print $13}}' {input.final_results} |awk 'NR>1' | sort -u > {output.list};"
+        "awk '{{print $6}}' {input.final_results} |awk 'NR>1' | sort -u > {output.list};"
         "seqkit grep -n -f {output.list} bin/abricate/db/user_db/sequences > {output.fasta}"
 
 
@@ -441,7 +480,7 @@ rule cd_hit:
     input:
         "output/3_define_clusters/relevant_ref_seqs.fasta"
     output:
-        clus="output/3_define_clusters/cd_hit.clstr",
+        clus=temp("output/3_define_clusters/cd_hit.clstr"),
         genes=temp("output/3_define_clusters/cd_hit"),
         new_head=temp("output/3_define_clusters/cd_hit.txt"),
         temp=temp("output/3_define_clusters/cd_hit.temp")
@@ -462,24 +501,27 @@ rule process_cd_hit_results:
     input: 
         "output/3_define_clusters/cd_hit.txt"
     output:
-        "output/3_define_clusters/cd_hit.processed"
+        "output/3_clustering.tsv"
     run:
         dict = {}
         input=open(input[0], "r")
         output=open(output[0], "w")
 
         for line in input:
+            if line.startswith("#"):
+                line = line.strip()
+                print(line, file=output)
             if not line.startswith("#"):
                 line = line.strip()
                 line_list = line.split()
                 gene_name = line_list[0]
                 clus_number = line_list[1]
                 if clus_number not in dict:
-                    # Split name so only first part of name is used
-                    # first_part_gene_name = re.split(', |\'|\/|\(|\)|_| ', gene_name)[0]
-                    first_part_gene_name = re.sub(r'\W', '_', gene_name)
-                    dict[clus_number] = clus_number + "_" + first_part_gene_name + ".tsv"
-                new_line = line + "\t" + dict[clus_number]
+                    # Transform characters that are not file name friendly into _
+                    
+                    friendly_gene_name = re.sub(r'\W', '_', gene_name)
+                    dict[clus_number] = clus_number + "_" + friendly_gene_name 
+                new_line = line + "\t" + dict[clus_number] + ".tsv" + "\t" + dict[clus_number]
                 print(new_line, file=output)        
         input.close()
         output.close()
@@ -487,13 +529,13 @@ rule process_cd_hit_results:
 
 checkpoint split_cd_hit_results:
     input:
-        "output/3_define_clusters/cd_hit.processed"
+        "output/3_clustering.tsv"
     output:
         clusters=directory("output/3_define_clusters/cd_hit_per_cluster")
     shell:
         "mkdir output/3_define_clusters/cd_hit_per_cluster;"
         "cd output/3_define_clusters/cd_hit_per_cluster;"
-        "cat ../cd_hit.processed | awk  '{{print>$8}}'"
+        "cat ../../3_clustering.tsv | grep -v '^#'| awk  '{{print>$8}}'"
 
 
 
@@ -506,7 +548,7 @@ rule extract_cluster_rows_from_results_file:
         results="output/4_cluster_results/{c}/{c}.tsv",
         temp=temp("output/4_cluster_results/{c}/{c}.temp")
     params:
-        awk="'NR==FNR{a[$1];next}($13 in a){{print $0}}'"
+        awk="'NR==FNR{a[$1];next}($6 in a){{print $0}}'"        # 6 refer to GENE collumn in "output/2_filter/hits_with_requested_flanks.tsv"
     shell:
         '''
         awk {params.awk} {input.list} {input.results} > {output.temp};
