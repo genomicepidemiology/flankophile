@@ -16,7 +16,7 @@ library(ape)          # ape_5.6-2
 library(ggnewscale)   # ggnewscale_0.4.7
 
 
-### Settings ######################################################################################################
+### Settings #######################################################################################################
 
 
 
@@ -81,7 +81,7 @@ make_plots <- function(cluster_name) {
       ggtitle(paste0("Cluster ", cluster_name))
     
     t4
-    ggsave(file = paste0(path_to_folder_for_plots, "/", cluster_name, "_single_sequence", "_tree", ".pdf"), plot = t4, width = 210, height = 150, units = "mm")
+    ggsave(file = paste0(path_to_folder_for_plots, "/", cluster_name, ".pdf"), plot = t4, width = 210, height = 150, units = "mm")
     
   } 
   
@@ -134,13 +134,13 @@ make_plots <- function(cluster_name) {
   
   
   # Based on flank + gene sequence
-  flanks_with_gene.df = parseDistanceDF(paste0(path_to_all_cluster_folders, cluster_name, "/", cluster_name, ".flanks_with_gene_dist"))
+  target_and_flanking_regions.df = parseDistanceDF(paste0(path_to_all_cluster_folders, cluster_name, "/", cluster_name, ".target_and_flanking_regions_dist"))
   
   # Based on flank sequence
-  flanks_masked_gene.df = parseDistanceDF(paste0(path_to_all_cluster_folders, cluster_name, "/", cluster_name, ".masked_gene_dist"))
+  flanks_flanking_regions_only.df = parseDistanceDF(paste0(path_to_all_cluster_folders, cluster_name, "/", cluster_name, ".flanking_regions_only_dist"))
   
   # Based on gene sequence
-  just_gene.df = parseDistanceDF(paste0(path_to_all_cluster_folders, cluster_name, "/", cluster_name, ".just_gene_dist"))
+  target_sequence_only.df = parseDistanceDF(paste0(path_to_all_cluster_folders, cluster_name, "/", cluster_name, ".target_sequence_only_dist"))
   
   
   # Calculate tree from distance matrix
@@ -154,9 +154,9 @@ make_plots <- function(cluster_name) {
   if (nrow(cluster_results) >= 2) {
     # Make trees
     
-    flanks_with_gene.tree = dist2tree(flanks_with_gene.df)
-    flanks_masked_gene.tree = dist2tree(flanks_masked_gene.df)
-    just_gene.tree = dist2tree(just_gene.df)
+    target_and_flanking_regions.tree = dist2tree(target_and_flanking_regions.df)
+    flanks_flanking_regions_only.tree = dist2tree(flanks_flanking_regions_only.df)
+    target_sequence_only.tree = dist2tree(target_sequence_only.df)
     
     ##Plot  ###############################################################
     plot_height <- 30 + (nrow(cluster_results) * 4)
@@ -166,7 +166,7 @@ make_plots <- function(cluster_name) {
     }
     
     #Flank only
-    t1 <- ggtree(flanks_masked_gene.tree, options(ignore.negative.edge=TRUE)) + geom_tiplab(size = 2)
+    t1 <- ggtree(flanks_flanking_regions_only.tree, options(ignore.negative.edge=TRUE)) + geom_tiplab(size = 2)
     
     off <- max(t1$data$x) / 10
     
@@ -185,16 +185,16 @@ make_plots <- function(cluster_name) {
       theme(legend.text = element_text(size=5))
     
     
-    t4 <- t3 + ggtitle(paste0("Cluster ", cluster_name, " - distance tree based on flanking region sequences")) + 
+    t4 <- t3 + ggtitle(paste0("Cluster ", cluster_name, " - distance tree based on flanking region sequences only")) + 
       new_scale_fill()
     
     t4
     
-    ggsave(file = paste0(path_to_folder_for_plots, "/", cluster_name, "_", "flanks only", "_tree", ".pdf"), plot = t4, width = 210, height = plot_height, units = "mm", limitsize = FALSE)
+    ggsave(file = paste0(path_to_folder_for_plots, "/", cluster_name, "_", "flanking_regions_only", ".pdf"), plot = t4, width = 210, height = plot_height, units = "mm", limitsize = FALSE)
     
     ## Gene only
     
-    t1 <- ggtree(just_gene.tree, options(ignore.negative.edge=TRUE)) + geom_tiplab(size = 2)   
+    t1 <- ggtree(target_sequence_only.tree, options(ignore.negative.edge=TRUE)) + geom_tiplab(size = 2)   
     
     off <- max(t1$data$x) / 10
     
@@ -212,17 +212,17 @@ make_plots <- function(cluster_name) {
       scale_fill_hue(direction = -1, l = 70, c = 30) + new_scale_fill() +
       theme(legend.text = element_text(size=5))
     
-    t4 <- t3 + ggtitle(paste0("Cluster ", cluster_name, " - distance tree based on gene sequences")) + 
+    t4 <- t3 + ggtitle(paste0("Cluster ", cluster_name, " - distance tree based on target sequences only")) + 
       new_scale_fill()
     
     t4
     
-    ggsave(file = paste0(path_to_folder_for_plots, "/", cluster_name, "_", "gene only", "_tree", ".pdf"), plot = t4, width = 210, height = plot_height, units = "mm", limitsize = FALSE)
+    ggsave(file = paste0(path_to_folder_for_plots, "/", cluster_name, "_", "target_sequence_only", ".pdf"), plot = t4, width = 210, height = plot_height, units = "mm", limitsize = FALSE)
     
     
     # Both flank and gene
     
-    t1 <- ggtree(flanks_with_gene.tree, options(ignore.negative.edge=TRUE)) + geom_tiplab(size = 2)   
+    t1 <- ggtree(target_and_flanking_regions.tree, options(ignore.negative.edge=TRUE)) + geom_tiplab(size = 2)   
     
     off <- max(t1$data$x) / 10
     
@@ -240,12 +240,12 @@ make_plots <- function(cluster_name) {
       scale_fill_hue(direction = -1, l = 70, c = 30) + new_scale_fill() +
       theme(legend.text = element_text(size=5))
     
-    t4 <- t3 + ggtitle(paste0("Cluster ", cluster_name, " - distance tree based on flanking region plus gene sequences")) + 
+    t4 <- t3 + ggtitle(paste0("Cluster ", cluster_name, " - distance tree based on target and flanking region sequences")) + 
       new_scale_fill()
     
     t4
     
-    ggsave(file = paste0(path_to_folder_for_plots, "/", cluster_name, "_", "flanks plus gene", "_tree", ".pdf"), plot = t4, width = 210, height = plot_height, units = "mm", limitsize = FALSE)
+    ggsave(file = paste0(path_to_folder_for_plots, "/", cluster_name, "_", "target_and_flanking_regions", ".pdf"), plot = t4, width = 210, height = plot_height, units = "mm", limitsize = FALSE)
   }
 }
 

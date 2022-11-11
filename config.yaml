@@ -1,43 +1,37 @@
-# FLANKOPHILE version 0.1.8
+# FLANKOPHILE version 0.1.9
 # Alex Vincent Thorn
 
 
-## 1 ##
+## 1 #######################################################################################
 
-database: "input/example_input_files/ResFinder_08_02_2022.fa"         # a multifasta file
+database: "input/example_input_files/ResFinder_08_02_2022.fa"         
 
-input_list: "input/example_input_files/input_list_example_assembly_mode.tsv"               # Path to input_list.
+input_list: "input/example_input_files/input_list_example_assembly_mode.tsv"               
                                                                                                                
-min_coverage_abricate: "98"   # Minimum coverage in percentage compared to reference sequence.
+min_coverage_abricate: "98"              # Minimum coverage in percentage compared to reference sequence.
 
-min_identity_abricate: "98"   # Minimum percentage identity compared to reference sequence.
-
+min_identity_abricate: "98"              # Minimum percentage identity compared to reference sequence.
 
  
-## 2 ##
+## 2 ######################################################################################
 
 flank_length_upstreams: "1500"
 
 flank_length_downstreams: "1500"
 
 
+## 3 #######################################################################################
 
-## 3 ##
+cluster_identity_cd_hit: "0.98"          # CD-HIT parameter = -c   0.98 = cluster at 98 % identity
 
-cluster_identity_cd_hit: "0.98"       # CD-HIT parameter = -c   0.98 = cluster at 98 % identity
-
-cluster_wordsize_cd_hit: "10"        # CD-HIT parameter = -n    See https://github.com/weizhongli/cdhit/wiki/3.-User's-Guide#CDHITEST for apropiate wordsize.
-
-cluster_length_dif_cd_hit: "0.9"     # CD-HIT parameter = -s    Length difference cutoff, if set to 0.9, the shorter sequences need to be at least 90% length of the representative of the cluster.
+cluster_length_dif_cd_hit: "0.9"         # CD-HIT parameter = -s    Length difference cutoff, if set to 0.9, the shorter sequences need to be at least 90% length of the representative of the cluster.
 
 
-
-
-## 4 + 5 ##
+## 4 + 5 ##################################################################################
 
 Kmersize_kma: "16"                       # Kmersize used by kma index. Try with "16" if in doubt.  
 
-distance_measure: "1" # Choose measurement for making distance matrix 
+distance_measure: "1"                    # Choose measurement for making distance matrix 
 
 
 

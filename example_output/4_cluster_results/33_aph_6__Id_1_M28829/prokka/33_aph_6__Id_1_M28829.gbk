@@ -1,4 +1,4 @@
-LOCUS       DT18                    3837 bp    DNA     linear       08-NOV-2022
+LOCUS       DT18                    3837 bp    DNA     linear       11-NOV-2022
 DEFINITION  Genus species strain strain.
 ACCESSION   
 VERSION
@@ -142,7 +142,7 @@ ORIGIN
      3721 gtgacctgcg gaggtctgaa taaacacgga cactggaaaa agctgagctt cctgaaagac
      3781 gcgatgcgtt cgcggtggat gtggaatatg cggcagctgc ttctgaaagc gtggtca
 //
-LOCUS       DT39                    3837 bp    DNA     linear       08-NOV-2022
+LOCUS       DT39                    3837 bp    DNA     linear       11-NOV-2022
 DEFINITION  Genus species strain strain.
 ACCESSION   
 VERSION
@@ -283,7 +283,7 @@ ORIGIN
      3721 cgccgaagcg catctcggca tacgtcacgg ccgagaccac aatgcgatca ccgcgcagca
      3781 ccgcctgctc caggcgcttc agcaccgctg ccggctgctc gcgcatgatg aacgagc
 //
-LOCUS       DT50                    3837 bp    DNA     linear       08-NOV-2022
+LOCUS       DT50                    3837 bp    DNA     linear       11-NOV-2022
 DEFINITION  Genus species strain strain.
 ACCESSION   
 VERSION
@@ -422,7 +422,7 @@ ORIGIN
      3721 gtggcaccta tgaacaggtg ccaataatta aatctgacta cccaatttac agttcagagg
      3781 gttactgctt tacgtcgttt gattcaagcc gctgaatttg cttctcaatc cacgtgc
 //
-LOCUS       DT78                    3837 bp    DNA     linear       08-NOV-2022
+LOCUS       DT78                    3837 bp    DNA     linear       11-NOV-2022
 DEFINITION  Genus species strain strain.
 ACCESSION   
 VERSION
@@ -562,7 +562,7 @@ ORIGIN
      3721 agcaaaacca cgcccctgct caccagcacg cgcggcctca attgctgcgt tgagtgccaa
      3781 caaattcgtt tgctcggcga tccctcgtat aacgtcaaga acttttgata tctcgtt
 //
-LOCUS       DT101                   3837 bp    DNA     linear       08-NOV-2022
+LOCUS       DT101                   3837 bp    DNA     linear       11-NOV-2022
 DEFINITION  Genus species strain strain.
 ACCESSION   
 VERSION
@@ -705,7 +705,7 @@ ORIGIN
      3721 cattggaaaa cgttcttcgg ggcgaaaact ctcaaggatc ttaccgctgt tgagatccag
      3781 ttcgatgtaa cccactcgtg cacccaactg atcttcagca tcttttactt tcaccag
 //
-LOCUS       DT130                   3837 bp    DNA     linear       08-NOV-2022
+LOCUS       DT130                   3837 bp    DNA     linear       11-NOV-2022
 DEFINITION  Genus species strain strain.
 ACCESSION   
 VERSION
@@ -839,7 +839,7 @@ ORIGIN
      3721 cgttcctgtc cacggtacgc ctgcggccaa atttgattcc tttcagcttt gcttcctgtc
      3781 ggccctcatt cgtgcgttct aggatcctcc ggcgttcagc ctgtgccaca gccgaca
 //
-LOCUS       DT163                   3837 bp    DNA     linear       08-NOV-2022
+LOCUS       DT163                   3837 bp    DNA     linear       11-NOV-2022
 DEFINITION  Genus species strain strain.
 ACCESSION   
 VERSION
@@ -984,7 +984,7 @@ ORIGIN
      3721 gagtggtccc gacgagggtt tacccgaagt cggggcgtat ctccgcgtta gcgggccgtc
      3781 agggccgctt acgagcgtgt actcaatact tccagcgaga agactgacag cgatgat
 //
-LOCUS       DT183                   3837 bp    DNA     linear       08-NOV-2022
+LOCUS       DT183                   3837 bp    DNA     linear       11-NOV-2022
 DEFINITION  Genus species strain strain.
 ACCESSION   
 VERSION
@@ -1133,7 +1133,7 @@ ORIGIN
      3721 gagcggagcc tgttcaacgg tgccgccgcg ctcgccggca tcgctgtcgc cggcctgctc
      3781 ctcaagcacg gccccaacag tgaagtagct gattgtcatc agcgcattga cggcgtc
 //
-LOCUS       DT194                   3837 bp    DNA     linear       08-NOV-2022
+LOCUS       DT194                   3837 bp    DNA     linear       11-NOV-2022
 DEFINITION  Genus species strain strain.
 ACCESSION   
 VERSION
@@ -1272,7 +1272,7 @@ ORIGIN
      3721 gtggcaccta tgaacaggtg ccaataatta aatctgacta cccaatttac agttcagagg
      3781 gttactgctt tacgtcgttt gattcaagcc gctgaatttg cttctcaatc cacgtgc
 //
-LOCUS       DT246                   3837 bp    DNA     linear       08-NOV-2022
+LOCUS       DT246                   3837 bp    DNA     linear       11-NOV-2022
 DEFINITION  Genus species strain strain.
 ACCESSION   
 VERSION
@@ -1406,7 +1406,7 @@ ORIGIN
      3721 cgttcctgtc cacggtacgc ctgcggccaa atttgattcc tttcagcttt gcttcctgtc
      3781 ggccctcatt cgtgcgttct aggatcctcc ggcgttcagc ctgtgccaca gccgaca
 //
-LOCUS       DT252                   3837 bp    DNA     linear       08-NOV-2022
+LOCUS       DT252                   3837 bp    DNA     linear       11-NOV-2022
 DEFINITION  Genus species strain strain.
 ACCESSION   
 VERSION

@@ -1,10 +1,103 @@
-# FLANKOPHILE version 0.1.8
+# FLANKOPHILE version 0.1.9
 # Alex Vincent Thorn
 
 configfile: "config.yaml"
 
 import os
 import re
+
+
+
+
+## Input control config file ############################################################
+
+try:
+  int(config["flank_length_upstreams"])
+  int(config["flank_length_downstreams"])
+except:
+  print("ERROR! Flank length must be a positive integer.")
+  
+
+
+if int(config["flank_length_upstreams"]) == 0 and int(config["flank_length_downstreams"]) == 0:
+    raise Exception("ERROR! Both flank_length_upstreams and flank_length_downstreams cannot both be 0. If you just want to find the genes and not the flanks use the tool Abricate by Torsten Seemann")
+
+if int(config["flank_length_upstreams"]) < 0 or int(config["flank_length_downstreams"]) < 0:
+    raise Exception("ERROR! Flank length must be a positive integer.")
+
+try:
+  float(config["min_coverage_abricate"])
+except:
+  print("ERROR! min_coverage_abricate must be a number, more specifically a float.")
+  raise Exception("ERROR!")
+
+if float(config["min_coverage_abricate"]) < 50 or float(config["min_coverage_abricate"]) > 100:
+    raise Exception("ERROR! min_coverage_abricate must be between 50 and 100.")
+
+
+try:
+  float(config["min_identity_abricate"])
+except:
+  print("ERROR! min_identity_abricate must be a number, more specifically a float.")
+  raise Exception("ERROR!")
+    
+if float(config["min_identity_abricate"]) < 50 or float(config["min_identity_abricate"]) > 100:
+    raise Exception("ERROR! min_identity_abricate must be between 50 and 100.")
+
+
+
+try:
+  float(config["cluster_identity_cd_hit"])
+  float(config["cluster_length_dif_cd_hit"])
+  
+except:
+  print("ERROR! Cluster parameters must be numbers.")
+  raise Exception("ERROR! Cluster parameters must be numbers." )
+
+if float(config["cluster_identity_cd_hit"]) < 0.8 or float(config["cluster_identity_cd_hit"]) > 1:
+    raise Exception("ERROR! cluster_identity_cd_hit must be between 0.80 and 1.")
+    
+if float(config["cluster_length_dif_cd_hit"]) < 0 or float(config["cluster_length_dif_cd_hit"]) > 1:
+    raise Exception("ERROR! cluster_length_dif_cd_hit must be between 0 and 1.")
+    
+
+try:
+  int(config["Kmersize_kma"])
+  int(config["distance_measure"])
+except:
+  raise Exception("ERROR! Kmersize_kma and distance_measure must be a positive integer." )
+
+if int(config["Kmersize_kma"]) < 1:
+    raise Exception("ERROR! Kmersize_kma must be a positive integer.")
+
+if int(config["distance_measure"]) == 1 or int(config["distance_measure"]) == 64 or int(config["distance_measure"]) == 256 or int(config["distance_measure"]) == 4096:
+    status = "Good"
+else:
+    raise Exception("ERROR! distance_measure must be 1, 64, 256 or 4096. See README file.")
+
+## Read in data #######################################################################################
+
+
+
+# Decide on word size for kma
+
+cd_id = float(config["cluster_identity_cd_hit"])
+
+if cd_id >= 0.95:
+    word_size_cd_hit = 10
+elif cd_id >= 0.90:
+    word_size_cd_hit = 8
+elif cd_id >= 0.88:
+    word_size_cd_hit = 7
+elif cd_id >= 0.85:
+    word_size_cd_hit = 6
+elif cd_id >= 0.80:
+    word_size_cd_hit = 5
+else:
+    word_size_cd_hit = "None"
+    
+
+
 
 ASSEMBLY_NAMES = []
 ASSEMBLY_NAME_PATH_DICT = {}
@@ -34,46 +127,7 @@ with open(config["input_list"], 'r') as file:
                 ASSEMBLY_NAME_PATH_DICT[assembly_name] = assembly_path
                 PATH_ASSEMBLY_NAME_DICT[assembly_path] = assembly_name
 
-
-## Input control config file ###########################################################
-
-try:
-  int(config["flank_length_upstreams"])
-except:
-  print("ERROR! Flank length must be a positive integer.")
-try:
-  int(config["flank_length_downstreams"])
-except:
-  print("ERROR! Flank length must be a positive integer.")
-
-
-if int(config["flank_length_upstreams"]) == 0 and int(config["flank_length_downstreams"]) == 0:
-    raise Exception("ERROR! Both flank_length_upstreams and flank_length_downstreams cannot both be 0. If you just want to find the genes and not the flanks use the tool Abricate by Torsten Seemann")
-
-if int(config["flank_length_upstreams"]) < 0 or int(config["flank_length_downstreams"]) < 0:
-    raise Exception("ERROR! Flank length must be a positive integer.")
-
-try:
-  float(config["min_coverage_abricate"])
-except:
-  print("ERROR! min_coverage_abricate must be a number, more specifically a float.")
-  raise Exception("ERROR!")
-
-if float(config["min_coverage_abricate"]) < 50 or float(config["min_coverage_abricate"]) > 100:
-    raise Exception("ERROR! min_coverage_abricate must be between 50 and 100.")
-
-
-try:
-  float(config["min_identity_abricate"])
-except:
-  print("ERROR! min_identity_abricate must be a number, more specifically a float.")
-  raise Exception("ERROR!")
-    
-if float(config["min_identity_abricate"]) < 50 or float(config["min_identity_abricate"]) > 100:
-    raise Exception("ERROR! min_identity_abricate must be between 50 and 100.")
-
-
-## Rule all ########################################################################
+## Rule all ###########################################################################################
 
             
 rule all:
@@ -83,7 +137,7 @@ rule all:
        "output/99_config.yaml"
 
 
-####################################################################################
+## Flankophile script ##################################################################################
 
 rule user_db:
     input:
@@ -264,13 +318,13 @@ rule filter_abricate_space_for_flanks:
         output_report = open("output/2_filter/flank_filtering.report", "w")
         a = "Flank length upstreams:" + "\t" + str(int(user_upstreams))
         b = a +"\nFlank length downstreams:" + "\t" + str(int(user_downstreams))
-        c = b + "\n\nNumber of gene observations before flank space filtering:" + "\t" + str(total_input_observations)
-        d = c + "\nNumber of gene observations after flank space filtering:" + "\t" + str(total_input_observations - total_discarded_observation)
-        e = d + "\nNumber of gene observations discarded by flank space filtering:" + "\t" + str(total_discarded_observation)
-        f = e +"\n\n\nHypothetical number of sequences discarded due to insufficient upstreams flank space if the following thresholds were used"
+        c = b + "\n\nNumber of hits before flank space filtering:" + "\t" + str(total_input_observations)
+        d = c + "\nNumber of hits after flank space filtering:" + "\t" + str(total_input_observations - total_discarded_observation)
+        e = d + "\n\nNumber of hits discarded by flank space filtering:" + "\t" + str(total_discarded_observation)
+        f = e +"\n\n\nHypothetical number of hits discarded due to insufficient upstreams flank space if the following thresholds were used:"
         g = f + "\n" + str(round(user_upstreams / 2)) + "\t" + str(round(user_upstreams)) + "\t"  + str(round(user_upstreams * 2)) 
         h = g + "\n" +  str(UP_half) + "\t" + str(UP_user) + "\t"  + str(UP_double)
-        i = h + "\n\nHypothetical number of sequences discarded due to insufficient downstreams flank space if the following thresholds were used"
+        i = h + "\n\nHypothetical number of hits discarded due to insufficient downstreams flank space if the following thresholds were used:"
         j = i + "\n" + str(round(user_downstreams / 2)) + "\t" + str(round(user_downstreams)) + "\t"  + str(round(user_downstreams* 2))
         k = j + "\n" +  str(DOWN_half) + "\t" + str(DOWN_user) + "\t"  + str(DOWN_double)
         print(k, file = output_report)
@@ -312,14 +366,14 @@ rule make_bedfiles:
     input:
         "output/temp_1/1_abricate_results_per_assembly/{a}.tsv"
     output:
-        temp("output/temp_2/bedfiles/flanks_with_gene/{a}/{a}.bed"),
-        temp("output/temp_2/bedfiles/just_gene/{a}/{a}.bed"),
-        temp("output/temp_2/bedfiles/masked_gene/{a}/{a}.bed")
+        temp("output/temp_2/bedfiles/target_and_flanking_regions/{a}/{a}.bed"),
+        temp("output/temp_2/bedfiles/target_sequence_only/{a}/{a}.bed"),
+        temp("output/temp_2/bedfiles/flanking_regions_only/{a}/{a}.bed")
     run:
         input=open(input[0], "r")
-        output_flanks_with_gene=open(output[0], "w")
-        output_just_gene=open(output[1], "w")
-        output_masked_gene=open(output[2], "w")
+        output_target_and_flanking_regions=open(output[0], "w")
+        output_target_sequence_only=open(output[1], "w")
+        output_flanking_regions_only=open(output[2], "w")
         col_index_SEQ, col_index_START, col_index_END, col_index_STRAND, col_index_ID_num  = 1, 2, 3, 4, 14
         user_upstreams=int(config["flank_length_upstreams"])
         user_downstreams=int(config["flank_length_downstreams"])
@@ -333,40 +387,40 @@ rule make_bedfiles:
             gene_strand = line_list[col_index_STRAND]
             ID = line_list[col_index_ID_num]
 
-            # for flanks_with_gene - whole region - with bedtools getfasta
+            # for target_and_flanking_regions - whole region - with bedtools getfasta
             if gene_strand == "+":
-                START_flanks_with_gene = START_old - user_upstreams -1
-                END_flanks_with_gene = END_old + user_downstreams
+                START_target_and_flanking_regions = START_old - user_upstreams -1
+                END_target_and_flanking_regions = END_old + user_downstreams
             if gene_strand == "-":
-                START_flanks_with_gene = START_old - user_downstreams -1
-                END_flanks_with_gene = END_old + user_upstreams
-            out_line = contig_name +  "\t" + str(START_flanks_with_gene) +  "\t" + str(END_flanks_with_gene)
+                START_target_and_flanking_regions = START_old - user_downstreams -1
+                END_target_and_flanking_regions = END_old + user_upstreams
+            out_line = contig_name +  "\t" + str(START_target_and_flanking_regions) +  "\t" + str(END_target_and_flanking_regions)
             out_line = out_line + "\t" + ID + "\t" + "1" + "\t" + gene_strand
-            print(out_line, file=output_flanks_with_gene)
+            print(out_line, file=output_target_and_flanking_regions)
  
-            #just_gene - just cut out the gene  with bedtools getfasta
+            #target_sequence_only - just cut out the gene  with bedtools getfasta
             out_line = contig_name +  "\t" + str(START_old - 1) +  "\t" + str(END_old)
             out_line = out_line + "\t" + ID + "\t" + "1" + "\t" + gene_strand
-            print(out_line, file=output_just_gene)
+            print(out_line, file=output_target_sequence_only)
 
-            #masked_gene - made with maskfasta from flanks_with_gene_fasta. All strands will be positive
-            START_masked_gene = user_upstreams + 1 - 1
+            #flanking_regions_only - made with maskfasta from target_and_flanking_regions_fasta. All strands will be positive
+            START_flanking_regions_only = user_upstreams + 1 - 1
             gene_length = END_old - START_old + 1
-            END_masked_gene = user_upstreams + gene_length
-            out_line = ID +  "\t" + str(START_masked_gene) + "\t" + str(END_masked_gene)
-            print(out_line, file =output_masked_gene )
+            END_flanking_regions_only = user_upstreams + gene_length
+            out_line = ID +  "\t" + str(START_flanking_regions_only) + "\t" + str(END_flanking_regions_only)
+            print(out_line, file =output_flanking_regions_only )
         input.close()
-        output_flanks_with_gene.close
-        output_just_gene.close
-        output_masked_gene.close
+        output_target_and_flanking_regions.close
+        output_target_sequence_only.close
+        output_flanking_regions_only.close
         
 
 
-rule bedtools_flanks_with_gene:
+rule bedtools_target_and_flanking_regions:
     input:
-        bed="output/temp_2/bedfiles/flanks_with_gene/{a}/{a}.bed"
+        bed="output/temp_2/bedfiles/target_and_flanking_regions/{a}/{a}.bed"
     output:
-        fasta=temp("output/temp_2/gene_fasta_files_per_assembly/flanks_with_gene/{a}/{a}.fa")
+        fasta=temp("output/temp_2/gene_fasta_files_per_assembly/target_and_flanking_regions/{a}/{a}.fa")
     conda: "environment.yaml"
     params:
         assembly_path=lambda wildcards: ASSEMBLY_NAME_PATH_DICT[wildcards.a]
@@ -376,12 +430,12 @@ rule bedtools_flanks_with_gene:
         sed -i -e "s/[(|)|+]//g" -e "s/-//g" {output.fasta}
         '''
 
-rule bedtools_just_gene:
+rule bedtools_target_sequence_only:
     input:
-        whole_flank="output/2_filter/gene_fasta_files_pooled/flanks_with_gene.fa",
-        bed="output/temp_2/bedfiles/just_gene/{a}/{a}.bed"
+        whole_flank="output/2_filter/gene_fasta_files_pooled/target_and_flanking_regions.fa",
+        bed="output/temp_2/bedfiles/target_sequence_only/{a}/{a}.bed"
     output:
-        fasta=temp("output/temp_2/gene_fasta_files_per_assembly/just_gene/{a}/{a}.fa")
+        fasta=temp("output/temp_2/gene_fasta_files_per_assembly/target_sequence_only/{a}/{a}.fa")
     conda: "environment.yaml"
     params:
         assembly_path=lambda wildcards: ASSEMBLY_NAME_PATH_DICT[wildcards.a]
@@ -392,44 +446,44 @@ rule bedtools_just_gene:
         ''' 
 
 
-rule bedtools_masked_gene:
+rule bedtools_flanking_regions_only:
     input:
-        just_gene="output/2_filter/gene_fasta_files_pooled/just_gene.fa",
-        bed="output/temp_2/bedfiles/masked_gene/{a}/{a}.bed",
-        fasta="output/temp_2/gene_fasta_files_per_assembly/flanks_with_gene/{a}/{a}.fa"
+        target_sequence_only="output/2_filter/gene_fasta_files_pooled/target_sequence_only.fa",
+        bed="output/temp_2/bedfiles/flanking_regions_only/{a}/{a}.bed",
+        fasta="output/temp_2/gene_fasta_files_per_assembly/target_and_flanking_regions/{a}/{a}.fa"
     output:
-        fasta=temp("output/temp_2/gene_fasta_files_per_assembly/masked_gene/{a}/{a}.fa")
+        fasta=temp("output/temp_2/gene_fasta_files_per_assembly/flanking_regions_only/{a}/{a}.fa")
     conda: "environment.yaml"
     shell:
         "bedtools maskfasta -fi {input.fasta} -bed {input.bed} -fo {output.fasta}"
 
 
 
-def flanks_with_gene_input(wildcards):
+def target_and_flanking_regions_input(wildcards):
     checkpoint_output = checkpoints.split_abricate_results.get(**wildcards).output[0]
-    return expand("output/temp_2/gene_fasta_files_per_assembly/flanks_with_gene/{a}/{a}.fa",
+    return expand("output/temp_2/gene_fasta_files_per_assembly/target_and_flanking_regions/{a}/{a}.fa",
            a=glob_wildcards(os.path.join(checkpoint_output, "{a}.tsv")).a)
 
 
 
-def just_gene_input(wildcards):
+def target_sequence_only_input(wildcards):
     checkpoint_output = checkpoints.split_abricate_results.get(**wildcards).output[0]
-    return expand("output/temp_2/gene_fasta_files_per_assembly/just_gene/{a}/{a}.fa",
+    return expand("output/temp_2/gene_fasta_files_per_assembly/target_sequence_only/{a}/{a}.fa",
            a=glob_wildcards(os.path.join(checkpoint_output, "{a}.tsv")).a)
 
 
-def masked_gene_input(wildcards):
+def flanking_regions_only_input(wildcards):
     checkpoint_output = checkpoints.split_abricate_results.get(**wildcards).output[0]
-    return expand("output/temp_2/gene_fasta_files_per_assembly/masked_gene/{a}/{a}.fa",
+    return expand("output/temp_2/gene_fasta_files_per_assembly/flanking_regions_only/{a}/{a}.fa",
            a=glob_wildcards(os.path.join(checkpoint_output, "{a}.tsv")).a)
 
 
-rule pool_flanks_with_gene:
+rule pool_target_and_flanking_regions:
     input:
-        flanks_with_gene_input
+        target_and_flanking_regions_input
     output:
-        temp=temp("output/temp_2/gene_fasta_files_pooled/temp_flanks_with_gene.fa"),
-        fasta="output/2_filter/gene_fasta_files_pooled/flanks_with_gene.fa"
+        temp=temp("output/temp_2/gene_fasta_files_pooled/temp_target_and_flanking_regions.fa"),
+        fasta="output/2_filter/gene_fasta_files_pooled/target_and_flanking_regions.fa"
     conda: "environment.yaml"
     shell:
         "cat {input}  > {output.temp};"
@@ -437,24 +491,24 @@ rule pool_flanks_with_gene:
         "rm -r output/temp_1"
 
 
-rule pool_just_gene:
+rule pool_target_sequence_only:
     input:
-        just_gene_input
+        target_sequence_only_input
     output:
-        temp=temp("output/temp_2/gene_fasta_files_pooled/temp_just_gene.fa"),
-        fasta="output/2_filter/gene_fasta_files_pooled/just_gene.fa"
+        temp=temp("output/temp_2/gene_fasta_files_pooled/temp_target_sequence_only.fa"),
+        fasta="output/2_filter/gene_fasta_files_pooled/target_sequence_only.fa"
     conda: "environment.yaml"
     shell:
         "cat {input}  > {output.temp};"
         "cat {output.temp} | seqkit sort -N -i -2  > {output.fasta}"
 
 
-rule pool_masked_gene:
+rule pool_flanking_regions_only:
     input:
-        masked_gene_input
+        flanking_regions_only_input
     output:
-        temp=temp("output/temp_2/gene_fasta_files_pooled/temp_masked_gene.fa"),
-        fasta="output/2_filter/gene_fasta_files_pooled/masked_gene.fa"
+        temp=temp("output/temp_2/gene_fasta_files_pooled/temp_flanking_regions_only.fa"),
+        fasta="output/2_filter/gene_fasta_files_pooled/flanking_regions_only.fa"
     conda: "environment.yaml"
     shell:
         "cat {input}  > {output.temp};"
@@ -463,9 +517,9 @@ rule pool_masked_gene:
 
 rule extract_relavant_reference_sequences:
     input:
-        flanks="output/2_filter/gene_fasta_files_pooled/flanks_with_gene.fa",
-        just_gene="output/2_filter/gene_fasta_files_pooled/just_gene.fa",
-        masked="output/2_filter/gene_fasta_files_pooled/masked_gene.fa",
+        flanks="output/2_filter/gene_fasta_files_pooled/target_and_flanking_regions.fa",
+        target_sequence_only="output/2_filter/gene_fasta_files_pooled/target_sequence_only.fa",
+        masked="output/2_filter/gene_fasta_files_pooled/flanking_regions_only.fa",
         final_results="output/2_filter/hits_with_requested_flanks.tsv"
     output:
         list=temp("output/3_define_clusters/final_output_list.txt"),
@@ -487,7 +541,7 @@ rule cd_hit:
     conda: "environment.yaml"
     params:
         c= config["cluster_identity_cd_hit"],
-        n= config["cluster_wordsize_cd_hit"],
+        n = word_size_cd_hit,
         s= config["cluster_length_dif_cd_hit"]
     shell:
         '''
@@ -559,33 +613,33 @@ rule extract_cluster_rows_from_results_file:
 rule extract_cluster_fastas:
     input:
         tsv="output/4_cluster_results/{c}/{c}.tsv",
-        flanks_with_gene_fasta="output/2_filter/gene_fasta_files_pooled/flanks_with_gene.fa",
-        just_gene_fasta="output/2_filter/gene_fasta_files_pooled/just_gene.fa",
-        masked_gene_fasta="output/2_filter/gene_fasta_files_pooled/masked_gene.fa"
+        target_and_flanking_regions_fasta="output/2_filter/gene_fasta_files_pooled/target_and_flanking_regions.fa",
+        target_sequence_only_fasta="output/2_filter/gene_fasta_files_pooled/target_sequence_only.fa",
+        flanking_regions_only_fasta="output/2_filter/gene_fasta_files_pooled/flanking_regions_only.fa"
     output:
         ID_list=temp("output/4_cluster_results/{c}/{c}.ID_list"),
-        flanks_with_gene_fasta="output/4_cluster_results/{c}/{c}.flanks_with_gene_fasta",
-        just_gene_fasta="output/4_cluster_results/{c}/{c}.just_gene_fasta",
-        masked_gene_fasta="output/4_cluster_results/{c}/{c}.masked_gene_fasta"
+        target_and_flanking_regions_fasta="output/4_cluster_results/{c}/{c}.target_and_flanking_regions_fasta",
+        target_sequence_only_fasta="output/4_cluster_results/{c}/{c}.target_sequence_only_fasta",
+        flanking_regions_only_fasta="output/4_cluster_results/{c}/{c}.flanking_regions_only_fasta"
     conda: "environment.yaml"
     shell:
         "awk '{{print $15}}' {input.tsv} > {output.ID_list};"
-        "seqkit grep -n -f {output.ID_list} {input.flanks_with_gene_fasta} > {output.flanks_with_gene_fasta};"
-        "seqkit grep -n -f {output.ID_list} {input.just_gene_fasta} > {output.just_gene_fasta};"
-        "seqkit grep -n -f {output.ID_list} {input.masked_gene_fasta} > {output.masked_gene_fasta}"
+        "seqkit grep -n -f {output.ID_list} {input.target_and_flanking_regions_fasta} > {output.target_and_flanking_regions_fasta};"
+        "seqkit grep -n -f {output.ID_list} {input.target_sequence_only_fasta} > {output.target_sequence_only_fasta};"
+        "seqkit grep -n -f {output.ID_list} {input.flanking_regions_only_fasta} > {output.flanking_regions_only_fasta}"
 
 
   
 
-def split_just_gene_fasta_file_input(wildcards):
+def split_target_sequence_only_fasta_file_input(wildcards):
     checkpoint_output = checkpoints.split_cd_hit_results.get(**wildcards).output[0]
-    return expand("output/4_cluster_results/{c}/{c}.just_gene_fasta",
+    return expand("output/4_cluster_results/{c}/{c}.target_sequence_only_fasta",
            c=glob_wildcards(os.path.join(checkpoint_output, "{c}.tsv")).c)
 
 
 rule translate_reference_database:
     input:
-        split_just_gene_fasta_file_input
+        split_target_sequence_only_fasta_file_input
     output:
         temp("output/user_db")
     conda: "environment.yaml"
@@ -596,7 +650,7 @@ rule translate_reference_database:
 rule prokka:
     input:
         AA_db="output/user_db",
-        fasta="output/4_cluster_results/{c}/{c}.flanks_with_gene_fasta"
+        fasta="output/4_cluster_results/{c}/{c}.target_and_flanking_regions_fasta"
     output:
         gff="output/4_cluster_results/{c}/prokka/{c}.gff",
         gbk="output/4_cluster_results/{c}/prokka/{c}.gbk",
@@ -636,58 +690,58 @@ rule make_gggenes_input:
 rule kma_index:
     input:
         gggenes="output/4_cluster_results/{c}/{c}.gggenes",
-        flanks_with_gene="output/4_cluster_results/{c}/{c}.flanks_with_gene_fasta",
-        masked="output/4_cluster_results/{c}/{c}.masked_gene_fasta",
-        just_gene="output/4_cluster_results/{c}/{c}.just_gene_fasta"
+        target_and_flanking_regions="output/4_cluster_results/{c}/{c}.target_and_flanking_regions_fasta",
+        masked="output/4_cluster_results/{c}/{c}.flanking_regions_only_fasta",
+        target_sequence_only="output/4_cluster_results/{c}/{c}.target_sequence_only_fasta"
     output:
-        temp("output/4_cluster_results/{c}/kma_index/flanks_with_gene.comp.b"),
-        temp("output/4_cluster_results/{c}/kma_index/flanks_with_gene.length.b"),
-        temp("output/4_cluster_results/{c}/kma_index/flanks_with_gene.name"),
-        temp("output/4_cluster_results/{c}/kma_index/flanks_with_gene.seq.b"),
-        temp("output/4_cluster_results/{c}/kma_index/masked_gene.comp.b"),
-        temp("output/4_cluster_results/{c}/kma_index/masked_gene.length.b"),
-        temp("output/4_cluster_results/{c}/kma_index/masked_gene.name"),
-        temp("output/4_cluster_results/{c}/kma_index/masked_gene.seq.b"),
-        temp("output/4_cluster_results/{c}/kma_index/just_gene.comp.b"),
-        temp("output/4_cluster_results/{c}/kma_index/just_gene.length.b"),
-        temp("output/4_cluster_results/{c}/kma_index/just_gene.name"),
-        temp("output/4_cluster_results/{c}/kma_index/just_gene.seq.b")
+        temp("output/4_cluster_results/{c}/kma_index/target_and_flanking_regions.comp.b"),
+        temp("output/4_cluster_results/{c}/kma_index/target_and_flanking_regions.length.b"),
+        temp("output/4_cluster_results/{c}/kma_index/target_and_flanking_regions.name"),
+        temp("output/4_cluster_results/{c}/kma_index/target_and_flanking_regions.seq.b"),
+        temp("output/4_cluster_results/{c}/kma_index/flanking_regions_only.comp.b"),
+        temp("output/4_cluster_results/{c}/kma_index/flanking_regions_only.length.b"),
+        temp("output/4_cluster_results/{c}/kma_index/flanking_regions_only.name"),
+        temp("output/4_cluster_results/{c}/kma_index/flanking_regions_only.seq.b"),
+        temp("output/4_cluster_results/{c}/kma_index/target_sequence_only.comp.b"),
+        temp("output/4_cluster_results/{c}/kma_index/target_sequence_only.length.b"),
+        temp("output/4_cluster_results/{c}/kma_index/target_sequence_only.name"),
+        temp("output/4_cluster_results/{c}/kma_index/target_sequence_only.seq.b")
     conda: "environment.yaml"
     params:
-        outfolder_flanks_with_gene=lambda wildcards: "output/4_cluster_results/" +  wildcards.c + "/kma_index/flanks_with_gene",
-        outfolder_masked=lambda wildcards: "output/4_cluster_results/" +  wildcards.c + "/kma_index/masked_gene",
-        outfolder_just_gene=lambda wildcards: "output/4_cluster_results/" +  wildcards.c + "/kma_index/just_gene",
+        outfolder_target_and_flanking_regions=lambda wildcards: "output/4_cluster_results/" +  wildcards.c + "/kma_index/target_and_flanking_regions",
+        outfolder_masked=lambda wildcards: "output/4_cluster_results/" +  wildcards.c + "/kma_index/flanking_regions_only",
+        outfolder_target_sequence_only=lambda wildcards: "output/4_cluster_results/" +  wildcards.c + "/kma_index/target_sequence_only",
         k=config["Kmersize_kma"]
     shell:
-        "kma index -k {params.k} -i {input.flanks_with_gene} -o {params.outfolder_flanks_with_gene};"
+        "kma index -k {params.k} -i {input.target_and_flanking_regions} -o {params.outfolder_target_and_flanking_regions};"
         "kma index -k {params.k} -i {input.masked} -o {params.outfolder_masked};"
-        "kma index -k {params.k} -i {input.just_gene} -o {params.outfolder_just_gene}"
+        "kma index -k {params.k} -i {input.target_sequence_only} -o {params.outfolder_target_sequence_only}"
 
 
 
 
 rule kma_dist:
     input:
-        ja="output/4_cluster_results/{c}/kma_index/just_gene.comp.b",
-        jb="output/4_cluster_results/{c}/kma_index/just_gene.length.b",
-        jc="output/4_cluster_results/{c}/kma_index/just_gene.name",
-        fa="output/4_cluster_results/{c}/kma_index/flanks_with_gene.comp.b",
-        fb="output/4_cluster_results/{c}/kma_index/flanks_with_gene.length.b",
-        fc="output/4_cluster_results/{c}/kma_index/flanks_with_gene.name",
-        ma="output/4_cluster_results/{c}/kma_index/masked_gene.comp.b",
-        mb="output/4_cluster_results/{c}/kma_index/masked_gene.length.b",
-        mc="output/4_cluster_results/{c}/kma_index/masked_gene.name",
-        f="output/4_cluster_results/{c}/kma_index/flanks_with_gene.seq.b",
-        m="output/4_cluster_results/{c}/kma_index/masked_gene.seq.b",
-        j="output/4_cluster_results/{c}/kma_index/just_gene.seq.b"
+        ja="output/4_cluster_results/{c}/kma_index/target_sequence_only.comp.b",
+        jb="output/4_cluster_results/{c}/kma_index/target_sequence_only.length.b",
+        jc="output/4_cluster_results/{c}/kma_index/target_sequence_only.name",
+        fa="output/4_cluster_results/{c}/kma_index/target_and_flanking_regions.comp.b",
+        fb="output/4_cluster_results/{c}/kma_index/target_and_flanking_regions.length.b",
+        fc="output/4_cluster_results/{c}/kma_index/target_and_flanking_regions.name",
+        ma="output/4_cluster_results/{c}/kma_index/flanking_regions_only.comp.b",
+        mb="output/4_cluster_results/{c}/kma_index/flanking_regions_only.length.b",
+        mc="output/4_cluster_results/{c}/kma_index/flanking_regions_only.name",
+        f="output/4_cluster_results/{c}/kma_index/target_and_flanking_regions.seq.b",
+        m="output/4_cluster_results/{c}/kma_index/flanking_regions_only.seq.b",
+        j="output/4_cluster_results/{c}/kma_index/target_sequence_only.seq.b"
     output:
-        f="output/4_cluster_results/{c}/{c}.flanks_with_gene_dist",
-        m="output/4_cluster_results/{c}/{c}.masked_gene_dist",
-        j="output/4_cluster_results/{c}/{c}.just_gene_dist"
+        f="output/4_cluster_results/{c}/{c}.target_and_flanking_regions_dist",
+        m="output/4_cluster_results/{c}/{c}.flanking_regions_only_dist",
+        j="output/4_cluster_results/{c}/{c}.target_sequence_only_dist"
     params:
-        f_db=lambda wildcards: "output/4_cluster_results/" +  wildcards.c + "/kma_index/flanks_with_gene",
-        m_db=lambda wildcards: "output/4_cluster_results/" +  wildcards.c + "/kma_index/masked_gene",
-        j_db=lambda wildcards: "output/4_cluster_results/" +  wildcards.c + "/kma_index/just_gene",
+        f_db=lambda wildcards: "output/4_cluster_results/" +  wildcards.c + "/kma_index/target_and_flanking_regions",
+        m_db=lambda wildcards: "output/4_cluster_results/" +  wildcards.c + "/kma_index/flanking_regions_only",
+        j_db=lambda wildcards: "output/4_cluster_results/" +  wildcards.c + "/kma_index/target_sequence_only",
         dist_measure=config["distance_measure"]
      
     conda: "environment.yaml"
@@ -701,7 +755,7 @@ rule kma_dist:
 
 def dist_input(wildcards):
     checkpoint_output = checkpoints.split_cd_hit_results.get(**wildcards).output[0]
-    return expand("output/4_cluster_results/{c}/{c}.masked_gene_dist",
+    return expand("output/4_cluster_results/{c}/{c}.flanking_regions_only_dist",
            c=glob_wildcards(os.path.join(checkpoint_output, "{c}.tsv")).c)
 
 

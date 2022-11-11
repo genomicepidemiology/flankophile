@@ -103,13 +103,13 @@ most_commen_gene <- as.character(most_commen_gene[1,1])
 #most_commen_gene <- "my gene"
 
 # Based on flank + gene sequence
-flanks_with_gene.df = parseDistanceDF(paste0(path_to_output_folder, cluster_name, "/", cluster_name, ".flanks_with_gene_dist"))
+target_and_flanking_regions.df = parseDistanceDF(paste0(path_to_output_folder, cluster_name, "/", cluster_name, ".target_and_flanking_regions_dist"))
 
 # Based on flank sequence
-flanks_masked_gene.df = parseDistanceDF(paste0(path_to_output_folder, cluster_name, "/", cluster_name, ".masked_gene_dist"))
+flanks_masked_gene.df = parseDistanceDF(paste0(path_to_output_folder, cluster_name, "/", cluster_name, ".flanking_regions_only_dist"))
 
 # Based on gene sequence
-just_gene.df = parseDistanceDF(paste0(path_to_output_folder, cluster_name, "/", cluster_name, ".just_gene_dist"))
+target_sequence_only.df = parseDistanceDF(paste0(path_to_output_folder, cluster_name, "/", cluster_name, ".target_sequence_only_dist"))
 
 
 # Calculate tree from distance matrix
@@ -122,14 +122,14 @@ dist2tree = function(distmat) {
 
 # Make trees
 
-flanks_with_gene.tree = dist2tree(flanks_with_gene.df)
-flanks_masked_gene.tree = dist2tree(flanks_masked_gene.df)
-just_gene.tree = dist2tree(just_gene.df)
+target_and_flanking_regions.tree = dist2tree(target_and_flanking_regions.df)
+flanks_flanking_regions_only.tree = dist2tree(flanks_flanking_regions_only.df)
+target_sequence_only.tree = dist2tree(target_sequence_only.df)
 
 
 # flank + gene plot - based on gene plus flanking sequence ##################
 
-p_flanks_with_gene <- ggtree(flanks_with_gene.tree, options(ignore.negative.edge=TRUE)) + 
+p_target_and_flanking_regions <- ggtree(target_and_flanking_regions.tree, options(ignore.negative.edge=TRUE)) + 
   geom_tiplab(size = 1) +
   xlim_tree(x_lim_plot) +
   ggtitle(paste0("Cluster ", clus_num, " - ", clus_gene, " - distance tree based on gene plus flanking region sequences")) +
@@ -138,15 +138,15 @@ p_flanks_with_gene <- ggtree(flanks_with_gene.tree, options(ignore.negative.edge
              on = most_commen_gene, label = 'gene_long', align = 'left') +
   theme(legend.position=legendpos)
 
-flanks_with_gene_plot <-facet_widths(p_flanks_with_gene, widths=c(1,2))
+target_and_flanking_regions_plot <-facet_widths(p_target_and_flanking_regions, widths=c(1,2))
 
-flanks_with_gene_plot
+target_and_flanking_regions_plot
 
 
 
 # flank  plot - based on only flanking sequence ##################
 
-p_flanks_masked_gene <- ggtree(flanks_masked_gene.tree, options(ignore.negative.edge=TRUE)) + 
+p_flanks_flanking_regions_only <- ggtree(flanks_flanking_regions_only.tree, options(ignore.negative.edge=TRUE)) + 
   geom_tiplab(size = 1) +
   xlim_tree(x_lim_plot) +
   ggtitle(paste0("Cluster ", clus_num, " - ", clus_gene, " - distance tree based on only flanking region sequences")) +
@@ -155,14 +155,14 @@ p_flanks_masked_gene <- ggtree(flanks_masked_gene.tree, options(ignore.negative.
              on = most_commen_gene, label = 'gene_long', align = 'left') +
   theme(legend.position=legendpos)
 
-flanks_masked_gene_plot <-facet_widths(p_flanks_masked_gene, widths=c(1,2))
+flanks_flanking_regions_only_plot <-facet_widths(p_flanks_flanking_regions_only, widths=c(1,2))
 
-flanks_masked_gene_plot
+flanks_flanking_regions_only_plot
 
 
 # gene  plot - based on only gene sequence ##################
 
-p_just_gene <- ggtree(just_gene.tree, options(ignore.negative.edge=TRUE)) + 
+p_target_sequence_only <- ggtree(target_sequence_only.tree, options(ignore.negative.edge=TRUE)) + 
   geom_tiplab(size = 1) +
   xlim_tree(x_lim_plot) +
   ggtitle(paste0("Cluster ", clus_num, " - ", clus_gene, " - distance tree based on only gene sequences")) +
@@ -171,17 +171,17 @@ p_just_gene <- ggtree(just_gene.tree, options(ignore.negative.edge=TRUE)) +
              on = most_commen_gene, label = 'gene_long', align = 'left') +
   theme(legend.position=legendpos)
 
-just_gene_plot <-facet_widths(p_just_gene, widths=c(1,2))
+target_sequence_only_plot <-facet_widths(p_target_sequence_only, widths=c(1,2))
 
-just_gene_plot
+target_sequence_only_plot
 
 
 ##Plot with reference gene % identity panel ###############################################################
 
 
 
-# Change to just_gene.tree or flanks_with_gene if wanted
-tree <- flanks_masked_gene.tree
+# Change to target_sequence_only.tree or target_and_flanking_regions if wanted
+tree <- flanks_flanking_regions_only.tree
 
 
 
@@ -210,4 +210,4 @@ t4
 
 #To save plots use ggsave
 
-#ggsave(file = paste0("flanks_masked_gene-ID-", cluster_name, "_tree", ".pdf"), plot = t4, width = 8.27, height = 11.69)
+#ggsave(file = paste0("flanks_flanking_regions_only-ID-", cluster_name, "_tree", ".pdf"), plot = t4, width = 8.27, height = 11.69)

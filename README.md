@@ -1,5 +1,5 @@
 # FLANKOPHILE
-FLANKOPHILE version 0.1.8
+FLANKOPHILE version 0.1.9
 By Alex Vincent Thorn
 
 ![flankophile_logo_2-1_square.jpg](example_output/flankophile_logo_2-1_square.jpg)
@@ -14,7 +14,7 @@ Flankophile is a pipeline built for easy analysis and visualization of gene synt
 
 **Input:** Genetic data in DNA multi-fasta format, such as assemblies plus a reference database containing target sequences in multi-fasta format.
 
-**Output:** [Gene synteny plots](example_output/5_plots), [results tables](example_output/2_filter/hits_with_requested_flanks.tsv), [clustering table](example_output/3_clustering.tsv), [distance matrices](example_output/4_cluster_results/33_aph_6__Id_1_M28829/33_aph_6__Id_1_M28829.flanks_with_gene_dist), genetic sequences of genes and flanking regions in fasta format. 
+**Output:** [Gene synteny plots](example_output/5_plots), [results tables](example_output/2_filter/hits_with_requested_flanks.tsv), [clustering table](example_output/3_clustering.tsv), [distance matrices](example_output/4_cluster_results/33_aph_6__Id_1_M28829/33_aph_6__Id_1_M28829.target_and_flanking_regions_dist), genetic sequences of genes and flanking regions in fasta format. 
 
 
 
@@ -94,9 +94,8 @@ The configuration file contains numbered sections. Each number refers to an outp
 | min_identity_abricate               | "98"                  | In %. 50 - 100% | Step 1. Minimum percentage identity compared to reference sequence.                                |
 | flank_length_upstreams              | "1500"                | Length in bp.   | Step 2.                                                                                            |
 | flank_length_downstreams            | "1500"                | Length in bp.   | Step 2.                                                                                            |
-| cluster_identity_cd_hit             | "0.95"                | 1 equals 100 %. | Step 3.     -c github.com/weizhongli/cdhit/wiki/3.-User's-Guide#CDHITEST                           |
-| cluster_wordsize_cd_hit             | "9"                   | Wordsize        | Step 3.     -n github.com/weizhongli/cdhit/wiki/3.-User's-Guide#CDHITEST                           |
-| cluster_length_dif_cd_hit           | "0.9"                 | 1 equals 100 %. | Step 3.     Length difference cutoff.                                                              |
+| cluster_identity_cd_hit             | "0.95"                | 1 equals 100 %. | Step 3. Interval: 0.80 - 1    CD-HIT-EST parameter c.                                              |
+| cluster_length_dif_cd_hit           | "0.9"                 | 1 equals 100 %. | Step 3.     Length difference limit within clusters.                                               |
 | Kmersize_kma                        | "16"                  | Kmer size.      | Step 4. For kma index.                                                                             |
 | distance_measure                    | "1"                   | Distmatrix      | Step 4.- 1 k-mer hamming distance 64 Jaccard distance 256 Cosine distance 4096 Chi-square distance |
 
@@ -166,7 +165,7 @@ The output also contains a [flank_filtering.report](example_output/2_filter/flan
 
  
 
-**Step 3 - define cluster**
+**Step 3 - define clusters**
 
 [3_clustering.tsv](example_output/3_clustering.tsv) is a table that contains information on which hits that belong to each output cluster, based on their reference sequences. The clustering is based on percentage identity.  
 
@@ -175,13 +174,7 @@ The output also contains a [flank_filtering.report](example_output/2_filter/flan
 
 Contains one directory for each reference gene cluster. Directory names have two parts. The first part is a unique number. 
 The second part after the underscore is the first part of the name of the gene that seeded the cluster. 
-See [example of output from an induvidual gene family cluster](example_output/4_cluster_results/33_aph_6__Id_1_M28829/). The folder contains [distance matrices](example_output/4_cluster_results/33_aph_6__Id_1_M28829/33_aph_6__Id_1_M28829.flanks_with_gene_dist), cluster results as tsv, fasta files and output from Prokka.
-
-| **Nickname**     | **Explanation**                                                                      |
-|------------------|--------------------------------------------------------------------------------------|
-| flanks_with_gene | The DNA sequence of target sequence and upstreams and downstreams flanking regions.  |
-| just_gene        | The DNA sequence of target sequence only.                                            |
-| masked_gene      | The DNA sequence of the flanking regions. Target sequence is included but masked.    |
+See [example of output from an induvidual gene family cluster](example_output/4_cluster_results/33_aph_6__Id_1_M28829/). The folder contains [distance matrices](example_output/4_cluster_results/33_aph_6__Id_1_M28829/33_aph_6__Id_1_M28829.target_and_flanking_regions_dist), [cluster results table](example_output/4_cluster_results/33_aph_6__Id_1_M28829/33_aph_6__Id_1_M28829.tsv), fasta files and output from Prokka.
 
 
 **Step 5 - plots**
