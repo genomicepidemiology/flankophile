@@ -1,5 +1,5 @@
 # FLANKOPHILE
-FLANKOPHILE version 0.1.9
+FLANKOPHILE version 0.1.10
 By Alex Vincent Thorn
 
 ![flankophile_logo_2-1_square.jpg](example_output/flankophile_logo_2-1_square.jpg)
@@ -10,17 +10,17 @@ By Alex Vincent Thorn
 
 ## About Flankophile
 
-Flankophile is a pipeline built for easy analysis and visualization of gene synteny - the genetic context of genes. Flankophile is especially useful for comparing the flanking regions of specific genes or other target sequences across different samples. Flankophile also outputs the percentage identity of each hit relative to its reference sequence. This allows for incorporating gene variants into the analysis.
+Flankophile is a pipeline built for easy analysis and visualization of gene synteny - the genetic context of genes. Flankophile is especially useful for comparing the flanking regions of specific genes or other target sequences across different samples. Flankophile automaticly gene synteny plots in pdf format. Flankophile also outputs the percentage identity of each hit relative to its reference sequence. This allows for incorporating gene variants into the analysis.
 
 **Input:** Genetic data in DNA multi-fasta format, such as assemblies plus a reference database containing target sequences in multi-fasta format.
 
-**Output:** [Gene synteny plots](example_output/5_plots), [results tables](example_output/2_filter/hits_with_requested_flanks.tsv), [clustering table](example_output/3_clustering.tsv), [distance matrices](example_output/4_cluster_results/33_aph_6__Id_1_M28829/33_aph_6__Id_1_M28829.target_and_flanking_regions_dist), genetic sequences of genes and flanking regions in fasta format. 
+**Output:** [Gene synteny plots](example_output/4_plots), [results tables](example_output/2_filter/2_hits_included_in_flank_analysis.tsv), [clustering table](example_output/3_clustering.tsv), [distance matrices](example_output/4_cluster_results/33_aph_6__Id_1_M28829/33_aph_6__Id_1_M28829.target_and_flanking_regions_dist), genetic sequences of genes and flanking regions in fasta format. 
 
 
 
 
 
-![Demo_R_plot.PNG](example_output/5_plots/Demo_R_plot.PNG)
+![Demo_R_plot.PNG](example_output/4_plots/Demo_R_plot.PNG)
 
 
 
@@ -43,7 +43,7 @@ Flankophile is a Snakemake based pipeline. Snakemake is a python based workflow 
 The [Snakefile](Snakefile) contains the main pipeline code.
 
 
-You need Miniconda and [Snakemake](https://snakemake.readthedocs.io/en/stable/index.html) to run Flankophile. Flankophile is conda based and uses a conda env. You can see it in the file [environment.yaml](environment.yaml).
+You need Miniconda (miniconda3/4.11.0) and [Snakemake](https://snakemake.readthedocs.io/en/stable/index.html) (snakemake/6.9.1) to run Flankophile. Flankophile is conda based and uses a conda env. You can see it in the file [environment.yaml](environment.yaml).
  You do not need to load the conda enviroment manually. Snakemake will automatically download the necessary conda packages when running the pipeline for the first time. For this reason, the pipeline will take a longer time to run the first time.
 
 ### Input files
@@ -65,11 +65,24 @@ The [ResFinder database](input/example_input_files/ResFinder_08_02_2022.fa) is i
 
 Your sample input data must consist of a number of assemblies, binned or unbinned contigs, genomes or other data in DNA multifasta format. One multifasta per sample. You can input as many samples as wanted. 
 
-The input_list file is a tsv file with two columns. Each row represents a sample. The first column is a unique nickname for each input fasta, for example, "sample_1" or "e.coli_bin_32". The name must not contain whitespace or slash but underscore, dot and dash is accepted. The second column is the full path to the fasta file, including the file name. The columns must be separated by tab. Flankophile will ignore rows that start with **#**. This is useful if you want to add headers.
+The input_list file is a tsv file with 2 or 3 columns. Each row represents a sample. Flankophile will ignore rows that start with **#**. This is useful if you want to add headers.
 
-Another useful feature is that if the first one or two characters in the assembly name are alphabetic letters, these will be included in the OBSERVATION_ID, which is used in the plots as tip labels. If you are working with samples from different countries, it will make sense to make the countries' two-letter code the first two letters of the assembly names. If the assembly name does not start with a letter then the OBSERVATION_ID will start with a lowercase i.
+**Column 1 - Assembly_name**
+The first column is a unique nickname for each input fasta, for example, "sample_1" or "e.coli_bin_32". It is used to distinguish different samples. The name must not contain whitespace or slash. Letters, numbers, underscore, dot and dash is accepted. Column 1 is mandatory.
+A useful feature is that if the first one or two characters in the assembly name are  letters, these will be included in the OBSERVATION_ID, which is printed in the plots as tip labels. If you are working with samples from different countries, it will make sense to make the countries' two-letter code the first two letters of the assembly names. If the assembly name does not start with a letter then the OBSERVATION_ID will start with a lowercase i.
+
+**Column 2 - Path to fasta**
+The second column is the full path to the fasta file, including the file name. The columns must be separated by tab. Column 2 is mandatory. 
+
+
+**Column 3**
+Column 3 is optional. Column 3 is a metadata column and Flankophile will automaticly recognise if it is present. You cannot add more than one metadata collumn. The metadata column must only contain numbers, letters and underscore. The metadata will be included in the output tables and in the plots. Examples of metadata could be host animal, sample site or gender. It is possible but not recomended to use more than 8 unique metadata values as it will be difficult to distinguish more than 8 different colors on the plots.
+
+
 
 See an example of an  [input_list file](input/example_input_files/input_list_example_assembly_mode.tsv). 
+
+
 
 | #assembly_name | path                                   |
 |----------------|----------------------------------------|
@@ -94,10 +107,18 @@ The configuration file contains numbered sections. Each number refers to an outp
 | min_identity_abricate               | "98"                  | In %. 50 - 100% | Step 1. Minimum percentage identity compared to reference sequence.                                |
 | flank_length_upstreams              | "1500"                | Length in bp.   | Step 2.                                                                                            |
 | flank_length_downstreams            | "1500"                | Length in bp.   | Step 2.                                                                                            |
-| cluster_identity_cd_hit             | "0.95"                | 1 equals 100 %. | Step 3. Interval: 0.80 - 1    CD-HIT-EST parameter c.                                              |
-| cluster_length_dif_cd_hit           | "0.9"                 | 1 equals 100 %. | Step 3.     Length difference limit within clusters.                                               |
-| Kmersize_kma                        | "16"                  | Kmer size.      | Step 4. For kma index.                                                                             |
-| distance_measure                    | "1"                   | Distmatrix      | Step 4.- 1 k-mer hamming distance 64 Jaccard distance 256 Cosine distance 4096 Chi-square distance |
+| cluster_identity_and_length_diff    | "0.95"                | 1 equals 100 %. | Step 3. Interval: 0.80 - 1    CD-HIT-EST parameters c and s.                                       |
+| k-mer_size                          | "16"                  | Kmer size.      | Step 4. For kma index. Minimum 6                                                                   |
+| distance_measure                    | "1"                   | Distmatrix      | Step 4. Each number represents a methods. See distance methods.                                    |
+
+
+**Distance methods:**
+```bash
+    1      k-mer hamming distance
+   64      Jaccard distance
+  256      Cosine distance
+ 4096      Chi-square distance
+```
 
 
 ### Running the pipeline
@@ -112,9 +133,9 @@ Run the pipeline:
 Cores is the number of cores available. For more info on flags visit: 
 https://snakemake.readthedocs.io/en/stable/executing/cli.html#command-line-interface 
 
-You should run the pipeline with as much memory as possible if you have large input files. The search step uses a large amount of memory, and if too little memory is used, Abricate may not find all possible hits in very large files. If you want to make sure that the computer runs the pipeline with enough memory, then run the pipeline twice with the same config file and compare the files output/1_all_hits.tsv from each run using 
+You should run the pipeline with as much memory as possible if you have large input files. The search step uses a large amount of memory, and if too little memory is used, Abricate may not find all possible hits in very large files. If you want to make sure that the computer runs the pipeline with enough memory, then run the pipeline twice with the same config file and compare the files output/1_hits_all.tsv from each run using 
 ```bash
-diff output1/1_all_hits.tsv output2/1_all_hits.tsv
+diff output1/1_hits_all.tsv output2/1_hits_all.tsv
 
 ``` 
 If they are identical, that means that enough memory was used. 
@@ -122,13 +143,13 @@ If they are identical, that means that enough memory was used.
 
 
 #### Rerunning the pipeline
-Flankophile creates the output directories in the order of the numbers. The files in the first directory are used to produce the files in the second directory, and so on. This is useful since it is then easy to rerun the analysis with different parameters without having to redo the whole analysis.
+Flankophile creates the output in the order of the numbers. The first files are used to produce the files in the second directory, and so on. This is useful since it is then easy to rerun the analysis with different parameters without having to redo the whole analysis.
 
 If you want to rerun the pipeline with new config settings, you must look in the config file [config.yaml](config.yaml)
  and take note of the numbered sections. If you want to change parameters, you must delete all output
  with a number equal to or higher than the number of the section. You simply delete output in descending order starting with 99 and down to where you do not want to rerun anymore. Snakemake will rerun these parts of the pipeline with the new config settings when you give the run command `snakemake --use-conda --cores 39` again. 
 
-You must delete the entire output folder if you want to add more data or use a different reference database. 
+You must delete the entire output folder if you want to rerun the pipeline from the start.
 
 
 #### Redirect where to store conda packages
@@ -152,14 +173,14 @@ envs_dirs:
 
 
 **Step 1 - Search**
-The file [1_all_hits.tsv](example_output/1_all_hits.tsv) contains the data for all hits found by Abricate, which have the requested minimum percentage identity and minimum percentage coverage.
+The file [1_hits_all.tsv](example_output/1_hits_all.tsv) contains the data for all hits found by Abricate, which have the requested minimum percentage identity and minimum percentage coverage.
 
-Step 1 is the most time-consuming step. If you want to rerun the pipeline with other parameters for steps 2-5 then you can save time by deleting the files for the other steps but keeping [1_all_hits.tsv](example_output/1_all_hits.tsv)
+Step 1 is the most time-consuming step. If you want to rerun the pipeline with other parameters for steps 2-5 then you can save time by deleting the files for the other steps but keeping [1_hits_all.tsv](example_output/1_hits_all.tsv)
 
 
 **Step 2 - filter on space for flanking regions*
 
-Directory 2_filter contains tsv file [hits_with_requested_flanks.tsv](example_output/2_filter/hits_with_requested_flanks.tsv), which is a filtered version of [all_hits.tsv](example_output/1_all_hits.tsv) from step 1. [Hits_with_requested_flanks.tsv](example_output/2_filter/hits_with_requested_flanks.tsv) contains only hits that had space on their contig for the user-requested upstream and downstream flanking region. The rest of the analysis is based on these hits.
+Directory 2_filter contains tsv file [2_hits_included_in_flank_analysis.tsv](example_output/2_filter/2_hits_included_in_flank_analysis.tsv), which is a filtered version of [all_hits.tsv](example_output/1_hits_all.tsv) from step 1. [2_hits_included_in_flank_analysis.tsv](example_output/2_filter/2_hits_included_in_flank_analysis.tsv) contains only hits that had space on their contig for the user-requested upstream and downstream flanking region. The rest of the analysis is based on these hits.
 
 The output also contains a [flank_filtering.report](example_output/2_filter/flank_filtering.report) on how many hits were discarded due to insufficient flanking region length. 
 
@@ -170,26 +191,17 @@ The output also contains a [flank_filtering.report](example_output/2_filter/flan
 [3_clustering.tsv](example_output/3_clustering.tsv) is a table that contains information on which hits that belong to each output cluster, based on their reference sequences. The clustering is based on percentage identity.  
 
   
-**Step 4 - analysis of extracted sequences for each cluster**
+**Step 4 - plots and analysis of extracted sequences for each cluster **
 
 Contains one directory for each reference gene cluster. Directory names have two parts. The first part is a unique number. 
 The second part after the underscore is the first part of the name of the gene that seeded the cluster. 
 See [example of output from an induvidual gene family cluster](example_output/4_cluster_results/33_aph_6__Id_1_M28829/). The folder contains [distance matrices](example_output/4_cluster_results/33_aph_6__Id_1_M28829/33_aph_6__Id_1_M28829.target_and_flanking_regions_dist), [cluster results table](example_output/4_cluster_results/33_aph_6__Id_1_M28829/33_aph_6__Id_1_M28829.tsv), fasta files and output from Prokka.
 
 
-**Step 5 - plots**
+All the plots produced by Flankophile from the R script [plot_gene_clusters_from_flankophile.R](bin/plot_gene_clusters_from_flankophile.R) are made in step 4. Plots are made for each cluster in 4_cluster_results. The distance matrices are used to produce distance trees and the gene annotation is then plotted with the tree. 
 
-Contains all the plots produced by Flankophile from the R script [plot_gene_clusters_from_flankophile.R](bin/plot_gene_clusters_from_flankophile.R). Plots are made for each cluster in 4_cluster_results. The distance matrices are used to produce distance trees and the gene annotation is then plotted with the tree. 
+[Examples of plots made with the pipeline](example_output/4_plots).
 
-[Examples of plots made with the pipeline](example_output/5_plots).
-
-
-
-## Visualization
-
-Flankophile automaticly output plots for each cluster from the results produced by the pipeline, but it is possible to visualize more metadata along with the plot. You can create your own custom plot, perhaps based on [this script](bin/plot_gene_clusters_stand_alone_version.R). Use the same versions of the packages as in this [script](bin/plot_gene_clusters_from_flankophile.R) Modify the script to read in a metadata table, join it with the cluster_results table and make an info table that can be read by the heatmap function. Here is an [example of plot made with a custom R script](example_output/5_plots/plot_made_with_custom_made_R_script_for_inspiration.pdf) which includes metadata on species. 
-
- Read more about tree visualization [here](https://yulab-smu.top/treedata-book/chapter7.html). 
 
 
 

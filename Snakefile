@@ -1,4 +1,4 @@
-# FLANKOPHILE version 0.1.9
+# FLANKOPHILE version 0.1.10
 # Alex Vincent Thorn
 
 configfile: "config.yaml"
@@ -8,8 +8,7 @@ import re
 
 
 
-
-## Input control config file ############################################################
+## Input control config file #############################################################
 
 try:
   int(config["flank_length_upstreams"])
@@ -45,32 +44,27 @@ if float(config["min_identity_abricate"]) < 50 or float(config["min_identity_abr
     raise Exception("ERROR! min_identity_abricate must be between 50 and 100.")
 
 
-
 try:
-  float(config["cluster_identity_cd_hit"])
-  float(config["cluster_length_dif_cd_hit"])
-  
+  float(config["cluster_identity_and_length_diff"])  
 except:
   print("ERROR! Cluster parameters must be numbers.")
-  raise Exception("ERROR! Cluster parameters must be numbers." )
+  raise Exception("ERROR! cluster_identity_and_length_diff parameter must be a number." )
 
-if float(config["cluster_identity_cd_hit"]) < 0.8 or float(config["cluster_identity_cd_hit"]) > 1:
-    raise Exception("ERROR! cluster_identity_cd_hit must be between 0.80 and 1.")
+if float(config["cluster_identity_and_length_diff"]) < 0.8 or float(config["cluster_identity_and_length_diff"]) > 1:
+    raise Exception("ERROR! cluster_identity_and_length_diff must be between 0.80 and 1.")
     
-if float(config["cluster_length_dif_cd_hit"]) < 0 or float(config["cluster_length_dif_cd_hit"]) > 1:
-    raise Exception("ERROR! cluster_length_dif_cd_hit must be between 0 and 1.")
     
 
 try:
-  int(config["Kmersize_kma"])
+  int(config["k-mer_size"])
   int(config["distance_measure"])
 except:
-  raise Exception("ERROR! Kmersize_kma and distance_measure must be a positive integer." )
+  raise Exception("ERROR! k-mer_size and distance_measure must be a positive integer." )
 
-if int(config["Kmersize_kma"]) < 1:
-    raise Exception("ERROR! Kmersize_kma must be a positive integer.")
+if int(config["k-mer_size"]) < 6:
+    raise Exception("ERROR! k-mer_size is wrong. K must be a positive integer above 5. Google k-mer size for guidance")
 
-if int(config["distance_measure"]) == 1 or int(config["distance_measure"]) == 64 or int(config["distance_measure"]) == 256 or int(config["distance_measure"]) == 4096:
+if int(config["distance_measure"]) == 1 or int(config["distance_measure"]) == 64 or int(config["distance_measure"]) == 256  or int(config["distance_measure"]) == 4096:
     status = "Good"
 else:
     raise Exception("ERROR! distance_measure must be 1, 64, 256 or 4096. See README file.")
@@ -81,7 +75,7 @@ else:
 
 # Decide on word size for kma
 
-cd_id = float(config["cluster_identity_cd_hit"])
+cd_id = float(config["cluster_identity_and_length_diff"])
 
 if cd_id >= 0.95:
     word_size_cd_hit = 10
@@ -103,11 +97,20 @@ ASSEMBLY_NAMES = []
 ASSEMBLY_NAME_PATH_DICT = {}
 PATH_ASSEMBLY_NAME_DICT = {}
 
+ASSEMBLY_NAME_META_DICT = {}
+
+first_line_flag = False
+
+col_num = "None"
+
 with open(config["input_list"], 'r') as file:
     for line in file:
         line = line.strip()
         if not line.startswith("#"):
             line_list = line.split("\t")
+            if first_line_flag == True:
+                if len(line_list) != col_num:
+                    raise Exception("ERROR! There must be the same number of columns on each row of input_list.")
             if len(line_list) > 3:
                 raise Exception("ERROR! Input list must have 2 or 3 collums in each row and be tab separated. Too many collumns in this input file.")
             if len(line_list) < 2:
@@ -122,19 +125,33 @@ with open(config["input_list"], 'r') as file:
                 raise Exception("ERROR! Assembly names in the input_list must not contain white space.")
             if assembly_name.find("/") != -1:
                 raise Exception("ERROR! Assembly names in the input_list must not contain slash.")
-            if assembly_name not in ASSEMBLY_NAMES:
-                ASSEMBLY_NAMES.append(assembly_name)
-                ASSEMBLY_NAME_PATH_DICT[assembly_name] = assembly_path
-                PATH_ASSEMBLY_NAME_DICT[assembly_path] = assembly_name
+            
+            ASSEMBLY_NAMES.append(assembly_name)
+            ASSEMBLY_NAME_PATH_DICT[assembly_name] = assembly_path
+            PATH_ASSEMBLY_NAME_DICT[assembly_path] = assembly_name
+            first_line_flag = True
+            col_num = len(line_list)
+            if col_num == 3:
+                metadata = line_list[2]
+                meta_check = re.search('\W', metadata) # Check that metadata only contain letters, numbers and _
+                if meta_check is None:
+                    ASSEMBLY_NAME_META_DICT[assembly_name] = str(metadata)
+                else: 
+                    raise Exception("ERROR! Metadata column must only contain letters, numbers and underscore.")
+            if col_num == 2:
+                metadata = "No_metadata"
+                
+                
+                
 
 ## Rule all ###########################################################################################
 
             
 rule all:
     input: 
-       "output/2_filter/hits_with_requested_flanks.tsv",
+       "output/2_filter/2_hits_included_in_flank_analysis.tsv",
        "output/3_clustering.tsv",
-       "output/99_config.yaml"
+       "output/4_config.yaml"
 
 
 ## Flankophile script ##################################################################################
@@ -179,8 +196,11 @@ rule abricate_merge:
          no_head=temp("output/1_search/abricate_all_raw_no_header.tsv"),
          tsv=temp("output/1_search/search_raw.tsv")
     shell:
-        "cat  {input} | grep -v '^#'| cut -f1-11   > {output.no_head};"
+        "touch {output.no_head};"
+        "cat  {input} | cut -f1-11 | grep -v '^#'  >> {output.no_head} || true;"   # True to avoid error if no hits are found
         "cat bin/abricate_header.txt {output.no_head} > {output.tsv};"
+
+
 
 rule python_enrich_abricate_output_with_length_and_metadata:
     input:
@@ -189,6 +209,7 @@ rule python_enrich_abricate_output_with_length_and_metadata:
     output:
         temp("output/1_search/search_temp.tsv")            
     run:
+        flag = False                                              # Flag remembers if any hits have been found
         input_tsv = open("output/1_search/search_raw.tsv", "r")
         output_tsv = open("output/1_search/search_temp.tsv","w") 
         for line in input_tsv:
@@ -209,10 +230,17 @@ rule python_enrich_abricate_output_with_length_and_metadata:
                         if line_l_list[0] == line_list[1]:         # If it is the same contig name.
                             this_contig_len = int(line_l_list[1])  # Save the contig length.
                 input_length.close
-                new_line = line + "\t" + str(this_contig_len) + "\t" + "metadata"  
+                
+                if len(ASSEMBLY_NAME_META_DICT) == 0:
+                    new_line = line + "\t" + str(this_contig_len) + "\t" + "No_metadata"
+                else: 
+                    new_line = line + "\t" + str(this_contig_len) + "\t" + ASSEMBLY_NAME_META_DICT[assembly_name]  
                 print(new_line, file = output_tsv)
+                flag = True                                        # Some hits were found.
         input_tsv.close
-        output_tsv.close         
+        output_tsv.close
+        if flag == False:
+            raise Exception("ERROR! ERROR! ERROR!\nERROR. Sorry. No hits found with requested min_coverage and min_identity values.")         
          
 
 
@@ -220,10 +248,10 @@ rule python_enrich_abricate_output_with_assembly_name_and_observation_ID:
     input:
         tsv="output/1_search/search_temp.tsv"
     output:
-        tsv="output/1_all_hits.tsv"
+        tsv="output/1_hits_all.tsv"
     run:
         input_tsv = open("output/1_search/search_temp.tsv", "r")
-        output_tsv = open("output/1_all_hits.tsv","w")
+        output_tsv = open("output/1_hits_all.tsv","w")
         OBS_DICT = {}
         for line in input_tsv:
             line = line = line.strip()
@@ -257,9 +285,9 @@ rule python_enrich_abricate_output_with_assembly_name_and_observation_ID:
 
 rule filter_abricate_space_for_flanks:
     input:
-        tsv="output/1_all_hits.tsv"
+        tsv="output/1_hits_all.tsv"
     output:
-        tsv="output/2_filter/hits_with_requested_flanks.tsv",
+        tsv="output/2_filter/2_hits_included_in_flank_analysis.tsv",
         report="output/2_filter/flank_filtering.report"
     run:
         counter_accepted = 0
@@ -273,8 +301,8 @@ rule filter_abricate_space_for_flanks:
         user_downstreams=float(config["flank_length_downstreams"])
                  
 
-        input_tsv = open("output/1_all_hits.tsv", "r")
-        output_tsv = open("output/2_filter/hits_with_requested_flanks.tsv", "w")
+        input_tsv = open("output/1_hits_all.tsv", "r")
+        output_tsv = open("output/2_filter/2_hits_included_in_flank_analysis.tsv", "w")
         for line in input_tsv:
             line = line.strip()
             if line.startswith("#"): print(line, file = output_tsv)
@@ -334,21 +362,28 @@ rule filter_abricate_space_for_flanks:
 
 rule add_file_name_to_tsv:
     input:
-        "output/2_filter/hits_with_requested_flanks.tsv"
+        "output/2_filter/2_hits_included_in_flank_analysis.tsv"
     output:
         temp("output/temp_1/final_gene_results_with_future_filename.tsv")
     run:
+        flag = False
         input=open(input[0], "r")
         output=open(output[0], "w")
         for line in input:
             line = line.strip()
-            line_list = line.split()
-            ASSEMBLY_NAME = line_list[13]
-            future_file_name = ASSEMBLY_NAME + ".tsv"
-            new_line = line + "\t" + future_file_name
-            print(new_line, file=output) 
+            if not line.startswith("#"):
+                flag = True
+                line_list = line.split()
+                ASSEMBLY_NAME = line_list[13]
+                future_file_name = ASSEMBLY_NAME + ".tsv"
+                new_line = line + "\t" + future_file_name
+                print(new_line, file=output) 
         input.close()
         output.close()
+        if flag == False:
+            raise Exception("ERROR! ERROR! ERROR!\nERROR. Sorry. No hits found with requested flanking regions length. Delete output folder and try again with a lower flank length.")
+            
+        
         
 checkpoint split_abricate_results:
     input:
@@ -359,7 +394,7 @@ checkpoint split_abricate_results:
         "rm -rf output/1_search;"
         "mkdir output/temp_1/1_abricate_results_per_assembly;"
         "cd output/temp_1/1_abricate_results_per_assembly;"
-        "cat ../final_gene_results_with_future_filename.tsv | grep -v '^#' | awk  '{{print>$16}}'"
+        "cat ../final_gene_results_with_future_filename.tsv  | awk  '{{print>$16}}'"
 
 
 rule make_bedfiles:
@@ -520,7 +555,7 @@ rule extract_relavant_reference_sequences:
         flanks="output/2_filter/gene_fasta_files_pooled/target_and_flanking_regions.fa",
         target_sequence_only="output/2_filter/gene_fasta_files_pooled/target_sequence_only.fa",
         masked="output/2_filter/gene_fasta_files_pooled/flanking_regions_only.fa",
-        final_results="output/2_filter/hits_with_requested_flanks.tsv"
+        final_results="output/2_filter/2_hits_included_in_flank_analysis.tsv"
     output:
         list=temp("output/3_define_clusters/final_output_list.txt"),
         fasta=temp("output/3_define_clusters/relevant_ref_seqs.fasta")
@@ -540,12 +575,11 @@ rule cd_hit:
         temp=temp("output/3_define_clusters/cd_hit.temp")
     conda: "environment.yaml"
     params:
-        c= config["cluster_identity_cd_hit"],
-        n = word_size_cd_hit,
-        s= config["cluster_length_dif_cd_hit"]
+        c_s= config["cluster_identity_and_length_diff"],
+        n = word_size_cd_hit
     shell:
         '''
-        cd-hit-est -i {input} -o {output.genes} -M 0 -d 0 -c {params.c} -n {params.n} -s {params.s}  -sc 1 -g 1;
+        cd-hit-est -i {input} -o {output.genes} -M 0 -d 0 -c {params.c_s} -n {params.n} -s {params.c_s}  -sc 1 -g 1;
         perl bin/clstr2txt.pl {output.clus} | tail -n+2 > {output.temp};
         cat bin/cd-hit-txt_header.txt {output.temp} > {output.new_head}
         '''
@@ -596,13 +630,13 @@ checkpoint split_cd_hit_results:
 
 rule extract_cluster_rows_from_results_file:
     input:
-        results="output/2_filter/hits_with_requested_flanks.tsv",
+        results="output/2_filter/2_hits_included_in_flank_analysis.tsv",
         list="output/3_define_clusters/cd_hit_per_cluster/{c}.tsv"
     output:
         results="output/4_cluster_results/{c}/{c}.tsv",
         temp=temp("output/4_cluster_results/{c}/{c}.temp")
     params:
-        awk="'NR==FNR{a[$1];next}($6 in a){{print $0}}'"        # 6 refer to GENE collumn in "output/2_filter/hits_with_requested_flanks.tsv"
+        awk="'NR==FNR{a[$1];next}($6 in a){{print $0}}'"        # 6 refer to GENE collumn in "output/2_filter/2_hits_included_in_flank_analysis.tsv"
     shell:
         '''
         awk {params.awk} {input.list} {input.results} > {output.temp};
@@ -711,7 +745,7 @@ rule kma_index:
         outfolder_target_and_flanking_regions=lambda wildcards: "output/4_cluster_results/" +  wildcards.c + "/kma_index/target_and_flanking_regions",
         outfolder_masked=lambda wildcards: "output/4_cluster_results/" +  wildcards.c + "/kma_index/flanking_regions_only",
         outfolder_target_sequence_only=lambda wildcards: "output/4_cluster_results/" +  wildcards.c + "/kma_index/target_sequence_only",
-        k=config["Kmersize_kma"]
+        k=config["k-mer_size"]
     shell:
         "kma index -k {params.k} -i {input.target_and_flanking_regions} -o {params.outfolder_target_and_flanking_regions};"
         "kma index -k {params.k} -i {input.masked} -o {params.outfolder_masked};"
@@ -762,22 +796,26 @@ def dist_input(wildcards):
 
 
 
-rule finito:
+rule plots:
     input:
         dist_input
     output:
-        config="output/99_config.yaml",
-        txt="output/5_plots/completed.txt"
+        config="output/4_config.yaml",
+        txt="output/4_plots/version.txt"
     conda: "environment.yaml"
     shell:
         '''
         cp config.yaml {output.config};
         rm -r output/3_define_clusters/cd_hit_per_cluster;
-        echo plots_completed > {output.txt};
+        echo flankophile_v._0.1.10 > {output.txt};
         Rscript bin/plot_gene_clusters_from_flankophile.R
         '''
 
 
+heart = "\n  #####   #####\n ####### #######\n#################\n## Flankophile ##\n ###############\n  #############"
+heart = heart + "\n   ###########\n    #########\n     #######\n      #####\n       ###\n        #"
 
-
+onsuccess:
+    print("Flankophile finished succesfully. Thank you for using Flankophile.")
+    print(heart)
 

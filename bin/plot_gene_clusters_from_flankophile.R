@@ -30,7 +30,7 @@ cutoff_limit_gene_arrow_labels <- 10  # Try with shorter value if some genes lab
 ############################################################################################################################
 
 
-path_to_folder_for_plots <- paste0(path_to_output_folder, "/5_plots") 
+path_to_folder_for_plots <- paste0(path_to_output_folder, "/4_plots") 
 
 
 
@@ -61,6 +61,13 @@ make_plots <- function(cluster_name) {
   
   cluster_prokka_raw <- read_tsv(paste0(path_to_all_cluster_folders, cluster_name, "/", cluster_name, ".gggenes"))
   
+  if (length(unique(cluster_results$METADATA)) == 1 & unique(cluster_results$METADATA)[1] == "No_metadata") {
+  metadata_present = "no"
+  } else {
+  metadata_present = "yes"
+  }
+  
+
   
   
   length_of_target <- cluster_results %>% mutate(len_gen = END - START + 1) %>%
@@ -87,13 +94,24 @@ make_plots <- function(cluster_name) {
   
   
   
+  
+    
+  info_meta <- cluster_results %>% 
+  mutate(id = OBSERVATION_ID) %>% 
+  select(id, METADATA) %>%
+  column_to_rownames(., var = "id") 
+    
+  #write_tsv(info_meta, paste0("testbob_", cluster_name, ".tsv"))
+  
+  
+  
   info_gene_ID <- cluster_results %>% 
     mutate(id = OBSERVATION_ID) %>% 
     relocate(id) %>% 
     rename(IDENTITY = "%IDENTITY") %>% 
     mutate(Gene = str_c(GENE, IDENTITY, "%", sep = "_")) %>% 
     select(id, Gene) %>%
-    rename(Identity = Gene) %>%
+    rename(IDENTITY = Gene) %>%
     column_to_rownames(., var = "id") 
   
   
@@ -159,16 +177,17 @@ make_plots <- function(cluster_name) {
     target_sequence_only.tree = dist2tree(target_sequence_only.df)
     
     ##Plot  ###############################################################
-    plot_height <- 30 + (nrow(cluster_results) * 4)
+    plot_height <- 150 + (nrow(cluster_results) * 4) + (length(unique(cluster_results$METADATA)) * 10)
     
-    if (plot_height < 150) {
-      plot_height <- 150
-    }
+
     
     #Flank only
     t1 <- ggtree(flanks_flanking_regions_only.tree, options(ignore.negative.edge=TRUE)) + geom_tiplab(size = 2)
     
-    off <- max(t1$data$x) / 10
+    off <- max(t1$data$x) / 9
+    
+    off2 <- off * 2
+    
     
     
     t2 <- facet_plot(t1, mapping = aes(xmin = start, xmax = end, fill = gene, forward = orientation),
@@ -179,24 +198,39 @@ make_plots <- function(cluster_name) {
     
     
     t3 <- gheatmap(t2, info_gene_ID,  width=0.1, hjust=1,
-                   colnames=TRUE, offset = off, font.size = 1, colnames_position = "bottom", colnames_angle = 0) +
-      labs(fill = "Target - Reference DB % identity") + 
+                   colnames=TRUE, offset = off, font.size = 1, colnames_position = "bottom", colnames_angle = 90) +
+      labs(fill = "Target % identity to reference") + 
       scale_fill_hue(direction = -1, l = 70, c = 30) + new_scale_fill() +
       theme(legend.text = element_text(size=5))
+      
+      
+    if (metadata_present == "yes") {
+      tx <- gheatmap(t3, info_meta,  width=0.1, hjust=1,
+                   colnames=TRUE, offset = off2 , font.size = 1, colnames_position = "bottom", colnames_angle = 90) +
+        labs(fill = "Metadata") + 
+        scale_fill_hue(direction = -1, l = 85) + new_scale_fill() +
+        theme(legend.text = element_text(size=5))
+      t4 <- tx + ggtitle(paste0("Cluster ", cluster_name, " - distance tree based on flanking region sequences only")) + 
+        new_scale_fill()  
+    }  else {
+      t4 <- t3 + ggtitle(paste0("Cluster ", cluster_name, " - distance tree based on flanking region sequences only")) + 
+        new_scale_fill()
+    }
     
-    
-    t4 <- t3 + ggtitle(paste0("Cluster ", cluster_name, " - distance tree based on flanking region sequences only")) + 
-      new_scale_fill()
     
     t4
     
     ggsave(file = paste0(path_to_folder_for_plots, "/", cluster_name, "_", "flanking_regions_only", ".pdf"), plot = t4, width = 210, height = plot_height, units = "mm", limitsize = FALSE)
     
+    
+    
     ## Gene only
     
     t1 <- ggtree(target_sequence_only.tree, options(ignore.negative.edge=TRUE)) + geom_tiplab(size = 2)   
     
-    off <- max(t1$data$x) / 10
+    off <- max(t1$data$x) / 9
+    
+    off2 <- off * 2
     
     
     t2 <- facet_plot(t1, mapping = aes(xmin = start, xmax = end, fill = gene, forward = orientation),
@@ -207,14 +241,26 @@ make_plots <- function(cluster_name) {
     
     
     t3 <- gheatmap(t2, info_gene_ID,  width=0.1, hjust=1,
-                   colnames=TRUE, offset = off, font.size = 1, colnames_position = "bottom", colnames_angle = 0) +
-      labs(fill = "Target - Reference DB % identity") + 
+                   colnames=TRUE, offset = off, font.size = 1, colnames_position = "bottom", colnames_angle = 90) +
+      labs(fill = "Target % identity to reference") + 
       scale_fill_hue(direction = -1, l = 70, c = 30) + new_scale_fill() +
       theme(legend.text = element_text(size=5))
+      
+      
+    if (metadata_present == "yes") {
+      tx <- gheatmap(t3, info_meta,  width=0.1, hjust=1,
+                   colnames=TRUE, offset = off2 , font.size = 1, colnames_position = "bottom", colnames_angle = 90) +
+        labs(fill = "Metadata") + 
+        scale_fill_hue(direction = -1, l = 85) + new_scale_fill() +
+        theme(legend.text = element_text(size=5))
+      t4 <- tx + ggtitle(paste0("Cluster ", cluster_name, " - distance tree based on target sequences only")) + 
+        new_scale_fill()  
+    }  else {
+      t4 <- t3 + ggtitle(paste0("Cluster ", cluster_name, " - distance tree based on target sequences only")) + 
+        new_scale_fill()
+    }  
     
-    t4 <- t3 + ggtitle(paste0("Cluster ", cluster_name, " - distance tree based on target sequences only")) + 
-      new_scale_fill()
-    
+ 
     t4
     
     ggsave(file = paste0(path_to_folder_for_plots, "/", cluster_name, "_", "target_sequence_only", ".pdf"), plot = t4, width = 210, height = plot_height, units = "mm", limitsize = FALSE)
@@ -224,7 +270,9 @@ make_plots <- function(cluster_name) {
     
     t1 <- ggtree(target_and_flanking_regions.tree, options(ignore.negative.edge=TRUE)) + geom_tiplab(size = 2)   
     
-    off <- max(t1$data$x) / 10
+    off <- max(t1$data$x) / 9
+    
+    off2 <- off * 2
     
     
     t2 <- facet_plot(t1, mapping = aes(xmin = start, xmax = end, fill = gene, forward = orientation),
@@ -235,13 +283,26 @@ make_plots <- function(cluster_name) {
     
     
     t3 <- gheatmap(t2, info_gene_ID,  width=0.1, hjust=1,
-                   colnames=TRUE, offset = off, font.size = 1, colnames_position = "bottom", colnames_angle = 0) +
-      labs(fill = "Target - Reference DB % identity") + 
+                   colnames=TRUE, offset = off, font.size = 1, colnames_position = "bottom", colnames_angle = 90) +
+      labs(fill = "Target % identity to reference") + 
       scale_fill_hue(direction = -1, l = 70, c = 30) + new_scale_fill() +
       theme(legend.text = element_text(size=5))
     
-    t4 <- t3 + ggtitle(paste0("Cluster ", cluster_name, " - distance tree based on target and flanking region sequences")) + 
-      new_scale_fill()
+    
+    if (metadata_present == "yes") {
+      tx <- gheatmap(t3, info_meta,  width=0.1, hjust=1,
+                   colnames=TRUE, offset = off2 , font.size = 1, colnames_position = "bottom", colnames_angle = 90) +
+        labs(fill = "Metadata") + 
+        scale_fill_hue(direction = -1, l = 85) + new_scale_fill() +
+        theme(legend.text = element_text(size=5))
+      t4 <- tx + ggtitle(paste0("Cluster ", cluster_name, " - distance tree based on target and flanking region sequences")) + 
+        new_scale_fill()  
+    }  else {
+      t4 <- t3 + ggtitle(paste0("Cluster ", cluster_name, " - distance tree based on target and flanking region sequences")) + 
+        new_scale_fill()
+    } 
+    
+    
     
     t4
     
