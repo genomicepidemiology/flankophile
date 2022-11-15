@@ -175,10 +175,10 @@ envs_dirs:
 **Step 1 - Search**
 The file [1_hits_all.tsv](example_output/1_hits_all.tsv) contains the data for all hits found by Abricate, which have the requested minimum percentage identity and minimum percentage coverage.
 
-Step 1 is the most time-consuming step. If you want to rerun the pipeline with other parameters for steps 2-5 then you can save time by deleting the files for the other steps but keeping [1_hits_all.tsv](example_output/1_hits_all.tsv)
+Step 1 is the most time-consuming step. If you want to rerun the pipeline with other parameters for steps 2-4 then you can save time by deleting the files for the other steps but keeping [1_hits_all.tsv](example_output/1_hits_all.tsv)
 
 
-**Step 2 - filter on space for flanking regions*
+**Step 2 - filter on space for flanking regions**
 
 Directory 2_filter contains tsv file [2_hits_included_in_flank_analysis.tsv](example_output/2_filter/2_hits_included_in_flank_analysis.tsv), which is a filtered version of [all_hits.tsv](example_output/1_hits_all.tsv) from step 1. [2_hits_included_in_flank_analysis.tsv](example_output/2_filter/2_hits_included_in_flank_analysis.tsv) contains only hits that had space on their contig for the user-requested upstream and downstream flanking region. The rest of the analysis is based on these hits.
 
