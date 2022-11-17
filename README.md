@@ -80,7 +80,7 @@ Column 3 is optional. Column 3 is a metadata column and Flankophile will automat
 
 
 
-See an example of an  [input_list file](input/example_input_files/input_list_example_assembly_mode.tsv). 
+See an example of an  [input_list file with 2 columns](input/example_input_files/input_list_example.tsv) and an [input_list file with 3 columns](input/example_input_files/input_list_example_metadata.tsv). 
 
 
 
@@ -267,6 +267,12 @@ By Torsten Seemann.
 
 [https://raw.githubusercontent.com/weizhongli/cdhit/master/clstr2txt.pl](https://raw.githubusercontent.com/weizhongli/cdhit/master/clstr2txt.pl)
 
+
+**DupRemover.py**
+
+https://github.com/abhijeetsingh1704/DupRemover
+
+Singh, Abhijeet. 2020. DupRemover: A Simple Program to Remove Duplicate Sequences from Multi-Fasta File
 
 
 
