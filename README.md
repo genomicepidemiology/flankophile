@@ -200,9 +200,9 @@ The table [1_hits_all.tsv](example_output/1_hits_all.tsv) contains the data for 
 
 The tsv file [2_hits_included_in_flank_analysis.tsv](example_output/2_hits_included_in_flank_analysis.tsv) is a filtered version of [all_hits.tsv](example_output/1_hits_all.tsv) from step 1. [2_hits_included_in_flank_analysis.tsv](example_output/2_hits_included_in_flank_analysis.tsv) contains only hits that had space on their contig for the user-requested upstream and downstream flanking region. The rest of the analysis is based on these hits.
 
-[**flank_filtering.report**](example_output/2_report_flank_filtering.txt)
+[**2_report_flank_filtering.txt**](example_output/2_report_flank_filtering.txt)
 
-Flankophile outputs  [flank_filtering.report](example_output/2_report_flank_filtering.txt) which informs the user on how many hits were discarded due to insufficient flanking region length. 
+Flankophile outputs  [2_report_flank_filtering.txt](example_output/2_report_flank_filtering.txt) which informs the user on how many hits were discarded due to insufficient flanking region length. 
 
 
 [**3_clustering.tsv**](example_output/3_clustering.tsv)
