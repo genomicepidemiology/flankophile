@@ -80,8 +80,7 @@ Column 3 is optional. Column 3 is a metadata column and Flankophile will automat
 
 
 
-See an example of an  [input_list file with 2 columns](input/example_input_files/input_list_example.tsv) and an [input_list file with 3 columns](input/example_input_files/input_list_example_metadata.tsv). 
-
+[**Input_list with 2 columns**](input/example_input_files/input_list_example.tsv) 
 
 
 | #assembly_name | path                                   |
@@ -90,6 +89,19 @@ See an example of an  [input_list file with 2 columns](input/example_input_files
 | dog_sample_2   | home/data/dog_v2.fasta                 |
 | pig_sample     | home/data/pig_sample.fsa               |
 | cat_sample     | home/data/old/cat_ER34793_sample.fasta |
+
+
+[**Input_list with 3 columns**](input/example_input_files/input_list_example_metadata.tsv)
+
+
+| #assembly_name | path                                   | metadata |
+|----------------|----------------------------------------|----------|
+| dog_sample_1   | home/data/dog_v1.fasta                 | Dog      |
+| dog_sample_2   | home/data/dog_v2.fasta                 | Dog      |
+| pig_sample     | home/data/pig_sample.fsa               | Pig      |
+| cat_sample     | home/data/old/cat_ER34793_sample.fasta | Cat      |
+
+
 
 
 
