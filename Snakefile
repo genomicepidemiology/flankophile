@@ -1,4 +1,4 @@
-# FLANKOPHILE version 0.1.10
+# FLANKOPHILE version 0.2.0
 # Alex Vincent Thorn
 
 configfile: "config.yaml"
@@ -149,7 +149,8 @@ with open(config["input_list"], 'r') as file:
             
 rule all:
     input: 
-       "output/2_filter/2_hits_included_in_flank_analysis.tsv",
+       "output/1_variants.fasta",
+       "output/2_hits_included_in_flank_analysis.tsv",
        "output/3_clustering.tsv",
        "output/4_config.yaml"
 
@@ -187,6 +188,9 @@ rule abricate:
         "seqkit fx2tab --length --name  {params.assembly_path} | awk -v  OFS='\t' '{{print $1, $NF}}' > {output.length_temp};"
         "cut -f2 {output.tsv} > {output.tsv_c2};"
         "grep -wFf {output.tsv_c2} {output.length_temp} > {output.length} || true"
+
+
+
 
 
 rule abricate_merge:
@@ -248,10 +252,10 @@ rule python_enrich_abricate_output_with_assembly_name_and_observation_ID:
     input:
         tsv="output/1_search/search_temp.tsv"
     output:
-        tsv="output/1_hits_all.tsv"
+        tsv=temp("output/1_hits_all_no_var.tsv")
     run:
         input_tsv = open("output/1_search/search_temp.tsv", "r")
-        output_tsv = open("output/1_hits_all.tsv","w")
+        output_tsv = open("output/1_hits_all_no_var.tsv","w")
         OBS_DICT = {}
         for line in input_tsv:
             line = line = line.strip()
@@ -275,7 +279,6 @@ rule python_enrich_abricate_output_with_assembly_name_and_observation_ID:
 
                 new_line = line + "\t" + assembly_name + "\t" + letter + str(OBS_DICT[letter])
                 print(new_line, file = output_tsv)
-
         input_tsv.close
         output_tsv.close
         
@@ -283,12 +286,205 @@ rule python_enrich_abricate_output_with_assembly_name_and_observation_ID:
 
 
 
+
+
+rule add_file_name_to_1_tsv:
+    input:
+        "output/1_hits_all_no_var.tsv"
+    output:
+        temp("output/temp_variant/all_hits_with_future_filename.tsv")
+    run:
+        input=open(input[0], "r")
+        output=open(output[0], "w")
+        for line in input:
+            line = line.strip()
+            if not line.startswith("#"):
+                flag = True
+                line_list = line.split()
+                ASSEMBLY_NAME = line_list[13]
+                future_file_name = ASSEMBLY_NAME + ".tsv"
+                new_line = line + "\t" + future_file_name
+                print(new_line, file=output) 
+        input.close()
+        output.close()
+
+
+checkpoint split_abricate_results1:
+    input:
+        "output/temp_variant/all_hits_with_future_filename.tsv"
+    output:
+        clusters=directory("output/temp_variant/abricate_results_per_assembly")
+    shell:
+        "mkdir output/temp_variant/abricate_results_per_assembly;"
+        "cd output/temp_variant/abricate_results_per_assembly;"
+        "cat ../all_hits_with_future_filename.tsv  | awk  '{{print>$16}}'"
+        
+        
+
+
+
+rule make_bedfiles1:
+    input:
+        "output/temp_variant/abricate_results_per_assembly/{a}.tsv"
+    output:
+        temp("output/temp_variant/bedfiles/target_sequence_only/{a}/{a}.bed")
+    run:
+        input=open(input[0], "r")
+        output_target_sequence_only=open(output[0], "w")
+        col_index_SEQ, col_index_START, col_index_END, col_index_STRAND, col_index_ID_num  = 1, 2, 3, 4, 14
+
+        for line in input:
+            line = line.strip()
+            line_list = line.split()
+            contig_name = line_list[col_index_SEQ]
+            START_old = int(line_list[col_index_START])
+            END_old = int(line_list[col_index_END])
+            gene_strand = line_list[col_index_STRAND]
+            ID = line_list[col_index_ID_num]
+            # cut out the gene  with bedtools getfasta
+            out_line = contig_name +  "\t" + str(START_old - 1) +  "\t" + str(END_old)
+            out_line = out_line + "\t" + ID + "\t" + "1" + "\t" + gene_strand
+            print(out_line, file=output_target_sequence_only)
+        input.close()
+        output_target_sequence_only.close
+
+
+
+
+
+rule bedtools_target_sequence_only1:
+    input:
+        bed="output/temp_variant/bedfiles/target_sequence_only/{a}/{a}.bed"
+    output:
+        fasta=temp("output/temp_variant/gene_fasta_files_per_assembly/target_sequence_only/{a}/{a}.fa")
+    conda: "environment.yaml"
+    params:
+        assembly_path=lambda wildcards: ASSEMBLY_NAME_PATH_DICT[wildcards.a]
+    shell:
+        '''
+        bedtools getfasta -fi {params.assembly_path} -bed {input.bed} -s -nameOnly > {output.fasta};
+        sed -i -e "s/[(|)|+]//g" -e "s/-//g" {output.fasta}
+        ''' 
+
+
+
+def target_sequence_only_input1(wildcards):
+    checkpoint_output = checkpoints.split_abricate_results1.get(**wildcards).output[0]
+    return expand("output/temp_variant/gene_fasta_files_per_assembly/target_sequence_only/{a}/{a}.fa",
+           a=glob_wildcards(os.path.join(checkpoint_output, "{a}.tsv")).a)
+
+
+rule pool_target_sequence_only1:
+    input:
+        target_sequence_only_input1
+    output:
+        temp=temp("output/temp_variant/gene_fasta_files_pooled/temp_target_sequence_only.fa"),
+        fasta=temp("output/temp_variant/target_sequence_only.fa")
+    conda: "environment.yaml"
+    shell:
+        "rm -rf output/temp_variant/abricate_results_per_assembly;" 
+        "cat {input}  > {output.temp};"
+        "cat {output.temp} | seqkit sort -N -i -2  > {output.fasta}"
+
+
+rule merge_dublicate_sequences1:
+    input:
+        "output/temp_variant/target_sequence_only.fa"
+    output:
+        temp("output/temp_variant/target_sequence_only_no_dub.fa")
+    shell:
+        "python3 bin/DupRemover.py -i {input} -o {output};"
+        
+        
+rule add_variant_numbers_to_fasta1:
+    input:
+        "output/temp_variant/target_sequence_only_no_dub.fa"
+    output:
+        temp("output/temp_variant/target_sequence_only_no_dub_var_num.fa")
+    run:
+        input_file=open(input[0], "r")
+        output_file=open(output[0], "w")
+        counter_fasta = 0
+        for line in input_file:
+            line = line.strip()
+            if line.startswith(">"):
+                counter_fasta += 1
+                novel_line = line + "|v_" + str(counter_fasta)
+                print(novel_line, file = output_file)
+            else:
+                print(line, file = output_file)
+        input_file.close()
+        input_file.close()
+
+
+
+
+
+rule make_variant_fasta:
+    input:
+        "output/temp_variant/target_sequence_only_no_dub_var_num.fa"
+    output:
+        "output/1_variants.fasta"
+    run:
+        input_file=open(input[0], "r")
+        output_file=open(output[0], "w")
+        for line in input_file:
+            line = line.strip()
+            if line.startswith(">"):
+                line = line[1:]                    # Remove >
+                line_list = line.split("|")
+                name_of_variant = line_list[-1]
+                new_header_line = ">" + name_of_variant
+                print(new_header_line, file = output_file)
+            else:
+                print(line, file = output_file)
+        input_file.close()
+        input_file.close()
+        
+        
+        
+        
+
+rule add_variant_number_to_results1:
+    input:
+        fasta="output/temp_variant/target_sequence_only_no_dub_var_num.fa",
+        tsv="output/1_hits_all_no_var.tsv"
+    output:
+        tsv="output/1_hits_all.tsv"
+    run:
+        input_tsv=open("output/1_hits_all_no_var.tsv", "r")
+        output_tsv=open("output/1_hits_all.tsv", "w")
+        
+        for tsv_line in input_tsv:
+            variants_name = "None"
+            tsv_line = tsv_line.strip()
+            if tsv_line.startswith("#"):
+                print(tsv_line, file = output_tsv)
+            else:
+                tsv_line_list = tsv_line.split("\t")
+                obs_id = tsv_line_list[14]
+                input_fasta=open("output/temp_variant/target_sequence_only_no_dub_var_num.fa", "r")
+                for fasta_line in input_fasta:                   
+                    if fasta_line.startswith(">"):
+                        fasta_line = fasta_line.strip()[1:]     #remove the >
+                        fasta_line_list = fasta_line.split("|")
+                        if obs_id in fasta_line_list:           # if it is the correct variant
+                            variants_name = fasta_line_list[-1]
+                new_tsv_line = tsv_line + "\t" + variants_name 
+                print(new_tsv_line, file = output_tsv)
+                input_fasta.close()
+        input_tsv.close()
+        output_tsv.close()
+        
+        
+        
+
 rule filter_abricate_space_for_flanks:
     input:
         tsv="output/1_hits_all.tsv"
     output:
-        tsv="output/2_filter/2_hits_included_in_flank_analysis.tsv",
-        report="output/2_filter/flank_filtering.report"
+        tsv="output/2_hits_included_in_flank_analysis.tsv",
+        report="output/2_report_flank_filtering.txt"
     run:
         counter_accepted = 0
 
@@ -302,7 +498,7 @@ rule filter_abricate_space_for_flanks:
                  
 
         input_tsv = open("output/1_hits_all.tsv", "r")
-        output_tsv = open("output/2_filter/2_hits_included_in_flank_analysis.tsv", "w")
+        output_tsv = open("output/2_hits_included_in_flank_analysis.tsv", "w")
         for line in input_tsv:
             line = line.strip()
             if line.startswith("#"): print(line, file = output_tsv)
@@ -343,7 +539,7 @@ rule filter_abricate_space_for_flanks:
                     total_discarded_observation += 1
         input_tsv.close
         output_tsv.close
-        output_report = open("output/2_filter/flank_filtering.report", "w")
+        output_report = open("output/2_report_flank_filtering.txt", "w")
         a = "Flank length upstreams:" + "\t" + str(int(user_upstreams))
         b = a +"\nFlank length downstreams:" + "\t" + str(int(user_downstreams))
         c = b + "\n\nNumber of hits before flank space filtering:" + "\t" + str(total_input_observations)
@@ -360,9 +556,9 @@ rule filter_abricate_space_for_flanks:
 
 
 
-rule add_file_name_to_tsv:
+rule add_file_name_to_2_tsv:
     input:
-        "output/2_filter/2_hits_included_in_flank_analysis.tsv"
+        "output/2_hits_included_in_flank_analysis.tsv"
     output:
         temp("output/temp_1/final_gene_results_with_future_filename.tsv")
     run:
@@ -385,7 +581,7 @@ rule add_file_name_to_tsv:
             
         
         
-checkpoint split_abricate_results:
+checkpoint split_abricate_results2:
     input:
         "output/temp_1/final_gene_results_with_future_filename.tsv"
     output:
@@ -394,10 +590,11 @@ checkpoint split_abricate_results:
         "rm -rf output/1_search;"
         "mkdir output/temp_1/1_abricate_results_per_assembly;"
         "cd output/temp_1/1_abricate_results_per_assembly;"
-        "cat ../final_gene_results_with_future_filename.tsv  | awk  '{{print>$16}}'"
+        "cat ../final_gene_results_with_future_filename.tsv  | awk  '{{print>$17}}'"
+        
 
 
-rule make_bedfiles:
+rule make_bedfiles2:
     input:
         "output/temp_1/1_abricate_results_per_assembly/{a}.tsv"
     output:
@@ -465,7 +662,7 @@ rule bedtools_target_and_flanking_regions:
         sed -i -e "s/[(|)|+]//g" -e "s/-//g" {output.fasta}
         '''
 
-rule bedtools_target_sequence_only:
+rule bedtools_target_sequence_only2:
     input:
         whole_flank="output/2_filter/gene_fasta_files_pooled/target_and_flanking_regions.fa",
         bed="output/temp_2/bedfiles/target_sequence_only/{a}/{a}.bed"
@@ -495,20 +692,20 @@ rule bedtools_flanking_regions_only:
 
 
 def target_and_flanking_regions_input(wildcards):
-    checkpoint_output = checkpoints.split_abricate_results.get(**wildcards).output[0]
+    checkpoint_output = checkpoints.split_abricate_results2.get(**wildcards).output[0]
     return expand("output/temp_2/gene_fasta_files_per_assembly/target_and_flanking_regions/{a}/{a}.fa",
            a=glob_wildcards(os.path.join(checkpoint_output, "{a}.tsv")).a)
 
 
 
 def target_sequence_only_input(wildcards):
-    checkpoint_output = checkpoints.split_abricate_results.get(**wildcards).output[0]
+    checkpoint_output = checkpoints.split_abricate_results2.get(**wildcards).output[0]
     return expand("output/temp_2/gene_fasta_files_per_assembly/target_sequence_only/{a}/{a}.fa",
            a=glob_wildcards(os.path.join(checkpoint_output, "{a}.tsv")).a)
 
 
 def flanking_regions_only_input(wildcards):
-    checkpoint_output = checkpoints.split_abricate_results.get(**wildcards).output[0]
+    checkpoint_output = checkpoints.split_abricate_results2.get(**wildcards).output[0]
     return expand("output/temp_2/gene_fasta_files_per_assembly/flanking_regions_only/{a}/{a}.fa",
            a=glob_wildcards(os.path.join(checkpoint_output, "{a}.tsv")).a)
 
@@ -526,7 +723,7 @@ rule pool_target_and_flanking_regions:
         "rm -r output/temp_1"
 
 
-rule pool_target_sequence_only:
+rule pool_target_sequence_only2:
     input:
         target_sequence_only_input
     output:
@@ -555,7 +752,7 @@ rule extract_relavant_reference_sequences:
         flanks="output/2_filter/gene_fasta_files_pooled/target_and_flanking_regions.fa",
         target_sequence_only="output/2_filter/gene_fasta_files_pooled/target_sequence_only.fa",
         masked="output/2_filter/gene_fasta_files_pooled/flanking_regions_only.fa",
-        final_results="output/2_filter/2_hits_included_in_flank_analysis.tsv"
+        final_results="output/2_hits_included_in_flank_analysis.tsv"
     output:
         list=temp("output/3_define_clusters/final_output_list.txt"),
         fasta=temp("output/3_define_clusters/relevant_ref_seqs.fasta")
@@ -605,8 +802,7 @@ rule process_cd_hit_results:
                 gene_name = line_list[0]
                 clus_number = line_list[1]
                 if clus_number not in dict:
-                    # Transform characters that are not file name friendly into _
-                    
+                    # Transform characters that are not file name friendly into _                    
                     friendly_gene_name = re.sub(r'\W', '_', gene_name)
                     dict[clus_number] = clus_number + "_" + friendly_gene_name 
                 new_line = line + "\t" + dict[clus_number] + ".tsv" + "\t" + dict[clus_number]
@@ -630,13 +826,13 @@ checkpoint split_cd_hit_results:
 
 rule extract_cluster_rows_from_results_file:
     input:
-        results="output/2_filter/2_hits_included_in_flank_analysis.tsv",
+        results="output/2_hits_included_in_flank_analysis.tsv",
         list="output/3_define_clusters/cd_hit_per_cluster/{c}.tsv"
     output:
         results="output/4_cluster_results/{c}/{c}.tsv",
         temp=temp("output/4_cluster_results/{c}/{c}.temp")
     params:
-        awk="'NR==FNR{a[$1];next}($6 in a){{print $0}}'"        # 6 refer to GENE collumn in "output/2_filter/2_hits_included_in_flank_analysis.tsv"
+        awk="'NR==FNR{a[$1];next}($6 in a){{print $0}}'"        # 6 refer to GENE collumn in "output/2_hits_included_in_flank_analysis.tsv"
     shell:
         '''
         awk {params.awk} {input.list} {input.results} > {output.temp};
@@ -794,8 +990,6 @@ def dist_input(wildcards):
 
 
 
-
-
 rule plots:
     input:
         dist_input
@@ -807,6 +1001,7 @@ rule plots:
         '''
         cp config.yaml {output.config};
         rm -r output/3_define_clusters/cd_hit_per_cluster;
+        rm -rf output/2_filter;
         echo flankophile_v._0.1.10 > {output.txt};
         Rscript bin/plot_gene_clusters_from_flankophile.R
         '''
@@ -816,6 +1011,6 @@ heart = "\n  #####   #####\n ####### #######\n#################\n## Flankophile 
 heart = heart + "\n   ###########\n    #########\n     #######\n      #####\n       ###\n        #"
 
 onsuccess:
-    print("Flankophile finished succesfully. Thank you for using Flankophile.")
+    print("Flankophile finished. Thank you for using Flankophile.")
     print(heart)
 

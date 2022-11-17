@@ -1,5 +1,5 @@
 # FLANKOPHILE
-FLANKOPHILE version 0.1.10
+FLANKOPHILE version 0.2.0
 By Alex Vincent Thorn
 
 ![flankophile_logo_2-1_square.jpg](example_output/flankophile_logo_2-1_square.jpg)
@@ -14,7 +14,7 @@ Flankophile is a pipeline built for easy analysis and visualization of gene synt
 
 **Input:** Genetic data in DNA multi-fasta format, such as assemblies plus a reference database containing target sequences in multi-fasta format.
 
-**Output:** [Gene synteny plots](example_output/4_plots), [results tables](example_output/2_filter/2_hits_included_in_flank_analysis.tsv), [clustering table](example_output/3_clustering.tsv), [distance matrices](example_output/4_cluster_results/33_aph_6__Id_1_M28829/33_aph_6__Id_1_M28829.target_and_flanking_regions_dist), genetic sequences of genes and flanking regions in fasta format. 
+**Output:** [Gene synteny plots](example_output/4_plots), [results tables](example_output/2_hits_included_in_flank_analysis.tsv), [clustering table](example_output/3_clustering.tsv), [distance matrices](example_output/4_cluster_results/33_aph_6__Id_1_M28829/33_aph_6__Id_1_M28829.target_and_flanking_regions_dist), genetic sequences of genes and flanking regions in fasta format. 
 
 
 
@@ -146,6 +146,7 @@ Cores is the number of cores available. For more info on flags visit:
 https://snakemake.readthedocs.io/en/stable/executing/cli.html#command-line-interface 
 
 You should run the pipeline with as much memory as possible if you have large input files. The search step uses a large amount of memory, and if too little memory is used, Abricate may not find all possible hits in very large files. If you want to make sure that the computer runs the pipeline with enough memory, then run the pipeline twice with the same config file and compare the files output/1_hits_all.tsv from each run using 
+
 ```bash
 diff output1/1_hits_all.tsv output2/1_hits_all.tsv
 
@@ -160,6 +161,8 @@ Flankophile creates the output in the order of the numbers. The first files are 
 If you want to rerun the pipeline with new config settings, you must look in the config file [config.yaml](config.yaml)
  and take note of the numbered sections. If you want to change parameters, you must delete all output
  with a number equal to or higher than the number of the section. You simply delete output in descending order starting with 99 and down to where you do not want to rerun anymore. Snakemake will rerun these parts of the pipeline with the new config settings when you give the run command `snakemake --use-conda --cores 39` again. 
+ 
+Step 1 is the most time-consuming step. If you want to rerun the pipeline with other parameters for steps 2-4 then you can save time by deleting the files for the other steps but keeping the files starting with 1.
 
 You must delete the entire output folder if you want to rerun the pipeline from the start.
 
@@ -184,36 +187,39 @@ envs_dirs:
 ## Output
 
 
-**Step 1 - Search**
-The file [1_hits_all.tsv](example_output/1_hits_all.tsv) contains the data for all hits found by Abricate, which have the requested minimum percentage identity and minimum percentage coverage.
+[**1_hits_all.tsv**](example_output/1_hits_all.tsv)
 
-Step 1 is the most time-consuming step. If you want to rerun the pipeline with other parameters for steps 2-4 then you can save time by deleting the files for the other steps but keeping [1_hits_all.tsv](example_output/1_hits_all.tsv)
+The table [1_hits_all.tsv](example_output/1_hits_all.tsv) contains the data for all hits found by Abricate, which have the requested minimum percentage identity and minimum percentage coverage.
+
+[**1_variants.fasta**](example_output/1_variants.fasta)
+
+[1_variants.fasta](example_output/1_variants.fasta) contains the actual sequences for all the hits found in [1_hits_all.tsv](example_output/1_hits_all.tsv).
 
 
-**Step 2 - filter on space for flanking regions**
+[**2_hits_included_in_flank_analysis.tsv**](example_output/2_hits_included_in_flank_analysis.tsv)
 
-Directory 2_filter contains tsv file [2_hits_included_in_flank_analysis.tsv](example_output/2_filter/2_hits_included_in_flank_analysis.tsv), which is a filtered version of [all_hits.tsv](example_output/1_hits_all.tsv) from step 1. [2_hits_included_in_flank_analysis.tsv](example_output/2_filter/2_hits_included_in_flank_analysis.tsv) contains only hits that had space on their contig for the user-requested upstream and downstream flanking region. The rest of the analysis is based on these hits.
+The tsv file [2_hits_included_in_flank_analysis.tsv](example_output/2_hits_included_in_flank_analysis.tsv) is a filtered version of [all_hits.tsv](example_output/1_hits_all.tsv) from step 1. [2_hits_included_in_flank_analysis.tsv](example_output/2_hits_included_in_flank_analysis.tsv) contains only hits that had space on their contig for the user-requested upstream and downstream flanking region. The rest of the analysis is based on these hits.
 
-The output also contains a [flank_filtering.report](example_output/2_filter/flank_filtering.report) on how many hits were discarded due to insufficient flanking region length. 
+[**flank_filtering.report**](example_output/2_report_flank_filtering.txt)
 
- 
+Flankophile outputs  [flank_filtering.report](example_output/2_report_flank_filtering.txt) which informs the user on how many hits were discarded due to insufficient flanking region length. 
 
-**Step 3 - define clusters**
+
+[**3_clustering.tsv**](example_output/3_clustering.tsv)
 
 [3_clustering.tsv](example_output/3_clustering.tsv) is a table that contains information on which hits that belong to each output cluster, based on their reference sequences. The clustering is based on percentage identity.  
 
   
-**Step 4 - plots and analysis of extracted sequences for each cluster **
+[**4_cluster_results**](example_output/4_cluster_results/33_aph_6__Id_1_M28829/)
 
-Contains one directory for each reference gene cluster. Directory names have two parts. The first part is a unique number. 
+The output contains one directory for each reference gene cluster. Directory names have two parts. The first part is a unique number. 
 The second part after the underscore is the first part of the name of the gene that seeded the cluster. 
 See [example of output from an induvidual gene family cluster](example_output/4_cluster_results/33_aph_6__Id_1_M28829/). The folder contains [distance matrices](example_output/4_cluster_results/33_aph_6__Id_1_M28829/33_aph_6__Id_1_M28829.target_and_flanking_regions_dist), [cluster results table](example_output/4_cluster_results/33_aph_6__Id_1_M28829/33_aph_6__Id_1_M28829.tsv), fasta files and output from Prokka.
 
 
+[**4_plots**](example_output/4_plots)
+
 All the plots produced by Flankophile from the R script [plot_gene_clusters_from_flankophile.R](bin/plot_gene_clusters_from_flankophile.R) are made in step 4. Plots are made for each cluster in 4_cluster_results. The distance matrices are used to produce distance trees and the gene annotation is then plotted with the tree. 
-
-[Examples of plots made with the pipeline](example_output/4_plots).
-
 
 
 

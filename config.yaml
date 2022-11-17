@@ -1,4 +1,4 @@
-# FLANKOPHILE version 0.1.10
+# FLANKOPHILE version 0.2.0
 # Alex Vincent Thorn
 
 
@@ -6,11 +6,11 @@
 
 database: "input/example_input_files/ResFinder_08_02_2022.fa"         
 
-input_list: "input/example_input_files/input_list_example.tsv"               
+input_list: "input/example_input_files/input_list_example_metadata.tsv"               
                                                                                                                
-min_coverage_abricate: "98"   # Minimum coverage in percentage compared to reference sequence.
+min_coverage_abricate: "98"                   # Minimum coverage in percentage compared to reference sequence.
 
-min_identity_abricate: "98"   # Minimum percentage identity compared to reference sequence.
+min_identity_abricate: "98"                   # Minimum percentage identity compared to reference sequence.
  
 ## 2 ######################################################################################
 
@@ -20,13 +20,13 @@ flank_length_downstreams: "1500"
 
 ## 3 #######################################################################################
 
-cluster_identity_and_length_diff: "0.98"  # CD-HIT parameters = c and s.  0.98 = cluster at 98 % identity and a maximum length difference of 98 %
+cluster_identity_and_length_diff: "0.98"      # CD-HIT parameters = c and s.  0.98 = cluster at 98 % identity and a maximum length difference of 98 %
 
 ## 4  ######################################################################################
 
-k-mer_size: "16"                        # Kmersize used by kma index. Try with "16" if in doubt.  
+k-mer_size: "16"                              # Kmersize used by kma index. Try with "16" if in doubt.  
 
-distance_measure: "1"                     # Choose measurement for making distance matrix 
+distance_measure: "1"                         # Choose measurement for making distance matrix 
 
 
 

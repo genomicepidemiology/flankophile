@@ -80,11 +80,22 @@ make_plots <- function(cluster_name) {
   midpoint <- length_of_target / 2 + start_pos - 1  
   
   
+    # Dealing with gene annotation names ##################
+  
+  
+  cluster_prokka <- cluster_prokka_raw %>%
+    mutate(gene_arrow_label = gene) %>%
+    mutate(gene = case_when(start < midpoint & end > midpoint ~ "TARGET",
+                            TRUE ~ gene_arrow_label)) %>% 
+    mutate(gene_arrow_label = str_sub(gene_arrow_label, 1, cutoff_limit_gene_arrow_labels))
+  
+  
   if (nrow(cluster_results) < 2) {
-    t4 <- ggplot(cluster_prokka_raw, aes(xmin = start, xmax = end, y = molecule, fill = gene, forward = orientation)) +
+    t4 <- ggplot(cluster_prokka, aes(xmin = start, xmax = end, y = molecule, fill = gene, forward = orientation)) +
       geom_gene_arrow() +
       facet_wrap(~ molecule, scales = "free", ncol = 1) +
-      scale_fill_brewer(palette = "Set3") +
+      #scale_fill_brewer(palette = "Set3") +
+      scale_fill_hue(direction = 1) + 
       ggtitle(paste0("Cluster ", cluster_name))
     
     t4
@@ -109,9 +120,9 @@ make_plots <- function(cluster_name) {
     mutate(id = OBSERVATION_ID) %>% 
     relocate(id) %>% 
     rename(IDENTITY = "%IDENTITY") %>% 
-    mutate(Gene = str_c(GENE, IDENTITY, "%", sep = "_")) %>% 
-    select(id, Gene) %>%
-    rename(IDENTITY = Gene) %>%
+    mutate(vari = str_c(GENE, IDENTITY, "%", VARIANT, sep = "_")) %>% 
+    select(id, vari) %>%
+    rename(VARIANT = vari) %>%
     column_to_rownames(., var = "id") 
   
   
@@ -139,14 +150,7 @@ make_plots <- function(cluster_name) {
   }
   
   
-  # Dealing with gene annotation names ##################
-  
-  
-  cluster_prokka <- cluster_prokka_raw %>%
-    mutate(gene_arrow_label = gene) %>%
-    mutate(gene = case_when(start < midpoint & end > midpoint ~ "TARGET",
-                            TRUE ~ gene_arrow_label)) %>% 
-    mutate(gene_arrow_label = str_sub(gene_arrow_label, 1, cutoff_limit_gene_arrow_labels))
+
   
   
   
@@ -199,7 +203,7 @@ make_plots <- function(cluster_name) {
     
     t3 <- gheatmap(t2, info_gene_ID,  width=0.1, hjust=1,
                    colnames=TRUE, offset = off, font.size = 1, colnames_position = "bottom", colnames_angle = 90) +
-      labs(fill = "Target % identity to reference") + 
+      labs(fill = "Target variant") + 
       scale_fill_hue(direction = -1, l = 70, c = 30) + new_scale_fill() +
       theme(legend.text = element_text(size=5))
       
@@ -242,7 +246,7 @@ make_plots <- function(cluster_name) {
     
     t3 <- gheatmap(t2, info_gene_ID,  width=0.1, hjust=1,
                    colnames=TRUE, offset = off, font.size = 1, colnames_position = "bottom", colnames_angle = 90) +
-      labs(fill = "Target % identity to reference") + 
+      labs(fill = "Target variant") + 
       scale_fill_hue(direction = -1, l = 70, c = 30) + new_scale_fill() +
       theme(legend.text = element_text(size=5))
       
@@ -284,7 +288,7 @@ make_plots <- function(cluster_name) {
     
     t3 <- gheatmap(t2, info_gene_ID,  width=0.1, hjust=1,
                    colnames=TRUE, offset = off, font.size = 1, colnames_position = "bottom", colnames_angle = 90) +
-      labs(fill = "Target % identity to reference") + 
+      labs(fill = "Target variant") + 
       scale_fill_hue(direction = -1, l = 70, c = 30) + new_scale_fill() +
       theme(legend.text = element_text(size=5))
     
