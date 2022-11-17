@@ -12,48 +12,60 @@ By Alex Vincent Thorn
 
 Flankophile is a pipeline built for easy analysis and visualization of gene synteny - the genetic context of genes. Flankophile is especially useful for comparing the flanking regions of specific genes or other target sequences across different samples. Flankophile automaticly gene synteny plots in pdf format. Flankophile also outputs the percentage identity of each hit relative to its reference sequence. This allows for incorporating gene variants into the analysis.
 
-**Input:** Genetic data in DNA multi-fasta format, such as assemblies plus a reference database containing target sequences in multi-fasta format.
-
-**Output:** [Gene synteny plots](example_output/4_plots), [results tables](example_output/2_hits_included_in_flank_analysis.tsv), [clustering table](example_output/3_clustering.tsv), [distance matrices](example_output/4_cluster_results/33_aph_6__Id_1_M28829/33_aph_6__Id_1_M28829.target_and_flanking_regions_dist), genetic sequences of genes and flanking regions in fasta format. 
-
-
-
-
 
 ![Demo_R_plot.PNG](example_output/4_plots/Demo_R_plot.PNG)
 
 
 
-## How to run Flankophile
-
-### [Computerome user? - quick guide for running Flankophile](quick_start.md)
+## Output
 
 
+[**1_hits_all.tsv**](example_output/1_hits_all.tsv)
 
-### Prerequisites
+The table [1_hits_all.tsv](example_output/1_hits_all.tsv) contains the data for all hits found by Abricate, which have the requested minimum percentage identity and minimum percentage coverage.
 
-Clone this repository to your computer.
+[**1_variants.fasta**](example_output/1_variants.fasta)
 
-```bash
-git clone https://avthorn@bitbucket.org/genomicepidemiology/flankophile.git
-
-```
-
-Flankophile is a Snakemake based pipeline. Snakemake is a python based workflow management system.
-The [Snakefile](Snakefile) contains the main pipeline code.
+[1_variants.fasta](example_output/1_variants.fasta) contains the actual sequences for all the hits found in [1_hits_all.tsv](example_output/1_hits_all.tsv).
 
 
-You need Miniconda (miniconda3/4.11.0) and [Snakemake](https://snakemake.readthedocs.io/en/stable/index.html) (snakemake/6.9.1) to run Flankophile. Flankophile is conda based and uses a conda env. You can see it in the file [environment.yaml](environment.yaml).
- You do not need to load the conda enviroment manually. Snakemake will automatically download the necessary conda packages when running the pipeline for the first time. For this reason, the pipeline will take a longer time to run the first time.
+[**2_hits_included_in_flank_analysis.tsv**](example_output/2_hits_included_in_flank_analysis.tsv)
 
-### Input files
+The tsv file [2_hits_included_in_flank_analysis.tsv](example_output/2_hits_included_in_flank_analysis.tsv) is a filtered version of [all_hits.tsv](example_output/1_hits_all.tsv) from step 1. [2_hits_included_in_flank_analysis.tsv](example_output/2_hits_included_in_flank_analysis.tsv) contains only hits that had space on their contig for the user-requested upstream and downstream flanking region. The rest of the analysis is based on these hits.
+
+[**2_report_flank_filtering.txt**](example_output/2_report_flank_filtering.txt)
+
+Flankophile outputs  [2_report_flank_filtering.txt](example_output/2_report_flank_filtering.txt) which informs the user on how many hits were discarded due to insufficient flanking region length. 
+
+
+[**3_clustering.tsv**](example_output/3_clustering.tsv)
+
+[3_clustering.tsv](example_output/3_clustering.tsv) is a table that contains information on which hits that belong to each output cluster, based on their reference sequences. The clustering is based on percentage identity.  
+
+  
+[**4_cluster_results**](example_output/4_cluster_results/33_aph_6__Id_1_M28829/)
+
+The output contains one directory for each reference gene cluster. Directory names have two parts. The first part is a unique number. 
+The second part after the underscore is the first part of the name of the gene that seeded the cluster. 
+See [example of output from an induvidual gene family cluster](example_output/4_cluster_results/33_aph_6__Id_1_M28829/). The folder contains [distance matrices](example_output/4_cluster_results/33_aph_6__Id_1_M28829/33_aph_6__Id_1_M28829.target_and_flanking_regions_dist), [cluster results table](example_output/4_cluster_results/33_aph_6__Id_1_M28829/33_aph_6__Id_1_M28829.tsv), fasta files and output from Prokka.
+
+
+[**4_plots**](example_output/4_plots)
+
+All the plots produced by Flankophile from the R script [plot_gene_clusters_from_flankophile.R](bin/plot_gene_clusters_from_flankophile.R) are made in step 4. Plots are made for each cluster in 4_cluster_results. The distance matrices are used to produce distance trees and the gene annotation is then plotted with the tree. 
+
+
+
+
+
+## Input
 
 In order to use the pipeline you need to prepare two input files: The reference database and the input list of data you want to analyse.
  
 The path to the input files must be given in the config file [config.yaml](config.yaml).
 
 
-#### Reference database
+### Reference database
 
 The reference database contains reference sequences of all the genes or target sequences that you want to perform gene synteny analysis on. It has to be a DNA multi fasta file with unique headers. Only AGCT is allowed in the sequence. Fasta headers may contain letters, numbers, dash, dot, underscore, parentheses and special characters used  in the [example database headers](input/example_input_files/ResFinder_08_02_2022.fa). If the headers contain whitespace Flankophile will only consider characters before the whitespace as the true header.The reference database can contain from one to thousands of sequences. The reference database can contain reference genes or sequences that are not homologs. Flankophile will cluster the reference sequences by percentage identity and report the results separately for each cluster.
 
@@ -61,7 +73,7 @@ The reference database contains reference sequences of all the genes or target s
 The [**ResFinder database**](input/example_input_files/ResFinder_08_02_2022.fa) is included in Flankophile as an example of a reference database. The ResFinder database consists of acquired antimicrobial resistance genes. The version found in this repository is from February 8 2022. The up-to-date ResFinder database is found [here](https://bitbucket.org/genomicepidemiology/resfinder_db/src/master/). If you want to use the included version of the ResFinder database for your analysis then you do not need to change the database variable in the contig file.
 
 
-#### Input list
+### Input list
 
 Your sample input data must consist of a number of assemblies, binned or unbinned contigs, genomes or other data in DNA multifasta format. One multifasta per sample. You can input as many samples as wanted. 
 
@@ -101,6 +113,34 @@ Column 3 is optional. Column 3 is a metadata column and Flankophile will automat
 | pig_sample     | home/data/pig_sample.fsa               | Pig      |
 | cat_sample     | home/data/old/cat_ER34793_sample.fasta | Cat      |
 
+
+
+
+
+
+
+
+## How to run Flankophile
+
+### [Computerome user? - Read quick guide for running Flankophile](quick_start.md)
+
+
+
+### Prerequisites
+
+Clone this repository to your computer.
+
+```bash
+git clone https://avthorn@bitbucket.org/genomicepidemiology/flankophile.git
+
+```
+
+Flankophile is a Snakemake based pipeline. Snakemake is a python based workflow management system.
+The [Snakefile](Snakefile) contains the main pipeline code.
+
+
+You need Miniconda (miniconda3/4.11.0) and [Snakemake](https://snakemake.readthedocs.io/en/stable/index.html) (snakemake/6.9.1) to run Flankophile. Flankophile is conda based and uses a conda env. You can see it in the file [environment.yaml](environment.yaml).
+ You do not need to load the conda enviroment manually. Snakemake will automatically download the necessary conda packages when running the pipeline for the first time. For this reason, the pipeline will take a longer time to run the first time.
 
 
 
@@ -184,42 +224,6 @@ envs_dirs:
 ```
 
 
-## Output
-
-
-[**1_hits_all.tsv**](example_output/1_hits_all.tsv)
-
-The table [1_hits_all.tsv](example_output/1_hits_all.tsv) contains the data for all hits found by Abricate, which have the requested minimum percentage identity and minimum percentage coverage.
-
-[**1_variants.fasta**](example_output/1_variants.fasta)
-
-[1_variants.fasta](example_output/1_variants.fasta) contains the actual sequences for all the hits found in [1_hits_all.tsv](example_output/1_hits_all.tsv).
-
-
-[**2_hits_included_in_flank_analysis.tsv**](example_output/2_hits_included_in_flank_analysis.tsv)
-
-The tsv file [2_hits_included_in_flank_analysis.tsv](example_output/2_hits_included_in_flank_analysis.tsv) is a filtered version of [all_hits.tsv](example_output/1_hits_all.tsv) from step 1. [2_hits_included_in_flank_analysis.tsv](example_output/2_hits_included_in_flank_analysis.tsv) contains only hits that had space on their contig for the user-requested upstream and downstream flanking region. The rest of the analysis is based on these hits.
-
-[**2_report_flank_filtering.txt**](example_output/2_report_flank_filtering.txt)
-
-Flankophile outputs  [2_report_flank_filtering.txt](example_output/2_report_flank_filtering.txt) which informs the user on how many hits were discarded due to insufficient flanking region length. 
-
-
-[**3_clustering.tsv**](example_output/3_clustering.tsv)
-
-[3_clustering.tsv](example_output/3_clustering.tsv) is a table that contains information on which hits that belong to each output cluster, based on their reference sequences. The clustering is based on percentage identity.  
-
-  
-[**4_cluster_results**](example_output/4_cluster_results/33_aph_6__Id_1_M28829/)
-
-The output contains one directory for each reference gene cluster. Directory names have two parts. The first part is a unique number. 
-The second part after the underscore is the first part of the name of the gene that seeded the cluster. 
-See [example of output from an induvidual gene family cluster](example_output/4_cluster_results/33_aph_6__Id_1_M28829/). The folder contains [distance matrices](example_output/4_cluster_results/33_aph_6__Id_1_M28829/33_aph_6__Id_1_M28829.target_and_flanking_regions_dist), [cluster results table](example_output/4_cluster_results/33_aph_6__Id_1_M28829/33_aph_6__Id_1_M28829.tsv), fasta files and output from Prokka.
-
-
-[**4_plots**](example_output/4_plots)
-
-All the plots produced by Flankophile from the R script [plot_gene_clusters_from_flankophile.R](bin/plot_gene_clusters_from_flankophile.R) are made in step 4. Plots are made for each cluster in 4_cluster_results. The distance matrices are used to produce distance trees and the gene annotation is then plotted with the tree. 
 
 
 
