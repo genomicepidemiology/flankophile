@@ -54,6 +54,7 @@ See [example of output from an induvidual gene family cluster](example_output/4_
 
 All the plots produced by Flankophile from the R script [plot_gene_clusters_from_flankophile.R](bin/plot_gene_clusters_from_flankophile.R) are made in step 4. Plots are made for each cluster in 4_cluster_results. The distance matrices are used to produce distance trees and the gene annotation is then plotted with the tree. 
 
+If the cluster contain more than 1 hit Flankophile will produce 3 plots based on 3 different distance trees. One [plot based on target sequence only](example_output/4_plots/33_aph_6__Id_1_M28829_target_sequence_only.pdf), one [plot based on flanking region sequence only](example_output/4_plots/33_aph_6__Id_1_M28829_flanking_regions_only.pdf) and one [plot based on both target sequence and flanking regions](example_output/4_plots/33_aph_6__Id_1_M28829_target_and_flanking_regions.pdf). The example plots are made from an [input_list](input/example_input_files/input_list_example_metadata.tsv) with metadata on species.For clusters where only one hit is found a single plot is outputted which shows just the gene synteny.
 
 
 
