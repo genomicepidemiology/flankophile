@@ -8,7 +8,7 @@ import re
 
 
 
-## Input control config file #############################################################
+## Input control config file ##############################################################
 
 try:
   int(config["flank_length_upstreams"])
@@ -387,20 +387,20 @@ rule pool_target_sequence_only1:
         "cat {output.temp} | seqkit sort -N -i -2  > {output.fasta}"
 
 
-rule merge_dublicate_sequences1:
+rule merge_duplicate_sequences1:
     input:
         "output/temp_variant/target_sequence_only.fa"
     output:
-        temp("output/temp_variant/target_sequence_only_no_dub.fa")
+        temp("output/temp_variant/target_sequence_only_no_dup.fa")
     shell:
         "python3 bin/DupRemover.py -i {input} -o {output};"
         
         
 rule add_variant_numbers_to_fasta1:
     input:
-        "output/temp_variant/target_sequence_only_no_dub.fa"
+        "output/temp_variant/target_sequence_only_no_dup.fa"
     output:
-        temp("output/temp_variant/target_sequence_only_no_dub_var_num.fa")
+        temp("output/temp_variant/target_sequence_only_no_dup_var_num.fa")
     run:
         input_file=open(input[0], "r")
         output_file=open(output[0], "w")
@@ -422,7 +422,7 @@ rule add_variant_numbers_to_fasta1:
 
 rule make_variant_fasta:
     input:
-        "output/temp_variant/target_sequence_only_no_dub_var_num.fa"
+        "output/temp_variant/target_sequence_only_no_dup_var_num.fa"
     output:
         "output/1_variants.fasta"
     run:
@@ -447,7 +447,7 @@ rule make_variant_fasta:
 
 rule add_variant_number_to_results1:
     input:
-        fasta="output/temp_variant/target_sequence_only_no_dub_var_num.fa",
+        fasta="output/temp_variant/target_sequence_only_no_dup_var_num.fa",
         tsv="output/1_hits_all_no_var.tsv"
     output:
         tsv="output/1_hits_all.tsv"
@@ -463,7 +463,7 @@ rule add_variant_number_to_results1:
             else:
                 tsv_line_list = tsv_line.split("\t")
                 obs_id = tsv_line_list[14]
-                input_fasta=open("output/temp_variant/target_sequence_only_no_dub_var_num.fa", "r")
+                input_fasta=open("output/temp_variant/target_sequence_only_no_dup_var_num.fa", "r")
                 for fasta_line in input_fasta:                   
                     if fasta_line.startswith(">"):
                         fasta_line = fasta_line.strip()[1:]     #remove the >
