@@ -1,5 +1,5 @@
 # FLANKOPHILE
-FLANKOPHILE version 0.2.0
+FLANKOPHILE version 0.2.1
 By Alex Vincent Thorn
 
 ![flankophile_logo_2-1_square.jpg](example_output/flankophile_logo_2-1_square.jpg)
@@ -68,7 +68,7 @@ The path to the input files must be given in the config file [config.yaml](confi
 
 ### Reference database
 
-The reference database contains reference sequences of all the genes or target sequences that you want to perform gene synteny analysis on. It has to be a DNA multi fasta file with unique headers. Only AGCT is allowed in the sequence. Fasta headers may contain letters, numbers, dash, dot, underscore, parentheses, colon, forward slash, plus symbol, the pipe symbol '|' and ' - single quotation mark . If the headers contain whitespace Flankophile will only consider characters before the whitespace as the sequence name. The headers must be unique. The reference database can contain from one to thousands of sequences. The reference database can contain reference genes or sequences that are not homologs. Flankophile will cluster the reference sequences by percentage identity and report the results separately for each cluster.
+The reference database contains reference sequences of all the genes or target sequences that you want to perform gene synteny analysis on. It has to be a DNA multi fasta file with unique headers. Only AGCT is allowed in the sequence. Fasta headers may contain letters, numbers, dash, dot, underscore, parentheses, colon, forward slash, plus symbol, the pipe symbol '|' and ' - single quotation mark . Headers must start > followed by a number or a letter. If the headers contain whitespace Flankophile will only consider characters before the whitespace as the sequence name. The headers must be unique. The reference database can contain from one to thousands of sequences. The reference database can contain reference genes or sequences that are not homologs. Flankophile will cluster the reference sequences by percentage identity and report the results separately for each cluster.
 
 
 The [**ResFinder database**](input/example_input_files/ResFinder_08_02_2022.fa) is included in Flankophile as an example of a reference database. The ResFinder database consists of acquired antimicrobial resistance genes. The version found in this repository is from February 8 2022. The up-to-date ResFinder database is found [here](https://bitbucket.org/genomicepidemiology/resfinder_db/src/master/). If you want to use the included version of the ResFinder database for your analysis then you do not need to change the database variable in the contig file.

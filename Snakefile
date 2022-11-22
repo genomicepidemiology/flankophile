@@ -1,4 +1,4 @@
-# FLANKOPHILE version 0.2.0
+# FLANKOPHILE version 0.2.1
 # Alex Vincent Thorn
 
 configfile: "config.yaml"
@@ -6,9 +6,21 @@ configfile: "config.yaml"
 import os
 import re
 
+## Input control reference database ##############################################################
+
+with open(config["database"], 'r') as file:
+    for line in file:
+        line = line.strip()
+        if line.startswith(">"):
+            if len(line) < 2:
+                raise Exception("ERROR! Headers must not be empty.")
+            header_start = line[1]
+            if not header_start.isalpha():
+                if not header_start.isdigit(): 
+                    raise Exception("ERROR! Headers must start with a letter or a number.")
 
 
-## Input control config file ##############################################################
+## Input control config file ################################################################
 
 try:
   int(config["flank_length_upstreams"])
@@ -1002,7 +1014,7 @@ rule plots:
         cp config.yaml {output.config};
         rm -r output/3_define_clusters/cd_hit_per_cluster;
         rm -rf output/2_filter;
-        echo flankophile_v._0.2.0 > {output.txt};
+        echo flankophile_v._0.2.1 > {output.txt};
         Rscript bin/plot_gene_clusters_from_flankophile.R
         '''
 
