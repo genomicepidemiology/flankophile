@@ -300,7 +300,7 @@ rule add_file_name_to_1_tsv:
             line = line.strip()
             if not line.startswith("#"):
                 flag = True
-                line_list = line.split()
+                line_list = line.split("\t")
                 ASSEMBLY_NAME = line_list[13]
                 future_file_name = ASSEMBLY_NAME + ".tsv"
                 new_line = line + "\t" + future_file_name
