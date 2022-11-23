@@ -1,4 +1,4 @@
-# FLANKOPHILE version 0.2.1
+# FLANKOPHILE version 0.2.2
 # Alex Vincent Thorn
 
 configfile: "config.yaml"
@@ -8,16 +8,34 @@ import re
 
 ## Input control reference database ##############################################################
 
+header_list = []
 with open(config["database"], 'r') as file:
     for line in file:
         line = line.strip()
         if line.startswith(">"):
             if len(line) < 2:
-                raise Exception("ERROR! Headers must not be empty.")
+                raise Exception("ERROR! Database headers must not be empty.")
             header_start = line[1]
             if not header_start.isalpha():
                 if not header_start.isdigit(): 
-                    raise Exception("ERROR! Headers must start with a letter or a number.")
+                    raise Exception("ERROR! Database headers must start with a letter or a number.")
+            if line.find(";") != -1:
+                raise Exception("ERROR! Database headers must not contain semicolon.")
+            if line.find(" ") != -1: # If whitespace present then everything after whitespace is header.
+                line_list=line.split()
+                this_header = line_list[0]
+                if len(line_list[0]) > 80:
+                    raise Exception("ERROR! Database headers must not be longer than 80 characters including >.")
+            else: # if no whitespace in header
+                this_header = line
+                if len(line) > 80:
+                    raise Exception("ERROR! Database headers must not be longer than 80 characters including >.")
+            if this_header in header_list:
+                raise Exception("ERROR! Database headers must be unique.")
+            else:
+               header_list.append(this_header)
+                
+                
 
 
 ## Input control config file ################################################################
@@ -1014,7 +1032,7 @@ rule plots:
         cp config.yaml {output.config};
         rm -r output/3_define_clusters/cd_hit_per_cluster;
         rm -rf output/2_filter;
-        echo flankophile_v._0.2.1 > {output.txt};
+        echo flankophile_v._0.2.2 > {output.txt};
         Rscript bin/plot_gene_clusters_from_flankophile.R
         '''
 

@@ -57,9 +57,23 @@ start_pos <- as.double(upstream + 1)
 make_plots <- function(cluster_name) {
   
   
-  cluster_results <- read_tsv(paste0(path_to_all_cluster_folders, cluster_name, "/", cluster_name, ".tsv"))
+  #cluster_results <- read_tsv(paste0(path_to_all_cluster_folders, cluster_name, "/", cluster_name, ".tsv"))
   
-  cluster_prokka_raw <- read_tsv(paste0(path_to_all_cluster_folders, cluster_name, "/", cluster_name, ".gggenes"))
+  #cluster_prokka_raw <- read_tsv(paste0(path_to_all_cluster_folders, cluster_name, "/", cluster_name, ".gggenes"))
+  
+  
+    ## NEW ##
+  cluster_results <- read_tsv(paste0(path_to_all_cluster_folders, cluster_name, "/", cluster_name, ".tsv"), col_types = cols(GENE = col_character(),
+                                                                                                                           METADATA = col_character()))
+  
+  ### NEW ##
+  cluster_prokka_raw <- read_tsv(paste0(path_to_all_cluster_folders, cluster_name, "/", cluster_name, ".gggenes"), col_types = cols(molecule = col_character(),
+                                                                                                                                    gene = col_character(),
+                                                                                                                                    start = col_integer(),
+                                                                                                                                    end = col_integer(),
+                                                                                                                                    orientation = col_integer(),
+                                                                                                                                    db_name = col_character()))
+  
   
   if (length(unique(cluster_results$METADATA)) == 1 & unique(cluster_results$METADATA)[1] == "No_metadata") {
   metadata_present = "no"
@@ -88,9 +102,22 @@ make_plots <- function(cluster_name) {
     mutate(gene = case_when(start < midpoint & end > midpoint ~ "TARGET",
                             TRUE ~ gene_arrow_label)) %>% 
     mutate(gene_arrow_label = str_sub(gene_arrow_label, 1, cutoff_limit_gene_arrow_labels))
+    
+    ## NEW ##
+  if (nrow(cluster_prokka) == 0) {    ## NEW ##
+    t4 <- ggplot() +
+      theme_void() +
+      geom_text(aes(0,0,label='No genes annotated by Prokka')) +
+      xlab(NULL) +
+      ggtitle(paste0("Cluster ", cluster_name))
+    
+    t4
+    ggsave(file = paste0(path_to_folder_for_plots, "/", cluster_name, ".pdf"), plot = t4, width = 210, height = 150, units = "mm")
+    
+  } 
   
   
-  if (nrow(cluster_results) < 2) {
+  if (nrow(cluster_results) == 1 & nrow(cluster_prokka) > 0) {    ## NEW line ##
     t4 <- ggplot(cluster_prokka, aes(xmin = start, xmax = end, y = molecule, fill = gene, forward = orientation)) +
       geom_gene_arrow() +
       facet_wrap(~ molecule, scales = "free", ncol = 1) +
