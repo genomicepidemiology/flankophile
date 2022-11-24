@@ -57,7 +57,26 @@ All the plots produced by Flankophile from the R script [plot_gene_clusters_from
 If the cluster contain more than 1 hit Flankophile will produce 3 plots based on 3 different distance trees. One [plot based on target sequence only](example_output/4_plots/33_aph_6__Id_1_M28829_target_sequence_only.pdf), one [plot based on flanking region sequence only](example_output/4_plots/33_aph_6__Id_1_M28829_flanking_regions_only.pdf) and one [plot based on both target sequence and flanking regions](example_output/4_plots/33_aph_6__Id_1_M28829_target_and_flanking_regions.pdf). The example plots are made from an [input_list](input/example_input_files/input_list_example_metadata.tsv) with metadata on species.For clusters where only one hit is found a single plot is outputted which shows just the gene synteny.
 
 
+#### Output columns for tsv files
 
+| **Column**     | **Example**                  | **Explanation**                                               |
+|----------------|------------------------------|---------------------------------------------------------------|
+| #FILE          | /home/assemblies/dog_1.fasta | Full path to fasta.                                           |
+| SEQUENCE       | contig_27                    | Fasta header of contig where hit was found.                   |
+| START          | 4032                         | Start position of hit on contig.                              |
+| END            | 5526                         | End position of hit on contig.                                |
+| STRAND         | +                            | Positive or negative sense of DNA sequence for hit.           |
+| GENE           | blaTEM                       | Name of the reference sequence that matched hit.              |
+| COVERAGE       | 1-1501/1501                  | What proportion of the reference sequence is in our sequence. |
+| COVERAGE_MAP   | ========/======              | Visual represenation of the hit.                              |
+| GAPS           | 1/4                          | Openings / gaps in query and subject.                         |
+| %COVERAGE      | 99.33                        | Proportion of reference sequence covered in percentage.       |
+| %IDENTITY      | 98.56                        | Proportion of exact nucleotide matches in percentage.         |
+| CONTIG_LENGTH  | 12498                        | Length of contig where hit was found.                         |
+| METADATA       | Denmark                      | Metadata from the input_list if metadata was provided.        |
+| ASSEMBLY_NAME  | 1_Dog_sample                 | Assembly name from input_list. Unique for each fasta.         |
+| OBSERVATION_ID | i_44                         | Unique identifier for each hit.                               |
+| VARIANT        | v_11                         | Unique identifier for each unique sequence found among hits.  |
 
 ## Input
 
