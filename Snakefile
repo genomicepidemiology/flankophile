@@ -24,14 +24,15 @@ with open(config["database"], 'r') as file:
             if line.find(" ") != -1: # If whitespace present then everything after whitespace is header.
                 line_list=line.split()
                 this_header = line_list[0]
-                if len(line_list[0]) > 80:
-                    raise Exception("ERROR! Database headers must not be longer than 80 characters including >.")
+                if len(line_list[0]) > 60:
+                    raise Exception("ERROR! Database headers must not be longer than 60 characters including >.")
             else: # if no whitespace in header
                 this_header = line
-                if len(line) > 80:
-                    raise Exception("ERROR! Database headers must not be longer than 80 characters including >.")
+                if len(line) > 60:
+                    raise Exception("ERROR! Database headers must not be longer than 60 characters including >.")
             if this_header in header_list:
-                raise Exception("ERROR! Database headers must be unique.")
+                error_uniq = "ERROR! Database headers must be unique. This header is not unique: " + str(this_header)
+                raise Exception(error_uniq)
             else:
                header_list.append(this_header)
                 
