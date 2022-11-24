@@ -175,8 +175,8 @@ The configuration file contains numbered sections. Each number refers to an outp
 |-------------------------------------|-----------------------|-----------------|----------------------------------------------------------------------------------------------------|
 | database                            | "input/db.fa"         | Path to file.   | Step 1. Multifasta file of genes of interest, DNA.                                                 |
 | input_list                          | "input/sa.tsv"        | Path to file.   | Step 1. Tsv file.                                                                                  |
-| min_coverage_abricate               | "98"                  | In %. 50 - 100% | Step 1. Minimum coverage in percentage compared to reference sequence.                             |
-| min_identity_abricate               | "98"                  | In %. 50 - 100% | Step 1. Minimum percentage identity compared to reference sequence.                                |
+| min_coverage_abricate               | "98"                  | In %. 90 - 100% | Step 1. Minimum coverage in percentage compared to reference sequence.                             |
+| min_identity_abricate               | "98"                  | In %. 90 - 100% | Step 1. Minimum percentage identity compared to reference sequence.                                |
 | flank_length_upstreams              | "1500"                | Length in bp.   | Step 2.                                                                                            |
 | flank_length_downstreams            | "1500"                | Length in bp.   | Step 2.                                                                                            |
 | cluster_identity_and_length_diff    | "0.95"                | 1 equals 100 %. | Step 3. Interval: 0.80 - 1    CD-HIT-EST parameters c and s.                                       |

@@ -61,8 +61,8 @@ except:
   print("ERROR! min_coverage_abricate must be a number, more specifically a float.")
   raise Exception("ERROR!")
 
-if float(config["min_coverage_abricate"]) < 50 or float(config["min_coverage_abricate"]) > 100:
-    raise Exception("ERROR! min_coverage_abricate must be between 50 and 100.")
+if float(config["min_coverage_abricate"]) < 90 or float(config["min_coverage_abricate"]) > 100:
+    raise Exception("ERROR! min_coverage_abricate must be between 90 and 100.")
 
 
 try:
@@ -71,8 +71,8 @@ except:
   print("ERROR! min_identity_abricate must be a number, more specifically a float.")
   raise Exception("ERROR!")
     
-if float(config["min_identity_abricate"]) < 50 or float(config["min_identity_abricate"]) > 100:
-    raise Exception("ERROR! min_identity_abricate must be between 50 and 100.")
+if float(config["min_identity_abricate"]) < 90 or float(config["min_identity_abricate"]) > 100:
+    raise Exception("ERROR! min_identity_abricate must be between 90 and 100.")
 
 
 try:
