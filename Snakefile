@@ -1,4 +1,4 @@
-# FLANKOPHILE version 0.2.2
+# FLANKOPHILE version 0.2.3
 # Alex Vincent Thorn
 
 configfile: "config.yaml"
@@ -940,11 +940,12 @@ rule prokka:
 
 rule make_gggenes_input:
     input:
-        "output/4_cluster_results/{c}/prokka/{c}.gff"
+        gff="output/4_cluster_results/{c}/prokka/{c}.gff",
+        tsv="output/4_cluster_results/{c}/{c}.tsv"
     output:
-        "output/4_cluster_results/{c}/{c}.gggenes"
+        g="output/4_cluster_results/{c}/{c}.gggenes"
     shell:
-        "python3 ./bin/gff_to_gggenes.py {input} {output}"
+        "python3 ./bin/gff_to_gggenes.py {input.gff} {output.g} {input.tsv}"
 
 
 

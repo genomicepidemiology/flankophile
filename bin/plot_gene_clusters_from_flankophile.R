@@ -19,12 +19,7 @@ library(ggnewscale)   # ggnewscale_0.4.7
 ### Settings #######################################################################################################
 
 
-
 path_to_output_folder <- "output"   # relative path to the entire flankophile output folder
-
-
-cutoff_limit_gene_arrow_labels <- 10  # Try with shorter value if some genes labels are not shown on the arrow.
-
 
 
 ############################################################################################################################
@@ -45,9 +40,6 @@ upstream <- config %>% filter(str_starts(X1, "flank_length_upstreams:", negate =
 
 upstream <- as.integer(upstream[1,1])
 
-start_pos <- as.double(upstream + 1)
-
-
 
 
 
@@ -57,16 +49,10 @@ start_pos <- as.double(upstream + 1)
 make_plots <- function(cluster_name) {
   
   
-  #cluster_results <- read_tsv(paste0(path_to_all_cluster_folders, cluster_name, "/", cluster_name, ".tsv"))
-  
-  #cluster_prokka_raw <- read_tsv(paste0(path_to_all_cluster_folders, cluster_name, "/", cluster_name, ".gggenes"))
-  
-  
-    ## NEW ##
+    
   cluster_results <- read_tsv(paste0(path_to_all_cluster_folders, cluster_name, "/", cluster_name, ".tsv"), col_types = cols(GENE = col_character(),
                                                                                                                            METADATA = col_character()))
-  
-  ### NEW ##
+ 
   cluster_prokka_raw <- read_tsv(paste0(path_to_all_cluster_folders, cluster_name, "/", cluster_name, ".gggenes"), col_types = cols(molecule = col_character(),
                                                                                                                                     gene = col_character(),
                                                                                                                                     start = col_integer(),
@@ -91,20 +77,51 @@ make_plots <- function(cluster_name) {
   
   length_of_target <- as.double(length_of_target[1,1])
   
-  midpoint <- length_of_target / 2 + start_pos - 1  
+  midpoint <- length_of_target / 2 + upstream 
   
   
     # Dealing with gene annotation names ##################
   
+  cutoff_limit_gene_arrow_labels <- 8  # Try with shorter value if some genes labels are not shown on the arrow.
+  
   
   cluster_prokka <- cluster_prokka_raw %>%
-    mutate(gene_arrow_label = gene) %>%
-    mutate(gene = case_when(start < midpoint & end > midpoint ~ "TARGET",
-                            TRUE ~ gene_arrow_label)) %>% 
-    mutate(gene_arrow_label = str_sub(gene_arrow_label, 1, cutoff_limit_gene_arrow_labels))
+    mutate(Gene = case_when(start < midpoint & end > midpoint ~ "TARGET",
+                            TRUE ~ gene)) %>% 
+    mutate(gene_arrow_label = case_when(gene == "Hypothetical protein" ~ "",
+                                        nchar(gene) < cutoff_limit_gene_arrow_labels ~ gene,
+                                        nchar(gene) >= cutoff_limit_gene_arrow_labels ~ paste0(str_sub(gene, 1, cutoff_limit_gene_arrow_labels), "...")))
     
-    ## NEW ##
-  if (nrow(cluster_prokka) == 0) {    ## NEW ##
+  # Deal with gene arrow colours
+  
+  gg_color_hue <- function(n) {
+    hues = seq(30, 330, length = n + 1)
+    hcl(h = hues, l = 65, c = 100)[1:n]
+  }
+  
+  
+  
+  target_hp_col_vec <- c("#FF0000", "#D3D3D3")
+  names(target_hp_col_vec) <- c("TARGET", "Hypothetical protein")
+  
+
+  novelty_gene_table <- cluster_prokka %>% select(Gene) %>%  filter(Gene != "TARGET" & Gene != "Hypothetical protein")         
+  
+  novelty_genes <- unique(novelty_gene_table$Gene)
+  
+  novelty_genes_vec <- gg_color_hue(length(novelty_genes))
+  
+  names(novelty_genes_vec) <- novelty_genes
+  
+  
+  all_genes_vec <- append(target_hp_col_vec, novelty_genes_vec)
+  
+  #scale_fill_manual(values = all_genes_vec)
+  
+  
+  # Deal with a completely empty plot ;(
+    
+  if (nrow(cluster_prokka) == 0) {    
     t4 <- ggplot() +
       theme_void() +
       geom_text(aes(0,0,label='No genes annotated by Prokka')) +
@@ -117,12 +134,14 @@ make_plots <- function(cluster_name) {
   } 
   
   
-  if (nrow(cluster_results) == 1 & nrow(cluster_prokka) > 0) {    ## NEW line ##
-    t4 <- ggplot(cluster_prokka, aes(xmin = start, xmax = end, y = molecule, fill = gene, forward = orientation)) +
+  
+  if (nrow(cluster_results) == 1 & nrow(cluster_prokka) > 0) {    
+    t4 <- ggplot(cluster_prokka, aes(xmin = start, xmax = end, y = molecule, fill = Gene, forward = orientation)) +
       geom_gene_arrow() +
       facet_wrap(~ molecule, scales = "free", ncol = 1) +
       #scale_fill_brewer(palette = "Set3") +
-      scale_fill_hue(direction = 1) + 
+      #scale_fill_hue(direction = 1) + 
+      scale_fill_manual(values = all_genes_vec)
       ggtitle(paste0("Cluster ", cluster_name))
     
     t4
@@ -139,7 +158,7 @@ make_plots <- function(cluster_name) {
   select(id, METADATA) %>%
   column_to_rownames(., var = "id") 
     
-  #write_tsv(info_meta, paste0("testbob_", cluster_name, ".tsv"))
+  
   
   
   
@@ -221,15 +240,17 @@ make_plots <- function(cluster_name) {
     
     
     
-    t2 <- facet_plot(t1, mapping = aes(xmin = start, xmax = end, fill = gene, forward = orientation),
+    t2 <- facet_plot(t1, mapping = aes(xmin = start, xmax = end, fill = Gene, forward = orientation),
                      data = cluster_prokka, geom = geom_motif, panel = 'Alignment',
                      on = "TARGET", label = 'gene_arrow_label', align = 'left') +
       labs(fill = "Gene") + 
-      scale_fill_hue(direction = 1) + new_scale_fill()
+      scale_fill_manual(values = all_genes_vec) +
+      #scale_fill_hue(direction = 1) + 
+      new_scale_fill()
     
     
     t3 <- gheatmap(t2, info_gene_ID,  width=0.1, hjust=1,
-                   colnames=TRUE, offset = off, font.size = 1, colnames_position = "bottom", colnames_angle = 90) +
+                   colnames=TRUE, offset = off, font.size = 1, colnames_position = "bottom", colnames_angle = 0) +
       labs(fill = "Target variant") + 
       scale_fill_hue(direction = -1, l = 70, c = 30) + new_scale_fill() +
       theme(legend.text = element_text(size=5))
@@ -237,9 +258,9 @@ make_plots <- function(cluster_name) {
       
     if (metadata_present == "yes") {
       tx <- gheatmap(t3, info_meta,  width=0.1, hjust=1,
-                   colnames=TRUE, offset = off2 , font.size = 1, colnames_position = "bottom", colnames_angle = 90) +
+                   colnames=TRUE, offset = off2 , font.size = 1, colnames_position = "bottom", colnames_angle = 0) +
         labs(fill = "Metadata") + 
-        scale_fill_hue(direction = -1, l = 85) + new_scale_fill() +
+         scale_fill_hue(direction = -1, l = 85, h = c(35, 330)) + new_scale_fill() +
         theme(legend.text = element_text(size=5))
       t4 <- tx + ggtitle(paste0("Cluster ", cluster_name, " - distance tree based on flanking region sequences only")) + 
         new_scale_fill()  
@@ -264,15 +285,17 @@ make_plots <- function(cluster_name) {
     off2 <- off * 2
     
     
-    t2 <- facet_plot(t1, mapping = aes(xmin = start, xmax = end, fill = gene, forward = orientation),
+    t2 <- facet_plot(t1, mapping = aes(xmin = start, xmax = end, fill = Gene, forward = orientation),
                      data = cluster_prokka, geom = geom_motif, panel = 'Alignment',
                      on = "TARGET", label = 'gene_arrow_label', align = 'left') +
       labs(fill = "Gene") + 
-      scale_fill_hue(direction = 1) + new_scale_fill()
+      scale_fill_manual(values = all_genes_vec) +
+      #scale_fill_hue(direction = 1) + 
+      new_scale_fill()
     
     
     t3 <- gheatmap(t2, info_gene_ID,  width=0.1, hjust=1,
-                   colnames=TRUE, offset = off, font.size = 1, colnames_position = "bottom", colnames_angle = 90) +
+                   colnames=TRUE, offset = off, font.size = 1, colnames_position = "bottom", colnames_angle = 0) +
       labs(fill = "Target variant") + 
       scale_fill_hue(direction = -1, l = 70, c = 30) + new_scale_fill() +
       theme(legend.text = element_text(size=5))
@@ -280,9 +303,9 @@ make_plots <- function(cluster_name) {
       
     if (metadata_present == "yes") {
       tx <- gheatmap(t3, info_meta,  width=0.1, hjust=1,
-                   colnames=TRUE, offset = off2 , font.size = 1, colnames_position = "bottom", colnames_angle = 90) +
+                   colnames=TRUE, offset = off2 , font.size = 1, colnames_position = "bottom", colnames_angle = 0) +
         labs(fill = "Metadata") + 
-        scale_fill_hue(direction = -1, l = 85) + new_scale_fill() +
+         scale_fill_hue(direction = -1, l = 85, h = c(35, 330)) + new_scale_fill() +
         theme(legend.text = element_text(size=5))
       t4 <- tx + ggtitle(paste0("Cluster ", cluster_name, " - distance tree based on target sequences only")) + 
         new_scale_fill()  
@@ -306,15 +329,17 @@ make_plots <- function(cluster_name) {
     off2 <- off * 2
     
     
-    t2 <- facet_plot(t1, mapping = aes(xmin = start, xmax = end, fill = gene, forward = orientation),
+    t2 <- facet_plot(t1, mapping = aes(xmin = start, xmax = end, fill = Gene, forward = orientation),
                      data = cluster_prokka, geom = geom_motif, panel = 'Alignment',
                      on = "TARGET", label = 'gene_arrow_label', align = 'left') +
       labs(fill = "Gene") + 
-      scale_fill_hue(direction = 1) + new_scale_fill()
+      scale_fill_manual(values = all_genes_vec) +
+      #scale_fill_hue(direction = 1) + 
+      new_scale_fill()
     
     
     t3 <- gheatmap(t2, info_gene_ID,  width=0.1, hjust=1,
-                   colnames=TRUE, offset = off, font.size = 1, colnames_position = "bottom", colnames_angle = 90) +
+                   colnames=TRUE, offset = off, font.size = 1, colnames_position = "bottom", colnames_angle = 0) +
       labs(fill = "Target variant") + 
       scale_fill_hue(direction = -1, l = 70, c = 30) + new_scale_fill() +
       theme(legend.text = element_text(size=5))
@@ -322,9 +347,9 @@ make_plots <- function(cluster_name) {
     
     if (metadata_present == "yes") {
       tx <- gheatmap(t3, info_meta,  width=0.1, hjust=1,
-                   colnames=TRUE, offset = off2 , font.size = 1, colnames_position = "bottom", colnames_angle = 90) +
+                   colnames=TRUE, offset = off2 , font.size = 1, colnames_position = "bottom", colnames_angle = 0) +
         labs(fill = "Metadata") + 
-        scale_fill_hue(direction = -1, l = 85) + new_scale_fill() +
+         scale_fill_hue(direction = -1, l = 85, h = c(35, 330)) + new_scale_fill() +
         theme(legend.text = element_text(size=5))
       t4 <- tx + ggtitle(paste0("Cluster ", cluster_name, " - distance tree based on target and flanking region sequences")) + 
         new_scale_fill()  
