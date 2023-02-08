@@ -1,4 +1,4 @@
-LOCUS       DK18                    3837 bp    DNA     linear       17-NOV-2022
+LOCUS       DK18                    3837 bp    DNA     linear       07-FEB-2023
 DEFINITION  Genus species strain strain.
 ACCESSION   
 VERSION
@@ -142,7 +142,7 @@ ORIGIN
      3721 gtgacctgcg gaggtctgaa taaacacgga cactggaaaa agctgagctt cctgaaagac
      3781 gcgatgcgtt cgcggtggat gtggaatatg cggcagctgc ttctgaaagc gtggtca
 //
-LOCUS       DT2                     3837 bp    DNA     linear       17-NOV-2022
+LOCUS       DT2                     3837 bp    DNA     linear       07-FEB-2023
 DEFINITION  Genus species strain strain.
 ACCESSION   
 VERSION
@@ -282,7 +282,7 @@ ORIGIN
      3721 agcaaaacca cgcccctgct caccagcacg cgcggcctca attgctgcgt tgagtgccaa
      3781 caaattcgtt tgctcggcga tccctcgtat aacgtcaaga acttttgata tctcgtt
 //
-LOCUS       DT25                    3837 bp    DNA     linear       17-NOV-2022
+LOCUS       DT25                    3837 bp    DNA     linear       07-FEB-2023
 DEFINITION  Genus species strain strain.
 ACCESSION   
 VERSION
@@ -425,7 +425,7 @@ ORIGIN
      3721 cattggaaaa cgttcttcgg ggcgaaaact ctcaaggatc ttaccgctgt tgagatccag
      3781 ttcgatgtaa cccactcgtg cacccaactg atcttcagca tcttttactt tcaccag
 //
-LOCUS       DT54                    3837 bp    DNA     linear       17-NOV-2022
+LOCUS       DT54                    3837 bp    DNA     linear       07-FEB-2023
 DEFINITION  Genus species strain strain.
 ACCESSION   
 VERSION
@@ -559,7 +559,7 @@ ORIGIN
      3721 cgttcctgtc cacggtacgc ctgcggccaa atttgattcc tttcagcttt gcttcctgtc
      3781 ggccctcatt cgtgcgttct aggatcctcc ggcgttcagc ctgtgccaca gccgaca
 //
-LOCUS       DT87                    3837 bp    DNA     linear       17-NOV-2022
+LOCUS       DT87                    3837 bp    DNA     linear       07-FEB-2023
 DEFINITION  Genus species strain strain.
 ACCESSION   
 VERSION
@@ -704,7 +704,7 @@ ORIGIN
      3721 gagtggtccc gacgagggtt tacccgaagt cggggcgtat ctccgcgtta gcgggccgtc
      3781 agggccgctt acgagcgtgt actcaatact tccagcgaga agactgacag cgatgat
 //
-LOCUS       DT107                   3837 bp    DNA     linear       17-NOV-2022
+LOCUS       DT107                   3837 bp    DNA     linear       07-FEB-2023
 DEFINITION  Genus species strain strain.
 ACCESSION   
 VERSION
@@ -853,7 +853,7 @@ ORIGIN
      3721 gagcggagcc tgttcaacgg tgccgccgcg ctcgccggca tcgctgtcgc cggcctgctc
      3781 ctcaagcacg gccccaacag tgaagtagct gattgtcatc agcgcattga cggcgtc
 //
-LOCUS       DT118                   3837 bp    DNA     linear       17-NOV-2022
+LOCUS       DT118                   3837 bp    DNA     linear       07-FEB-2023
 DEFINITION  Genus species strain strain.
 ACCESSION   
 VERSION
@@ -992,7 +992,7 @@ ORIGIN
      3721 gtggcaccta tgaacaggtg ccaataatta aatctgacta cccaatttac agttcagagg
      3781 gttactgctt tacgtcgttt gattcaagcc gctgaatttg cttctcaatc cacgtgc
 //
-LOCUS       DT170                   3837 bp    DNA     linear       17-NOV-2022
+LOCUS       DT170                   3837 bp    DNA     linear       07-FEB-2023
 DEFINITION  Genus species strain strain.
 ACCESSION   
 VERSION
@@ -1126,7 +1126,7 @@ ORIGIN
      3721 cgttcctgtc cacggtacgc ctgcggccaa atttgattcc tttcagcttt gcttcctgtc
      3781 ggccctcatt cgtgcgttct aggatcctcc ggcgttcagc ctgtgccaca gccgaca
 //
-LOCUS       DT176                   3837 bp    DNA     linear       17-NOV-2022
+LOCUS       DT176                   3837 bp    DNA     linear       07-FEB-2023
 DEFINITION  Genus species strain strain.
 ACCESSION   
 VERSION
@@ -1265,7 +1265,7 @@ ORIGIN
      3721 gtggcaccta tgaacaggtg ccaataatta aatctgacta cccaatttac agttcagagg
      3781 gttactgctt tacgtcgttt gattcaagcc gctgaatttg cttctcaatc cacgtgc
 //
-LOCUS       UK12                    3837 bp    DNA     linear       17-NOV-2022
+LOCUS       UK12                    3837 bp    DNA     linear       07-FEB-2023
 DEFINITION  Genus species strain strain.
 ACCESSION   
 VERSION
@@ -1406,7 +1406,7 @@ ORIGIN
      3721 cgccgaagcg catctcggca tacgtcacgg ccgagaccac aatgcgatca ccgcgcagca
      3781 ccgcctgctc caggcgcttc agcaccgctg ccggctgctc gcgcatgatg aacgagc
 //
-LOCUS       UK23                    3837 bp    DNA     linear       17-NOV-2022
+LOCUS       UK23                    3837 bp    DNA     linear       07-FEB-2023
 DEFINITION  Genus species strain strain.
 ACCESSION   
 VERSION

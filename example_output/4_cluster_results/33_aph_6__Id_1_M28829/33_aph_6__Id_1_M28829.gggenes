@@ -1,43 +1,41 @@
 molecule	gene	start	end	orientation	db_name
-DK18	IS1133	262	591	1	ISfinder
-DK18	aph(3'')-Ib_2_AF024602	698	1501	1	user_db
 DK18	aph(6)-Id_1_M28829	1501	2337	1	user_db
-DT2	IS1133	262	591	1	ISfinder
-DT2	aph(3'')-Ib_2_AF024602	698	1501	1	user_db
+UK12	aph(6)-Id_1_M28829	1501	2337	1	user_db
+UK23	aph(6)-Id_1_M28829	1501	2337	1	user_db
 DT2	aph(6)-Id_1_M28829	1501	2337	1	user_db
+DT25	aph(6)-Id_1_M28829	1501	2337	1	user_db
+DT54	aph(6)-Id_1_M28829	1501	2337	1	user_db
+DT87	aph(6)-Id_1_M28829	1501	2337	1	user_db
+DT107	aph(6)-Id_1_M28829	1501	2337	1	user_db
+DT118	aph(6)-Id_1_M28829	1501	2337	1	user_db
+DT170	aph(6)-Id_1_M28829	1501	2337	1	user_db
+DT176	aph(6)-Id_1_M28829	1501	2337	1	user_db
+DK18	IS1133	262	591	1	ISfinder
+DK18	Hypothetical protein	2433	2948	-1	None
+DK18	Hypothetical protein	2964	3236	1	None
+DK18	Hypothetical protein	3430	3714	-1	None
+DT2	IS1133	262	591	1	ISfinder
 DT2	IS903	2407	3051	-1	ISfinder
 DT2	ISPsy43	3307	3783	-1	ISfinder
 DT25	sul2_9_FJ197818	32	637	1	user_db
-DT25	aph(3'')-Ib_2_AF024602	698	1501	1	user_db
-DT25	aph(6)-Id_1_M28829	1501	2337	1	user_db
 DT25	blaTEM-206_1_KC783461	3058	3834	-1	user_db
 DT54	sul2_9_FJ197818	32	637	1	user_db
-DT54	aph(3'')-Ib_2_AF024602	698	1501	1	user_db
-DT54	aph(6)-Id_1_M28829	1501	2337	1	user_db
 DT54	blaTEM-1A_1_HM749966	2568	3428	-1	user_db
 DT87	IS1133	262	591	1	ISfinder
-DT87	aph(3'')-Ib_2_AF024602	698	1501	1	user_db
-DT87	aph(6)-Id_1_M28829	1501	2337	1	user_db
+DT87	Hypothetical protein	2592	2891	-1	None
 DT87	relE2	2937	3218	-1	UniProtKB
+DT87	Hypothetical protein	3215	3484	-1	None
 DT107	sul2_9_FJ197818	32	637	1	user_db
-DT107	aph(3'')-Ib_2_AF024602	698	1501	1	user_db
-DT107	aph(6)-Id_1_M28829	1501	2337	1	user_db
+DT107	Hypothetical protein	3297	3539	1	None
 DT107	tetR	3571	3819	-1	UniProtKB
 DT118	sul2_9_FJ197818	32	637	1	user_db
-DT118	aph(3'')-Ib_2_AF024602	698	1501	1	user_db
-DT118	aph(6)-Id_1_M28829	1501	2337	1	user_db
+DT118	Hypothetical protein	2960	3340	-1	None
 DT170	sul2_9_FJ197818	32	637	1	user_db
-DT170	aph(3'')-Ib_2_AF024602	698	1501	1	user_db
-DT170	aph(6)-Id_1_M28829	1501	2337	1	user_db
 DT170	blaTEM-1A_1_HM749966	2568	3428	-1	user_db
 DT176	sul2_9_FJ197818	32	637	1	user_db
-DT176	aph(3'')-Ib_2_AF024602	698	1501	1	user_db
-DT176	aph(6)-Id_1_M28829	1501	2337	1	user_db
-UK12	aph(3'')-Ib_2_AF024602	698	1501	1	user_db
-UK12	aph(6)-Id_1_M28829	1501	2337	1	user_db
+DT176	Hypothetical protein	2960	3340	-1	None
 UK12	ISEc15	2407	2919	-1	ISfinder
 UK12	ISEc15	2967	3251	-1	ISfinder
 UK12	vapC	3455	3826	-1	UniProtKB
 UK23	sul2_9_FJ197818	32	637	1	user_db
-UK23	aph(3'')-Ib_2_AF024602	698	1501	1	user_db
-UK23	aph(6)-Id_1_M28829	1501	2337	1	user_db
+UK23	Hypothetical protein	2960	3340	-1	None
