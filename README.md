@@ -247,6 +247,10 @@ envs_dirs:
 ```
 
 
+## Visual guide to plots
+
+![visual_guide.png](example_output/4_plots/visual_guide.png)
+
 
 
 
