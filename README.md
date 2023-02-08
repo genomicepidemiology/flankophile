@@ -42,6 +42,13 @@ Flankophile outputs  [2_report_flank_filtering.txt](example_output/2_report_flan
 
 [3_clustering.tsv](example_output/3_clustering.tsv) is a table that contains information on which hits that belong to each output cluster, based on their reference sequences. The clustering is based on percentage identity.  
 
+
+[**4_plots**](example_output/4_plots)
+
+All the plots produced by Flankophile from the R script [plot_gene_clusters_from_flankophile.R](bin/plot_gene_clusters_from_flankophile.R) are made in step 4. Plots are made for each cluster in 4_cluster_results. The distance matrices are used to produce distance trees and the gene annotation is then plotted with the tree. 
+
+If the cluster contain more than 1 hit Flankophile will produce 3 plots based on 3 different distance trees. One [plot based on target sequence only](example_output/4_plots/33_aph_6__Id_1_M28829_target_sequence_only.pdf), one [plot based on flanking region sequence only](example_output/4_plots/33_aph_6__Id_1_M28829_flanking_regions_only.pdf) and one [plot based on both target sequence and flanking regions](example_output/4_plots/33_aph_6__Id_1_M28829_target_and_flanking_regions.pdf). The example plots are made from an [input_list](input/example_input_files/input_list_example_metadata.tsv) with metadata on species.For clusters where only one hit is found a single plot is outputted which shows just the gene synteny.
+
   
 [**4_cluster_results**](example_output/4_cluster_results/33_aph_6__Id_1_M28829/)
 
@@ -50,11 +57,7 @@ The second part after the underscore is the first part of the name of the gene t
 See [example of output from an induvidual gene family cluster](example_output/4_cluster_results/33_aph_6__Id_1_M28829/). The folder contains [distance matrices](example_output/4_cluster_results/33_aph_6__Id_1_M28829/33_aph_6__Id_1_M28829.target_and_flanking_regions_dist), [cluster results table](example_output/4_cluster_results/33_aph_6__Id_1_M28829/33_aph_6__Id_1_M28829.tsv), fasta files and output from Prokka.
 
 
-[**4_plots**](example_output/4_plots)
 
-All the plots produced by Flankophile from the R script [plot_gene_clusters_from_flankophile.R](bin/plot_gene_clusters_from_flankophile.R) are made in step 4. Plots are made for each cluster in 4_cluster_results. The distance matrices are used to produce distance trees and the gene annotation is then plotted with the tree. 
-
-If the cluster contain more than 1 hit Flankophile will produce 3 plots based on 3 different distance trees. One [plot based on target sequence only](example_output/4_plots/33_aph_6__Id_1_M28829_target_sequence_only.pdf), one [plot based on flanking region sequence only](example_output/4_plots/33_aph_6__Id_1_M28829_flanking_regions_only.pdf) and one [plot based on both target sequence and flanking regions](example_output/4_plots/33_aph_6__Id_1_M28829_target_and_flanking_regions.pdf). The example plots are made from an [input_list](input/example_input_files/input_list_example_metadata.tsv) with metadata on species.For clusters where only one hit is found a single plot is outputted which shows just the gene synteny.
 
 
 #### Output columns for tsv files
@@ -228,7 +231,7 @@ You must delete the entire output folder if you want to rerun the pipeline from 
 
 
 #### Redirect where to store conda packages
-As a default conda will download the packages needed to your root directory.
+As a default conda will download the packages needed to your root directory. You may get an error message while running Flankophile if your system does not allow you to store large files in your root directory. 
 If you want conda to store your packages and enviroments in another location than your root directoty then you can write this in the file called ".condarc". Maybe you already have a ".condarc" file in your root directory. If not you can just make one and place it in your root.
 Write this in your ".condarc" file:
 
