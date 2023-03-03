@@ -1,0 +1,2 @@
+version 0.2.4 - Fix bug related to NA in metadata.
+version 0.2.3 - Include metadata in plots and other improvements.
