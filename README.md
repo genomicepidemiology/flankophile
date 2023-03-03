@@ -7,139 +7,12 @@ By Alex Vincent Thorn
 
 
 
-
 ## About Flankophile
 
 Flankophile is a pipeline built for easy analysis and visualization of gene synteny - the genetic context of genes. Flankophile is especially useful for comparing the flanking regions of specific genes or other target sequences across different samples. Flankophile automaticly gene synteny plots in pdf format. Flankophile also outputs the percentage identity of each hit relative to its reference sequence. This allows for incorporating gene variants into the analysis.
 
 
 ![Demo_R_plot.PNG](example_output/4_plots/Demo_R_plot.PNG)
-
-
-
-## Output
-
-
-[**1_hits_all.tsv**](example_output/1_hits_all.tsv)
-
-The table [1_hits_all.tsv](example_output/1_hits_all.tsv) contains the data for all hits found by Abricate, which have the requested minimum percentage identity and minimum percentage coverage.
-
-[**1_variants.fasta**](example_output/1_variants.fasta)
-
-[1_variants.fasta](example_output/1_variants.fasta) contains the actual sequences for all the hits found in [1_hits_all.tsv](example_output/1_hits_all.tsv).
-
-
-[**2_hits_included_in_flank_analysis.tsv**](example_output/2_hits_included_in_flank_analysis.tsv)
-
-The tsv file [2_hits_included_in_flank_analysis.tsv](example_output/2_hits_included_in_flank_analysis.tsv) is a filtered version of [all_hits.tsv](example_output/1_hits_all.tsv) from step 1. [2_hits_included_in_flank_analysis.tsv](example_output/2_hits_included_in_flank_analysis.tsv) contains only hits that had space on their contig for the user-requested upstream and downstream flanking region. The rest of the analysis is based on these hits.
-
-[**2_report_flank_filtering.txt**](example_output/2_report_flank_filtering.txt)
-
-Flankophile outputs  [2_report_flank_filtering.txt](example_output/2_report_flank_filtering.txt) which informs the user on how many hits were discarded due to insufficient flanking region length. 
-
-
-[**3_clustering.tsv**](example_output/3_clustering.tsv)
-
-[3_clustering.tsv](example_output/3_clustering.tsv) is a table that contains information on which hits that belong to each output cluster, based on their reference sequences. The clustering is based on percentage identity.  
-
-
-[**4_plots**](example_output/4_plots)
-
-All the plots produced by Flankophile from the R script [plot_gene_clusters_from_flankophile.R](bin/plot_gene_clusters_from_flankophile.R) are made in step 4. Plots are made for each cluster in 4_cluster_results. The distance matrices are used to produce distance trees and the gene annotation is then plotted with the tree. 
-
-If the cluster contain more than 1 hit Flankophile will produce 3 plots based on 3 different distance trees. One [plot based on target sequence only](example_output/4_plots/33_aph_6__Id_1_M28829_target_sequence_only.pdf), one [plot based on flanking region sequence only](example_output/4_plots/33_aph_6__Id_1_M28829_flanking_regions_only.pdf) and one [plot based on both target sequence and flanking regions](example_output/4_plots/33_aph_6__Id_1_M28829_target_and_flanking_regions.pdf). The example plots are made from an [input_list](input/example_input_files/input_list_example_metadata.tsv) with metadata on species.For clusters where only one hit is found a single plot is outputted which shows just the gene synteny.
-
-  
-[**4_cluster_results**](example_output/4_cluster_results/33_aph_6__Id_1_M28829/)
-
-The output contains one directory for each reference gene cluster. Directory names have two parts. The first part is a unique number. 
-The second part after the underscore is the first part of the name of the gene that seeded the cluster. 
-See [example of output from an induvidual gene family cluster](example_output/4_cluster_results/33_aph_6__Id_1_M28829/). The folder contains [distance matrices](example_output/4_cluster_results/33_aph_6__Id_1_M28829/33_aph_6__Id_1_M28829.target_and_flanking_regions_dist), [cluster results table](example_output/4_cluster_results/33_aph_6__Id_1_M28829/33_aph_6__Id_1_M28829.tsv), fasta files and output from Prokka.
-
-
-
-
-
-#### Output columns for tsv files
-
-| **Column**     | **Example**                  | **Explanation**                                               |
-|----------------|------------------------------|---------------------------------------------------------------|
-| #FILE          | /home/assemblies/dog_1.fasta | Full path to fasta.                                           |
-| SEQUENCE       | contig_27                    | Fasta header of contig where hit was found.                   |
-| START          | 4032                         | Start position of hit on contig.                              |
-| END            | 5526                         | End position of hit on contig.                                |
-| STRAND         | +                            | Positive or negative sense of DNA sequence for hit.           |
-| GENE           | blaTEM                       | Name of the reference sequence that matched hit.              |
-| COVERAGE       | 1-1501/1501                  | What proportion of the reference sequence is in our sequence. |
-| COVERAGE_MAP   | ========/======              | Visual represenation of the hit.                              |
-| GAPS           | 1/4                          | Openings / gaps in query and subject.                         |
-| %COVERAGE      | 99.33                        | Proportion of reference sequence covered in percentage.       |
-| %IDENTITY      | 98.56                        | Proportion of exact nucleotide matches in percentage.         |
-| CONTIG_LENGTH  | 12498                        | Length of contig where hit was found.                         |
-| METADATA       | Denmark                      | Metadata from the input_list if metadata was provided.        |
-| ASSEMBLY_NAME  | 1_Dog_sample                 | Assembly name from input_list. Unique for each fasta.         |
-| OBSERVATION_ID | i_44                         | Unique identifier for each hit.                               |
-| VARIANT        | v_11                         | Unique identifier for each unique sequence found among hits.  |
-
-## Input
-
-In order to use the pipeline you need to prepare two input files: The reference database and the input list of data you want to analyse.
- 
-The path to the input files must be given in the config file [config.yaml](config.yaml).
-
-
-### Reference database
-
-The reference database contains reference sequences of all the genes or target sequences that you want to perform gene synteny analysis on. It has to be a DNA multi fasta file with unique headers. Only AGCT is allowed in the sequence. Fasta headers may contain letters, numbers, dash, dot, underscore, parentheses, colon, forward slash, plus symbol, the pipe symbol '|' and ' - single quotation mark . Headers must start > followed by a number or a letter. If the headers contain whitespace Flankophile will only consider characters after whitespace as a comment. Headers must not be longer than 60 characters long. The headers as well as the sequences must be unique. You can use [DupRemover](https://github.com/abhijeetsingh1704/DupRemover) to test that sequences are unique. The reference database can contain from one to thousands of sequences. The reference database can contain reference genes or sequences that are not homologs. Flankophile will cluster the reference sequences by percentage identity and report the results separately for each cluster.
-
-
-The [**ResFinder database**](input/example_input_files/ResFinder_08_02_2022.fa) is included in Flankophile as an example of a reference database. The ResFinder database consists of acquired antimicrobial resistance genes. The version found in this repository is from February 8 2022. The up-to-date ResFinder database is found [here](https://bitbucket.org/genomicepidemiology/resfinder_db/src/master/). If you want to use the included version of the ResFinder database for your analysis then you do not need to change the database variable in the contig file.
-
-
-### Input list
-
-Your sample input data must consist of a number of assemblies, binned or unbinned contigs, genomes or other data in DNA multifasta format. One multifasta per sample. You can input as many samples as wanted. The input fastas *must* have UNIX line endings.
-
-The input_list file is a tsv file with 2 or 3 columns. Each row represents a sample. Flankophile will ignore rows that start with **#**. This is useful if you want to add headers.
-
-**Column 1 - Assembly_name**
-The first column is a unique nickname for each input fasta, for example, "sample_1" or "e.coli_bin_32". It is used to distinguish different samples. The name must not contain whitespace or slash. Letters, numbers, underscore, dot and dash is accepted. Column 1 is mandatory.
-A useful feature is that if the first one or two characters in the assembly name are  letters, these will be included in the OBSERVATION_ID, which is printed in the plots as tip labels. If you are working with samples from different countries, it will make sense to make the countries' two-letter code the first two letters of the assembly names. If the assembly name does not start with a letter then the OBSERVATION_ID will start with a lowercase i.
-
-**Column 2 - Path to fasta**
-The second column is the full path to the fasta file, including the file name. The columns must be separated by tab. Column 2 is mandatory. 
-
-
-**Column 3**
-Column 3 is optional. Column 3 is a metadata column and Flankophile will automaticly recognise if it is present. You cannot add more than one metadata collumn. The metadata column must only contain numbers, letters and underscore. The metadata will be included in the output tables and in the plots. Examples of metadata could be host animal, sample site or gender. It is possible but not recomended to use more than 8 unique metadata values as it will be difficult to distinguish more than 8 different colors on the plots.
-
-
-
-[**Input_list with 2 columns**](input/example_input_files/input_list_example.tsv) 
-
-
-| #assembly_name | path                                   |
-|----------------|----------------------------------------|
-| dog_sample_1   | home/data/dog_v1.fasta                 |
-| dog_sample_2   | home/data/dog_v2.fasta                 |
-| pig_sample     | home/data/pig_sample.fsa               |
-| cat_sample     | home/data/old/cat_ER34793_sample.fasta |
-
-
-[**Input_list with 3 columns**](input/example_input_files/input_list_example_metadata.tsv)
-
-
-| #assembly_name | path                                   | metadata |
-|----------------|----------------------------------------|----------|
-| dog_sample_1   | home/data/dog_v1.fasta                 | Dog      |
-| dog_sample_2   | home/data/dog_v2.fasta                 | Dog      |
-| pig_sample     | home/data/pig_sample.fsa               | Pig      |
-| cat_sample     | home/data/old/cat_ER34793_sample.fasta | Cat      |
-
-
-
-
-
 
 
 
@@ -246,6 +119,132 @@ envs_dirs:
 ![visual_guide.png](example_output/4_plots/visual_guide.png)
 
 
+## Input
+
+In order to use the pipeline you need to prepare two input files: The reference database and the input list of data you want to analyse.
+ 
+The path to the input files must be given in the config file [config.yaml](config.yaml).
+
+
+### Reference database
+
+The reference database contains reference sequences of all the genes or target sequences that you want to perform gene synteny analysis on. It has to be a DNA multi fasta file with unique headers. Only AGCT is allowed in the sequence. Fasta headers may contain letters, numbers, dash, dot, underscore, parentheses, colon, forward slash, plus symbol, the pipe symbol '|' and ' - single quotation mark . Headers must start > followed by a number or a letter. If the headers contain whitespace Flankophile will only consider characters after whitespace as a comment. Headers must not be longer than 60 characters long. The headers as well as the sequences must be unique. You can use [DupRemover](https://github.com/abhijeetsingh1704/DupRemover) to test that sequences are unique. The reference database can contain from one to thousands of sequences. The reference database can contain reference genes or sequences that are not homologs. Flankophile will cluster the reference sequences by percentage identity and report the results separately for each cluster.
+
+
+The [**ResFinder database**](input/example_input_files/ResFinder_08_02_2022.fa) is included in Flankophile as an example of a reference database. The ResFinder database consists of acquired antimicrobial resistance genes. The version found in this repository is from February 8 2022. The up-to-date ResFinder database is found [here](https://bitbucket.org/genomicepidemiology/resfinder_db/src/master/). If you want to use the included version of the ResFinder database for your analysis then you do not need to change the database variable in the contig file.
+
+
+### Input list
+
+Your sample input data must consist of a number of assemblies, binned or unbinned contigs, genomes or other data in DNA multifasta format. One multifasta per sample. You can input as many samples as wanted. The input fastas *must* have UNIX line endings.
+
+The input_list file is a tsv file with 2 or 3 columns. Each row represents a sample. Flankophile will ignore rows that start with **#**. This is useful if you want to add headers.
+
+**Column 1 - Assembly_name**
+The first column is a unique nickname for each input fasta, for example, "sample_1" or "e.coli_bin_32". It is used to distinguish different samples. The name must not contain whitespace or slash. Letters, numbers, underscore, dot and dash is accepted. Column 1 is mandatory.
+A useful feature is that if the first one or two characters in the assembly name are  letters, these will be included in the OBSERVATION_ID, which is printed in the plots as tip labels. If you are working with samples from different countries, it will make sense to make the countries' two-letter code the first two letters of the assembly names. If the assembly name does not start with a letter then the OBSERVATION_ID will start with a lowercase i.
+
+**Column 2 - Path to fasta**
+The second column is the full path to the fasta file, including the file name. The columns must be separated by tab. Column 2 is mandatory. 
+
+
+**Column 3**
+Column 3 is optional. Column 3 is a metadata column and Flankophile will automaticly recognise if it is present. You cannot add more than one metadata collumn. The metadata column must only contain numbers, letters and underscore. The metadata will be included in the output tables and in the plots. Examples of metadata could be host animal, sample site or gender. It is possible but not recomended to use more than 8 unique metadata values as it will be difficult to distinguish more than 8 different colors on the plots.
+
+
+
+[**Input_list with 2 columns**](input/example_input_files/input_list_example.tsv) 
+
+
+| #assembly_name | path                                   |
+|----------------|----------------------------------------|
+| dog_sample_1   | home/data/dog_v1.fasta                 |
+| dog_sample_2   | home/data/dog_v2.fasta                 |
+| pig_sample     | home/data/pig_sample.fsa               |
+| cat_sample     | home/data/old/cat_ER34793_sample.fasta |
+
+
+[**Input_list with 3 columns**](input/example_input_files/input_list_example_metadata.tsv)
+
+
+| #assembly_name | path                                   | metadata |
+|----------------|----------------------------------------|----------|
+| dog_sample_1   | home/data/dog_v1.fasta                 | Dog      |
+| dog_sample_2   | home/data/dog_v2.fasta                 | Dog      |
+| pig_sample     | home/data/pig_sample.fsa               | Pig      |
+| cat_sample     | home/data/old/cat_ER34793_sample.fasta | Cat      |
+
+
+
+
+## Output
+
+
+[**1_hits_all.tsv**](example_output/1_hits_all.tsv)
+
+The table [1_hits_all.tsv](example_output/1_hits_all.tsv) contains the data for all hits found by Abricate, which have the requested minimum percentage identity and minimum percentage coverage.
+
+[**1_variants.fasta**](example_output/1_variants.fasta)
+
+[1_variants.fasta](example_output/1_variants.fasta) contains the actual sequences for all the hits found in [1_hits_all.tsv](example_output/1_hits_all.tsv).
+
+
+[**2_hits_included_in_flank_analysis.tsv**](example_output/2_hits_included_in_flank_analysis.tsv)
+
+The tsv file [2_hits_included_in_flank_analysis.tsv](example_output/2_hits_included_in_flank_analysis.tsv) is a filtered version of [all_hits.tsv](example_output/1_hits_all.tsv) from step 1. [2_hits_included_in_flank_analysis.tsv](example_output/2_hits_included_in_flank_analysis.tsv) contains only hits that had space on their contig for the user-requested upstream and downstream flanking region. The rest of the analysis is based on these hits.
+
+[**2_report_flank_filtering.txt**](example_output/2_report_flank_filtering.txt)
+
+Flankophile outputs  [2_report_flank_filtering.txt](example_output/2_report_flank_filtering.txt) which informs the user on how many hits were discarded due to insufficient flanking region length. 
+
+
+[**3_clustering.tsv**](example_output/3_clustering.tsv)
+
+[3_clustering.tsv](example_output/3_clustering.tsv) is a table that contains information on which hits that belong to each output cluster, based on their reference sequences. The clustering is based on percentage identity.  
+
+
+[**4_plots**](example_output/4_plots)
+
+All the plots produced by Flankophile from the R script [plot_gene_clusters_from_flankophile.R](bin/plot_gene_clusters_from_flankophile.R) are made in step 4. Plots are made for each cluster in 4_cluster_results. The distance matrices are used to produce distance trees and the gene annotation is then plotted with the tree. 
+
+If the cluster contain more than 1 hit Flankophile will produce 3 plots based on 3 different distance trees. One [plot based on target sequence only](example_output/4_plots/33_aph_6__Id_1_M28829_target_sequence_only.pdf), one [plot based on flanking region sequence only](example_output/4_plots/33_aph_6__Id_1_M28829_flanking_regions_only.pdf) and one [plot based on both target sequence and flanking regions](example_output/4_plots/33_aph_6__Id_1_M28829_target_and_flanking_regions.pdf). The example plots are made from an [input_list](input/example_input_files/input_list_example_metadata.tsv) with metadata on species.For clusters where only one hit is found a single plot is outputted which shows just the gene synteny.
+
+  
+[**4_cluster_results**](example_output/4_cluster_results/33_aph_6__Id_1_M28829/)
+
+The output contains one directory for each reference gene cluster. Directory names have two parts. The first part is a unique number. 
+The second part after the underscore is the first part of the name of the gene that seeded the cluster. 
+See [example of output from an induvidual gene family cluster](example_output/4_cluster_results/33_aph_6__Id_1_M28829/). The folder contains [distance matrices](example_output/4_cluster_results/33_aph_6__Id_1_M28829/33_aph_6__Id_1_M28829.target_and_flanking_regions_dist), [cluster results table](example_output/4_cluster_results/33_aph_6__Id_1_M28829/33_aph_6__Id_1_M28829.tsv), fasta files and output from Prokka.
+
+
+
+
+
+#### Output columns for tsv files
+
+| **Column**     | **Example**                  | **Explanation**                                               |
+|----------------|------------------------------|---------------------------------------------------------------|
+| #FILE          | /home/assemblies/dog_1.fasta | Full path to fasta.                                           |
+| SEQUENCE       | contig_27                    | Fasta header of contig where hit was found.                   |
+| START          | 4032                         | Start position of hit on contig.                              |
+| END            | 5526                         | End position of hit on contig.                                |
+| STRAND         | +                            | Positive or negative sense of DNA sequence for hit.           |
+| GENE           | blaTEM                       | Name of the reference sequence that matched hit.              |
+| COVERAGE       | 1-1501/1501                  | What proportion of the reference sequence is in our sequence. |
+| COVERAGE_MAP   | ========/======              | Visual represenation of the hit.                              |
+| GAPS           | 1/4                          | Openings / gaps in query and subject.                         |
+| %COVERAGE      | 99.33                        | Proportion of reference sequence covered in percentage.       |
+| %IDENTITY      | 98.56                        | Proportion of exact nucleotide matches in percentage.         |
+| CONTIG_LENGTH  | 12498                        | Length of contig where hit was found.                         |
+| METADATA       | Denmark                      | Metadata from the input_list if metadata was provided.        |
+| ASSEMBLY_NAME  | 1_Dog_sample                 | Assembly name from input_list. Unique for each fasta.         |
+| OBSERVATION_ID | i_44                         | Unique identifier for each hit.                               |
+| VARIANT        | v_11                         | Unique identifier for each unique sequence found among hits.  |
+
+
+
+
+
 
 
 ## Contact
@@ -345,19 +344,7 @@ Bioinformatics 2014 Jul 15;30(14):2068-9. [PMID:24642063](https://pubmed.ncbi.nl
 
 **R packages**
 
-R base - 4.1.3
-
-Tidyverse - 1.3.2
-
-ggtree - 3.2.0
-
-gggenes - 0.4.1
-
-treeio - 1.18.0
-
-ape - 5.6
-
-ggnewscale - 0.4.7
+R base - 4.1.3, Tidyverse - 1.3.2, ggtree - 3.2.0, gggenes - 0.4.1, treeio - 1.18.0, ape - 5.6, ggnewscale - 0.4.7
 
 
 
