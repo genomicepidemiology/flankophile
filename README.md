@@ -1,5 +1,5 @@
 # FLANKOPHILE
-FLANKOPHILE version 0.2.3
+FLANKOPHILE version 0.2.4
 By Alex Vincent Thorn
 
 ![flankophile_logo_2-1_square.jpg](example_output/flankophile_logo_2-1_square.jpg)
@@ -98,7 +98,7 @@ The [**ResFinder database**](input/example_input_files/ResFinder_08_02_2022.fa) 
 
 ### Input list
 
-Your sample input data must consist of a number of assemblies, binned or unbinned contigs, genomes or other data in DNA multifasta format. One multifasta per sample. You can input as many samples as wanted. 
+Your sample input data must consist of a number of assemblies, binned or unbinned contigs, genomes or other data in DNA multifasta format. One multifasta per sample. You can input as many samples as wanted. The input fastas *must* have UNIX line endings.
 
 The input_list file is a tsv file with 2 or 3 columns. Each row represents a sample. Flankophile will ignore rows that start with **#**. This is useful if you want to add headers.
 
@@ -203,7 +203,9 @@ Enter the flankophile folder.
 Make sure you have the prerequisites.
 
 Run the pipeline: 
-`snakemake --use-conda --cores 39` 
+```bash
+snakemake --use-conda --cores <number of cores> 
+```
 
 Cores is the number of cores available. For more info on flags visit: 
 https://snakemake.readthedocs.io/en/stable/executing/cli.html#command-line-interface 
