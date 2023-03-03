@@ -151,20 +151,18 @@ Column 3 is optional. Column 3 is a metadata column and Flankophile will automat
 
 ### Prerequisites
 
-Clone this repository to your computer.
+Install Miniconda (miniconda3/4.11.0) and [Snakemake](https://snakemake.readthedocs.io/en/stable/index.html) (snakemake/6.9.1) to run Flankophile. 
+[Guide on installation of Miniconda and Snakemake](https://github.com/varlociraptor/varlociraptor-evaluation). 
+
+
+Download flankophile:
 
 ```bash
 git clone https://avthorn@bitbucket.org/genomicepidemiology/flankophile.git
 
 ```
 
-Flankophile is a Snakemake based pipeline. Snakemake is a python based workflow management system.
-The [Snakefile](Snakefile) contains the main pipeline code.
-
-
-You need Miniconda (miniconda3/4.11.0) and [Snakemake](https://snakemake.readthedocs.io/en/stable/index.html) (snakemake/6.9.1) to run Flankophile. Flankophile is conda based and uses a conda env. You can see it in the file [environment.yaml](environment.yaml).
- You do not need to load the conda enviroment manually. Snakemake will automatically download the necessary conda packages when running the pipeline for the first time. For this reason, the pipeline will take a longer time to run the first time.
-
+Flankophile is written in Snakemake and uses a conda environment. You do not need to load the environment manually. Snakemake will automatically download the necessary packages and load the environment. 
 
 
 
@@ -196,19 +194,26 @@ The configuration file contains numbered sections. Each number refers to an outp
 ```
 
 
-### Running the pipeline with Snakemake
+### Running the pipeline
 
 Enter the flankophile directory.
 
-Make sure you have the prerequisites.
+Make sure you have the prerequisites. If you are using a HPC cluster we recommend using an interactive node to run Flankophile.
 
 Run the pipeline: 
 ```bash
 snakemake --use-conda --cores <number of cores> 
 ```
 
-For info on Snakemake flags visit: 
-https://snakemake.readthedocs.io/en/stable/executing/cli.html#command-line-interface 
+[Read about Snakemake flags](https://snakemake.readthedocs.io/en/stable/executing/cli.html#command-line-interface)
+
+ 
+
+#### Log files
+Log files can be found in the folder `.snakemake/log`
+
+
+#### Memory Allocation
 
 You should run the pipeline with as much memory as possible if you have large input files. The search step uses a large amount of memory, and if too little memory is used, Abricate may not find all possible hits in very large files. If you want to make sure that the computer runs the pipeline with enough memory, then run the pipeline twice with the same config file and compare the files output/1_hits_all.tsv from each run using `diff`. If they are identical, that means that enough memory was used.
 
