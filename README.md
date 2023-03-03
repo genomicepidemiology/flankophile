@@ -196,9 +196,9 @@ The configuration file contains numbered sections. Each number refers to an outp
 ```
 
 
-### Running the pipeline
+### Running the pipeline with Snakemake
 
-Enter the flankophile folder.
+Enter the flankophile directory.
 
 Make sure you have the prerequisites.
 
@@ -207,29 +207,16 @@ Run the pipeline:
 snakemake --use-conda --cores <number of cores> 
 ```
 
-Cores is the number of cores available. For more info on flags visit: 
+For info on Snakemake flags visit: 
 https://snakemake.readthedocs.io/en/stable/executing/cli.html#command-line-interface 
 
-You should run the pipeline with as much memory as possible if you have large input files. The search step uses a large amount of memory, and if too little memory is used, Abricate may not find all possible hits in very large files. If you want to make sure that the computer runs the pipeline with enough memory, then run the pipeline twice with the same config file and compare the files output/1_hits_all.tsv from each run using 
-
-```bash
-diff output1/1_hits_all.tsv output2/1_hits_all.tsv
-
-``` 
-If they are identical, that means that enough memory was used. 
+You should run the pipeline with as much memory as possible if you have large input files. The search step uses a large amount of memory, and if too little memory is used, Abricate may not find all possible hits in very large files. If you want to make sure that the computer runs the pipeline with enough memory, then run the pipeline twice with the same config file and compare the files output/1_hits_all.tsv from each run using `diff`. If they are identical, that means that enough memory was used.
 
 
 
 #### Rerunning the pipeline
-Flankophile creates the output in the order of the numbers. The first files are used to produce the files in the second directory, and so on. This is useful since it is then easy to rerun the analysis with different parameters without having to redo the whole analysis.
+You must delete or rename the entire output folder if you want to rerun the pipeline with new data or new config settings.
 
-If you want to rerun the pipeline with new config settings, you must look in the config file [config.yaml](config.yaml)
- and take note of the numbered sections. If you want to change parameters, you must delete all output
- with a number equal to or higher than the number of the section. You simply delete output in descending order starting with 99 and down to where you do not want to rerun anymore. Snakemake will rerun these parts of the pipeline with the new config settings when you give the run command `snakemake --use-conda --cores 39` again. 
- 
-Step 1 is the most time-consuming step. If you want to rerun the pipeline with other parameters for steps 2-4 then you can save time by deleting the files for the other steps but keeping the files starting with 1.
-
-You must delete the entire output folder if you want to rerun the pipeline from the start.
 
 
 #### Redirect where to store conda packages
