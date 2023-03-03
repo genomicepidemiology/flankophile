@@ -1,4 +1,4 @@
-# FLANKOPHILE version 0.2.3
+# FLANKOPHILE
 # Alex Vincent Thorn
 
 configfile: "config.yaml"
