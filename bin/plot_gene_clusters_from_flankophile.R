@@ -1,11 +1,9 @@
 
 
-# Companion script for Flankophile. 
+# R script for Flankophile. 
 # By Alex Vincent Thorn
 
-# Try with R version 4.1.2 or 4.1.3.  
-
-
+# R version 4.1.2 or 4.1.3.  
 
 
 library(tidyverse)
@@ -16,13 +14,10 @@ library(ape)          # ape_5.6-2
 library(ggnewscale)   # ggnewscale_0.4.7
 
 
-### Settings #######################################################################################################
+##########################################################################################################
 
 
 path_to_output_folder <- "output"   # relative path to the entire flankophile output folder
-
-
-############################################################################################################################
 
 
 path_to_folder_for_plots <- paste0(path_to_output_folder, "/4_plots") 
@@ -51,7 +46,8 @@ make_plots <- function(cluster_name) {
   
     
   cluster_results <- read_tsv(paste0(path_to_all_cluster_folders, cluster_name, "/", cluster_name, ".tsv"), col_types = cols(GENE = col_character(),
-                                                                                                                           METADATA = col_character()))
+                                                                                                                           METADATA = col_character())) %>% 
+    replace_na(list(METADATA = "NA"))
  
   cluster_prokka_raw <- read_tsv(paste0(path_to_all_cluster_folders, cluster_name, "/", cluster_name, ".gggenes"), col_types = cols(molecule = col_character(),
                                                                                                                                     gene = col_character(),
