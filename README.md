@@ -1,6 +1,6 @@
 # FLANKOPHILE
 FLANKOPHILE version 0.2.4
-By Alex Vincent Thorn
+By Alix Vincent Thorn
 
 ![flankophile_logo_2-1_square.jpg](example_output/flankophile_logo_2-1_square.jpg)
 
@@ -248,20 +248,20 @@ See [example of output from an induvidual gene family cluster](example_output/4_
 
 
 ## Contact
-Alex Vincent Thorn
+Alix Vincent Thorn
 
 alvit@food.dtu.dk
 
-Twitter: @AlexVThorn
+Twitter: @alix_thorn
 
 
 
 
 ## Supervisors
 
-Head Supervisor Frank Møller Aarestrup.
+Frank Møller Aarestrup
 
-Supervisor Patrick Munk.
+Patrick Munk
 
 
 

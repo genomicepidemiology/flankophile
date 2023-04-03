@@ -1,5 +1,5 @@
 # FLANKOPHILE
-# Alex Vincent Thorn
+# Alix Vincent Thorn
 
 configfile: "config.yaml"
 
