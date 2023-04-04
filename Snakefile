@@ -1034,7 +1034,7 @@ rule plots:
         cp config.yaml {output.config};
         rm -r output/3_define_clusters/cd_hit_per_cluster;
         rm -rf output/2_filter;
-        echo flankophile_v._0.2.4 > {output.txt};
+        echo flankophile > {output.txt};
         Rscript bin/plot_gene_clusters_from_flankophile.R
         '''
 
