@@ -1,7 +1,7 @@
 
 
 # R script for Flankophile. 
-# By Alex Vincent Thorn
+# By Alix Vincent Thorn
 
 # R version 4.1.2 or 4.1.3.  
 
