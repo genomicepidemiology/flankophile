@@ -259,10 +259,10 @@ make_plots <- function(cluster_name) {
          scale_fill_hue(direction = -1, l = 85, h = c(35, 330)) + new_scale_fill() +
         theme(legend.text = element_text(size=5))
       t4 <- tx + ggtitle(paste0("Cluster ", cluster_name, " - distance tree based on flanking region sequences only")) + 
-        new_scale_fill()  
+        new_scale_fill()  + if(length(unique(info_gene_ID$VARIANT)) > 25){ theme(legend.position="none")}
     }  else {
       t4 <- t3 + ggtitle(paste0("Cluster ", cluster_name, " - distance tree based on flanking region sequences only")) + 
-        new_scale_fill()
+        new_scale_fill() + if(length(unique(info_gene_ID$VARIANT)) > 25){ theme(legend.position="none")}
     }
     
     
@@ -304,10 +304,10 @@ make_plots <- function(cluster_name) {
          scale_fill_hue(direction = -1, l = 85, h = c(35, 330)) + new_scale_fill() +
         theme(legend.text = element_text(size=5))
       t4 <- tx + ggtitle(paste0("Cluster ", cluster_name, " - distance tree based on target sequences only")) + 
-        new_scale_fill()  
+        new_scale_fill()  + if(length(unique(info_gene_ID$VARIANT)) > 25){ theme(legend.position="none")}
     }  else {
       t4 <- t3 + ggtitle(paste0("Cluster ", cluster_name, " - distance tree based on target sequences only")) + 
-        new_scale_fill()
+        new_scale_fill() + if(length(unique(info_gene_ID$VARIANT)) > 25){ theme(legend.position="none")}
     }  
     
  
@@ -348,10 +348,10 @@ make_plots <- function(cluster_name) {
          scale_fill_hue(direction = -1, l = 85, h = c(35, 330)) + new_scale_fill() +
         theme(legend.text = element_text(size=5))
       t4 <- tx + ggtitle(paste0("Cluster ", cluster_name, " - distance tree based on target and flanking region sequences")) + 
-        new_scale_fill()  
+        new_scale_fill()  + if(length(unique(info_gene_ID$VARIANT)) > 25){ theme(legend.position="none")}
     }  else {
       t4 <- t3 + ggtitle(paste0("Cluster ", cluster_name, " - distance tree based on target and flanking region sequences")) + 
-        new_scale_fill()
+        new_scale_fill() + if(length(unique(info_gene_ID$VARIANT)) > 25){ theme(legend.position="none")}
     } 
     
     
