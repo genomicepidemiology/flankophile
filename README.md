@@ -1,5 +1,5 @@
 # FLANKOPHILE
-FLANKOPHILE version 0.2.4
+FLANKOPHILE version 0.2.5
 By Alix Vincent Thorn
 
 ![flankophile_logo_2-1_square.jpg](example_output/flankophile_logo_2-1_square.jpg)
@@ -148,8 +148,8 @@ A useful feature is that if the first one or two characters in the assembly name
 The second column is the full path to the fasta file, including the file name. The columns must be separated by tab. Column 2 is mandatory. 
 
 
-**Column 3**
-Column 3 is optional. Column 3 is a metadata column and Flankophile will automaticly recognise if it is present. You cannot add more than one metadata collumn. The metadata column must only contain numbers, letters and underscore. The metadata will be included in the output tables and in the plots. Examples of metadata could be host animal, sample site or gender. It is possible but not recomended to use more than 8 unique metadata values as it will be difficult to distinguish more than 8 different colors on the plots.
+**Column 3 - Metadata**
+Column 3 is optional. Column 3 is a metadata column and Flankophile will automaticly recognise if it is present. You cannot add more than one metadata column. The metadata column must only contain numbers, letters and underscore. The metadata will be included in the output tables and in the plots. Examples of metadata could be host animal, sample site or gender. It is possible but not recomended to use more than 8 unique metadata values as it will be difficult to distinguish more than 8 different colors on the plots. More than 30 unique metadata values or very long metadata values may break the pipeline and cause an error in the plotting step.
 
 
 
