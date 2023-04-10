@@ -445,7 +445,7 @@ rule add_variant_numbers_to_fasta1:
             else:
                 print(line, file = output_file)
         input_file.close()
-        input_file.close()
+        output_file.close()
 
 
 
