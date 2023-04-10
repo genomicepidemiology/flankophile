@@ -1,4 +1,4 @@
-# FLANKOPHILE version 0.2.4
+# FLANKOPHILE version 0.2.5
 # Alix Vincent Thorn
 
 
@@ -6,7 +6,7 @@
 
 database: "input/example_input_files/ResFinder_08_02_2022.fa"         
 
-input_list: "input/example_input_files/input_list_example_metadata.tsv"               
+input_list: "input/example_input_files/input_list_example_metadata.tsv"     # Edit this!          
                                                                                                                
 min_coverage_abricate: "98"                   # Minimum coverage in percentage compared to reference sequence.
 
