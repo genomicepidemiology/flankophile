@@ -256,7 +256,7 @@ make_plots <- function(cluster_name) {
       tx <- gheatmap(t3, info_meta,  width=0.1, hjust=1,
                    colnames=TRUE, offset = off2 , font.size = 1, colnames_position = "bottom", colnames_angle = 0) +
         labs(fill = "Metadata") + 
-         scale_fill_hue(direction = -1, l = 85, h = c(35, 330)) + new_scale_fill() +
+         scale_fill_hue(direction = -1, l = 85) + new_scale_fill() +
         theme(legend.text = element_text(size=5))
       t4 <- tx + ggtitle(paste0("Cluster ", cluster_name, " - distance tree based on flanking region sequences only")) + 
         new_scale_fill()  + if(length(unique(info_gene_ID$VARIANT)) > 25){ theme(legend.position="none")}
@@ -301,7 +301,7 @@ make_plots <- function(cluster_name) {
       tx <- gheatmap(t3, info_meta,  width=0.1, hjust=1,
                    colnames=TRUE, offset = off2 , font.size = 1, colnames_position = "bottom", colnames_angle = 0) +
         labs(fill = "Metadata") + 
-         scale_fill_hue(direction = -1, l = 85, h = c(35, 330)) + new_scale_fill() +
+         scale_fill_hue(direction = -1, l = 85) + new_scale_fill() +
         theme(legend.text = element_text(size=5))
       t4 <- tx + ggtitle(paste0("Cluster ", cluster_name, " - distance tree based on target sequences only")) + 
         new_scale_fill()  + if(length(unique(info_gene_ID$VARIANT)) > 25){ theme(legend.position="none")}
@@ -345,7 +345,7 @@ make_plots <- function(cluster_name) {
       tx <- gheatmap(t3, info_meta,  width=0.1, hjust=1,
                    colnames=TRUE, offset = off2 , font.size = 1, colnames_position = "bottom", colnames_angle = 0) +
         labs(fill = "Metadata") + 
-         scale_fill_hue(direction = -1, l = 85, h = c(35, 330)) + new_scale_fill() +
+         scale_fill_hue(direction = -1, l = 85) + new_scale_fill() +
         theme(legend.text = element_text(size=5))
       t4 <- tx + ggtitle(paste0("Cluster ", cluster_name, " - distance tree based on target and flanking region sequences")) + 
         new_scale_fill()  + if(length(unique(info_gene_ID$VARIANT)) > 25){ theme(legend.position="none")}

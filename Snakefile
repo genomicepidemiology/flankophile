@@ -394,7 +394,7 @@ rule bedtools_target_sequence_only1:
     shell:
         '''
         bedtools getfasta -fi {params.assembly_path} -bed {input.bed} -s -nameOnly > {output.fasta};
-        sed -i -e "s/[(|)|+]//g" -e "s/-//g" {output.fasta}
+        sed -i -e "s/[(|)|+]//g" {output.fasta} && sed -i -e "s/-//g" {output.fasta}
         ''' 
 
 
@@ -690,7 +690,7 @@ rule bedtools_target_and_flanking_regions:
     shell:
         '''
         bedtools getfasta -fi {params.assembly_path} -bed {input.bed} -s -nameOnly > {output.fasta};
-        sed -i -e "s/[(|)|+]//g" -e "s/-//g" {output.fasta}
+        sed -i -e "s/[(|)|+]//g" {output.fasta} && sed -i -e "s/-//g" {output.fasta}
         '''
 
 rule bedtools_target_sequence_only2:
@@ -705,7 +705,7 @@ rule bedtools_target_sequence_only2:
     shell:
         '''
         bedtools getfasta -fi {params.assembly_path} -bed {input.bed} -s -nameOnly > {output.fasta};
-        sed -i -e "s/[(|)|+]//g" -e "s/-//g" {output.fasta}
+        sed -i -e "s/[(|)|+]//g" {output.fasta} && sed -i -e "s/-//g" {output.fasta}
         ''' 
 
 
@@ -1034,7 +1034,7 @@ rule plots:
         cp config.yaml {output.config};
         rm -r output/3_define_clusters/cd_hit_per_cluster;
         rm -rf output/2_filter;
-        echo flankophile > {output.txt};
+        cp {output.config} {output.txt};
         Rscript bin/plot_gene_clusters_from_flankophile.R
         '''
 

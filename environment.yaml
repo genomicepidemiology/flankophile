@@ -4,7 +4,6 @@ channels:
   - default
 dependencies:
   - python=3.7
-  - snakemake=6.9.1
   - seqkit=2.1.0
   - any2fasta=0.4.2
   - blast=2.12.0

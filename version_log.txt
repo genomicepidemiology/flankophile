@@ -1,3 +1,10 @@
+version 0.2.6 - Remove Snakemake from env file since it is a prereq.
+              - Remove Miniconda as prereq.
+              - Edit README file.
+              - Snakefile: Make version file in 4_plots folder into a copy of the config file.
+              - Snakefile: change from sed -i -e "s/[(|)|+]//g" -e "s/-//g" {output.fasta}      to 
+                 sed -i -e "s/[(|)|+]//g" {output.fasta} && sed -i -e "s/-//g" {output.fasta} 3 places to make Flankophile work on Mac computer.
+              - R script: Change metadata colours. 
 version 0.2.5 - Fix first name in various files.
               - Remove version signature from last step in Snakefile. No effect on results.
               - Fix problem with variant legend being too big for R if there are too many variants in cluster. 
