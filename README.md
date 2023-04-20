@@ -1,5 +1,5 @@
 # FLANKOPHILE
-FLANKOPHILE version 0.2.6
+FLANKOPHILE version 0.2.7
 By Alix Vincent Thorn
 
 ![flankophile_logo_2-1_square.jpg](example_output/flankophile_logo_2-1_square.jpg)
@@ -24,7 +24,10 @@ Flankophile is a pipeline built for easy analysis and visualization of gene synt
 
 ### Prerequisites
 
-Install [Snakemake](https://snakemake.readthedocs.io/en/stable/index.html) (version 6.9.1) to run Flankophile. 
+Install Miniconda3 (version 4.11.0) and [Snakemake](https://snakemake.readthedocs.io/en/stable/index.html) (version 6.9.1) to run Flankophile. 
+
+
+[Guide on installation of Miniconda and Snakemake](https://github.com/varlociraptor/varlociraptor-evaluation). 
 
 ```bash
 conda install snakemake=6.9.1

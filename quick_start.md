@@ -33,7 +33,8 @@ Now you need to load the right modules:
 
 ```bash
 module purge
-module load tools  
+module load tools
+module load miniconda3/4.11.0  
 module load snakemake/6.9.1
 
 ```
