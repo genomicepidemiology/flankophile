@@ -1,9 +1,13 @@
+name: flankophile
 channels:
+  - nodefaults
   - conda-forge
   - bioconda
   - default
 dependencies:
   - python=3.7
+  - tabulate=0.8.10
+  - snakemake=6.9.1
   - seqkit=2.1.0
   - any2fasta=0.4.2
   - blast=2.12.0

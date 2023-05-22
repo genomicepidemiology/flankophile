@@ -1,3 +1,4 @@
+version 0.2.8 - Edit env. file to avoid version incompatability experienced by a few users.
 version 0.2.7 - Add Miniconda as a prereq. again in README and Quick guide.
 version 0.2.6 - Remove Snakemake from env file since it is a prereq.
               - Remove Miniconda as prereq.
