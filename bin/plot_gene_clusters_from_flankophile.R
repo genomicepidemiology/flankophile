@@ -248,7 +248,7 @@ make_plots <- function(cluster_name) {
     t3 <- gheatmap(t2, info_gene_ID,  width=0.1, hjust=1,
                    colnames=TRUE, offset = off, font.size = 1, colnames_position = "bottom", colnames_angle = 0) +
       labs(fill = "Target variant") + 
-      scale_fill_hue(direction = -1, l = 70, c = 30) + new_scale_fill() +
+      scale_fill_hue(direction = -1, l = 70, c = 70) + new_scale_fill() +
       theme(legend.text = element_text(size=5))
       
       
@@ -293,7 +293,7 @@ make_plots <- function(cluster_name) {
     t3 <- gheatmap(t2, info_gene_ID,  width=0.1, hjust=1,
                    colnames=TRUE, offset = off, font.size = 1, colnames_position = "bottom", colnames_angle = 0) +
       labs(fill = "Target variant") + 
-      scale_fill_hue(direction = -1, l = 70, c = 30) + new_scale_fill() +
+      scale_fill_hue(direction = -1, l = 70, c = 70) + new_scale_fill() +
       theme(legend.text = element_text(size=5))
       
       
@@ -337,7 +337,7 @@ make_plots <- function(cluster_name) {
     t3 <- gheatmap(t2, info_gene_ID,  width=0.1, hjust=1,
                    colnames=TRUE, offset = off, font.size = 1, colnames_position = "bottom", colnames_angle = 0) +
       labs(fill = "Target variant") + 
-      scale_fill_hue(direction = -1, l = 70, c = 30) + new_scale_fill() +
+      scale_fill_hue(direction = -1, l = 70, c = 70) + new_scale_fill() +
       theme(legend.text = element_text(size=5))
     
     
